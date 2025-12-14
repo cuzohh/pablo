@@ -679,9 +679,10 @@
         }
 
         .trade-item {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 60px 60px 1fr;
             align-items: center;
+            gap: 1rem;
             padding: 0.8rem 0;
             border-bottom: 1px solid var(--border);
             font-family: 'JetBrains Mono', monospace;
@@ -691,9 +692,10 @@
         .trade-item:last-child { border-bottom: none; }
 
         .trade-time { color: var(--text-dim); }
-        .trade-type { font-weight: 600; }
+        .trade-type { font-weight: 600; text-align: center; }
         .trade-type.long { color: var(--green); }
         .trade-type.short { color: var(--red); }
+        .trade-result { text-align: right; }
         .trade-result.win { color: var(--green); }
         .trade-result.loss { color: var(--red); }
         .trade-result.be { color: var(--accent); }
@@ -983,12 +985,8 @@
                 <div class="stat-label">Current Balance</div>
             </div>
             <div class="account-card">
-                <div class="stat-value neutral">$250</div>
-                <div class="stat-label">Risk Per Trade</div>
-            </div>
-            <div class="account-card">
                 <div class="stat-value neutral">0.25%</div>
-                <div class="stat-label">Risk %</div>
+                <div class="stat-label">Risk Per Trade</div>
             </div>
         </section>
 
@@ -1080,7 +1078,7 @@
                     <span class="recap-pnl positive">+$595</span>
                 </div>
                 <div class="recap-body">
-                    <img class="recap-image" src="https://private-user-images.githubusercontent.com/93789257/526258654-f3d4472b-7fbe-425f-b7ce-5d8f43cfabdb.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjU2OTY0MTYsIm5iZiI6MTc2NTY5NjExNiwicGF0aCI6Ii85Mzc4OTI1Ny81MjYyNTg2NTQtZjNkNDQ3MmItN2ZiZS00MjVmLWI3Y2UtNWQ4ZjQzY2ZhYmRiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEyMTQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMjE0VDA3MDgzNlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWZjNmU3ODg3M2M4YzZjY2I4ODYwNzZlNmQzM2FkMDM4ZjQ2ZmRmYzY3ODAzYjNjMjVlNjFhMzgxYWI5NDg3NzYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.xq7KzASXOmusMlPQCcL_ZhBexUL0vAU_fHCEGUOONLU" alt="December 8th, 2025 Trade Recap">
+                    <img class="recap-image" src="https://raw.githubusercontent.com/cuzohh/pablo/main/images/dec825.png" alt="December 8th, 2025 Trade Recap">
                     
                     <div class="recap-breakdown">
                         <div class="breakdown-item">
@@ -1115,6 +1113,66 @@
                     </p>
                 </div>
             </div>
+
+            <!-- December 9th - No trades -->
+            <div class="recap-card">
+                <div class="recap-card-header">
+                    <span class="recap-date">December 9th, 2025</span>
+                    <span class="recap-pnl" style="color: var(--text-dim);">$0</span>
+                </div>
+                <div class="recap-body">
+                    <p class="recap-notes" style="text-align: center; padding: 2rem;">
+                        📊 No trades taken today. Pablo was watching and waiting.
+                    </p>
+                </div>
+            </div>
+
+            <!-- December 10th -->
+            <div class="recap-card">
+                <div class="recap-card-header">
+                    <span class="recap-date">December 10th, 2025</span>
+                    <span class="recap-pnl positive">+$3,105</span>
+                </div>
+                <div class="recap-body">
+                    <img class="recap-image" src="https://raw.githubusercontent.com/cuzohh/pablo/main/images/dec1025.png" alt="December 10th, 2025 Trade Recap">
+                    
+                    <div class="recap-breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trades</div>
+                            <div class="breakdown-value">6</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Wins</div>
+                            <div class="breakdown-value positive">2</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Losses</div>
+                            <div class="breakdown-value negative">3</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Breakevens</div>
+                            <div class="breakdown-value">1</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Best Trade</div>
+                            <div class="breakdown-value positive">+10.08 RR</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Loss Total</div>
+                            <div class="breakdown-value negative">-$750</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Win Total</div>
+                            <div class="breakdown-value positive">+$3,855</div>
+                        </div>
+                    </div>
+
+                    <p class="recap-notes">
+                        Massive day! Pablo caught a 10.08 RR winner and a 5.34 RR winner despite taking 3 losses. 
+                        Account balance after today: <strong>$103,700</strong>
+                    </p>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -1136,7 +1194,8 @@
     <script>
         // Configuration
         const STARTING_BALANCE = 100000;
-        const RISK_PER_TRADE = 250; // $250 or 0.25% of $100k
+        const RISK_PERCENT = 0.0025; // 0.25% risk per trade
+        const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT; // $250 at start, scales with balance
 
         // Trading data - P&L calculated from RR (risk-reward ratio)
         // For losses: pnl = -RISK_PER_TRADE (-$250)
@@ -1145,10 +1204,21 @@
         const tradingData = {
             '2025-12-08': {
                 trades: [
-                    { time: '09:32', type: 'short', result: 'loss', pnl: -250 },
-                    { time: '09:45', type: 'short', result: 'loss', pnl: -250 },
-                    { time: '10:02', type: 'short', result: 'loss', pnl: -250 },
-                    { time: '10:15', type: 'short', result: 'win', pnl: 1345, rr: 5.38 }
+                    { time: '09:32', type: 'long', result: 'loss', pnl: -250 },
+                    { time: '09:45', type: 'long', result: 'loss', pnl: -250 },
+                    { time: '10:02', type: 'long', result: 'loss', pnl: -250 },
+                    { time: '10:15', type: 'long', result: 'win', pnl: 1345, rr: 5.38 }
+                ]
+            },
+            // December 9th - No trades taken
+            '2025-12-10': {
+                trades: [
+                    { time: '09:35', type: 'long', result: 'loss', pnl: -250 },
+                    { time: '09:52', type: 'long', result: 'loss', pnl: -250 },
+                    { time: '10:08', type: 'long', result: 'win', pnl: 2520, rr: 10.08 },
+                    { time: '11:15', type: 'short', result: 'loss', pnl: -250 },
+                    { time: '13:42', type: 'short', result: 'be', pnl: 0 },
+                    { time: '14:55', type: 'short', result: 'win', pnl: 1335, rr: 5.34 }
                 ]
             }
         };
