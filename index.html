@@ -211,14 +211,15 @@
             background: var(--bg-card);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            padding: 0.8rem 1.8rem 1.2rem;
+            padding: 0.8rem 1.8rem 1.4rem;
             border-radius: 50px;
             font-size: 0.95rem;
             color: var(--text-dim);
             margin-bottom: 2rem;
             animation: fadeInScale 0.8s ease-out 0.4s both;
             transition: all 0.3s ease;
-            line-height: 1.6;
+            line-height: 1.7;
+            overflow: visible;
         }
 
         .status:hover {
@@ -261,16 +262,17 @@
         .links a {
             color: var(--text);
             text-decoration: none;
-            padding: 0.8rem 1.5rem 1.3rem;
+            padding: 0.8rem 1.5rem 1.5rem;
             border: 1px solid var(--border);
             border-radius: 12px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
-            overflow: hidden;
-            line-height: 1.6;
+            overflow: visible;
+            line-height: 1.7;
             display: inline-block;
+            min-height: 3rem;
         }
 
         .links a::before {
@@ -279,9 +281,17 @@
             top: 0;
             left: -100%;
             width: 100%;
-            height: calc(100% - 0.3rem);
+            height: calc(100% - 0.5rem);
             background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
             transition: left 0.5s ease;
+            border-radius: 12px;
+        }
+        
+        .links a::after {
+            content: '';
+            display: block;
+            height: 0.3em;
+            width: 100%;
         }
 
         .links a:hover::before {
@@ -992,13 +1002,21 @@
             background: rgba(251, 191, 36, 0.08);
             border: 1px solid rgba(251, 191, 36, 0.25);
             border-radius: 12px;
-            padding: 1rem 1.5rem 1.4rem;
+            padding: 1rem 1.5rem 1.6rem;
             margin-bottom: 2rem;
             font-size: 0.85rem;
             color: #fbbf24;
-            line-height: 1.7;
+            line-height: 1.8;
             animation: fadeInUp 0.8s ease-out 0.6s both;
             overflow: visible;
+            position: relative;
+        }
+        
+        .disclaimer::after {
+            content: '';
+            display: block;
+            height: 0.4em;
+            width: 100%;
         }
 
         .disclaimer strong {
