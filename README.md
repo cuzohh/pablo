@@ -24,7 +24,7 @@ Coming soon! Script will be published on TradingView once I'm happy with it, sti
 
 ## 📊 Backtesting & Data
 
-Unfortunately, buying a $600 TradingView plan to backtest this isn't something I can really do as a college student 💀
+Unfortunately, buying a $600 TradingView plan to backtest this isn't something I can really do as a college student 😢
 
 So data will be collected manually — the old fashioned way.
 
