@@ -593,9 +593,11 @@
             background: linear-gradient(135deg, rgba(20, 20, 30, 0.95) 0%, rgba(10, 10, 15, 0.98) 100%);
             border: 1px solid var(--border);
             border-radius: 24px;
-            padding: 2.5rem;
-            max-width: 500px;
-            width: 90%;
+            padding: 2rem;
+            max-width: 700px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
             transform: scale(0.8) translateY(30px);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 50px var(--accent-glow);
@@ -664,6 +666,52 @@
             letter-spacing: 0.1em;
         }
 
+        .modal-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .modal-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-breakdown-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 0.75rem 0.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-breakdown-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.2rem;
+        }
+
+        .modal-breakdown-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .modal-notes {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
         .modal-trades {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 16px;
@@ -671,7 +719,7 @@
         }
 
         .modal-trades-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -827,109 +875,6 @@
         .legend-icon.orange { color: #f97316; }
         .legend-icon.teal { color: #06b6d4; }
 
-        /* Daily Recap Section */
-        .daily-recaps {
-            margin-top: 3rem;
-            animation: fadeInUp 1s ease-out 1.1s both;
-        }
-
-        .daily-recaps h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .recap-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
-        .recap-card-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .recap-date {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .recap-pnl {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .recap-pnl.positive { color: var(--green); }
-        .recap-pnl.negative { color: var(--red); }
-
-        .recap-body {
-            padding: 1.5rem;
-        }
-
-        .recap-image {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border);
-        }
-
-        .recap-breakdown {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .breakdown-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .breakdown-label {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-        }
-
-        .breakdown-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .breakdown-value.positive { color: var(--green); }
-        .breakdown-value.negative { color: var(--red); }
-
-        .recap-notes {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            line-height: 1.7;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-        }
-
-        .recap-notes strong {
-            color: var(--green);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 2rem 1rem; }
@@ -952,26 +897,26 @@
 
     <div class="container">
         <section class="hero">
-            <div class="logo">🎨</div>
-            <h1>pablo</h1>
-            <p class="tagline">A quantitative algorithm for the nasdaq</p>
-            <p class="trust">Trust Pablo.</p>
+        <div class="logo">🎨</div>
+        <h1>pablo</h1>
+        <p class="tagline">A quantitative algorithm for the nasdaq</p>
+        <p class="trust">Trust Pablo.</p>
 
-            <div class="status">
-                <span class="status-dot"></span>
+        <div class="status">
+            <span class="status-dot"></span>
                 System Active — Tracking Live
-            </div>
+        </div>
 
-            <p class="description">
+        <p class="description">
                 A proprietary mean-reversion system designed to catch the highs and lows of the day.
                 Built with sleepless nights, spite, and sheer stubbornness.
-            </p>
+        </p>
 
-            <div class="links">
+        <div class="links">
                 <a href="https://github.com/cuzohh" target="_blank">GitHub</a>
                 <a href="https://www.tradingview.com/u/cuzohh/" target="_blank">TradingView</a>
                 <a href="#calendar">View Calendar</a>
-            </div>
+        </div>
         </section>
 
         <!-- Account Stats -->
@@ -983,7 +928,7 @@
             <div class="account-card">
                 <div class="stat-value positive" id="currentBalance">—</div>
                 <div class="stat-label">Current Balance</div>
-            </div>
+        </div>
             <div class="account-card">
                 <div class="stat-value neutral">0.25%</div>
                 <div class="stat-label">Risk Per Trade</div>
@@ -1067,113 +1012,6 @@
                 <div class="calendar-grid" id="calendarGrid"></div>
             </div>
         </section>
-
-        <!-- Daily Recaps -->
-        <section class="daily-recaps">
-            <h2><span>📈</span> Daily Recaps</h2>
-
-            <div class="recap-card">
-                <div class="recap-card-header">
-                    <span class="recap-date">December 8th, 2025</span>
-                    <span class="recap-pnl positive">+$595</span>
-                </div>
-                <div class="recap-body">
-                    <img class="recap-image" src="https://raw.githubusercontent.com/cuzohh/pablo/main/images/dec825.png" alt="December 8th, 2025 Trade Recap">
-                    
-                    <div class="recap-breakdown">
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Trades</div>
-                            <div class="breakdown-value">4</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Wins</div>
-                            <div class="breakdown-value positive">1</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Losses</div>
-                            <div class="breakdown-value negative">3</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Best Trade</div>
-                            <div class="breakdown-value positive">+5.38 RR</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Loss Total</div>
-                            <div class="breakdown-value negative">-$750</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Win Total</div>
-                            <div class="breakdown-value positive">+$1,345</div>
-                        </div>
-                    </div>
-
-                    <p class="recap-notes">
-                        Pablo took 3 stop losses before catching a 5.38 RR winner. Patience pays off. 
-                        Account balance after today: <strong>$100,595</strong>
-                    </p>
-                </div>
-            </div>
-
-            <!-- December 9th - No trades -->
-            <div class="recap-card">
-                <div class="recap-card-header">
-                    <span class="recap-date">December 9th, 2025</span>
-                    <span class="recap-pnl" style="color: var(--text-dim);">$0</span>
-                </div>
-                <div class="recap-body">
-                    <p class="recap-notes" style="text-align: center; padding: 2rem;">
-                        📊 No trades taken today. Pablo was watching and waiting.
-                    </p>
-                </div>
-            </div>
-
-            <!-- December 10th -->
-            <div class="recap-card">
-                <div class="recap-card-header">
-                    <span class="recap-date">December 10th, 2025</span>
-                    <span class="recap-pnl positive">+$3,105</span>
-                </div>
-                <div class="recap-body">
-                    <img class="recap-image" src="https://raw.githubusercontent.com/cuzohh/pablo/main/images/dec1025.png" alt="December 10th, 2025 Trade Recap">
-                    
-                    <div class="recap-breakdown">
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Trades</div>
-                            <div class="breakdown-value">6</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Wins</div>
-                            <div class="breakdown-value positive">2</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Losses</div>
-                            <div class="breakdown-value negative">3</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Breakevens</div>
-                            <div class="breakdown-value">1</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Best Trade</div>
-                            <div class="breakdown-value positive">+10.08 RR</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Loss Total</div>
-                            <div class="breakdown-value negative">-$750</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div class="breakdown-label">Win Total</div>
-                            <div class="breakdown-value positive">+$3,855</div>
-                        </div>
-                    </div>
-
-                    <p class="recap-notes">
-                        Massive day! Pablo caught a 10.08 RR winner and a 5.34 RR winner despite taking 3 losses. 
-                        Account balance after today: <strong>$103,700</strong>
-                    </p>
-                </div>
-            </div>
-        </section>
     </div>
 
     <footer>
@@ -1201,8 +1039,15 @@
         // For losses: pnl = -RISK_PER_TRADE (-$250)
         // For wins: pnl = RR × RISK_PER_TRADE (e.g., 5.38 RR = +$1,345)
         // For breakevens: pnl = 0
+        // Image URL base - images stored in github.com/cuzohh/pablo/images/
+        const IMAGE_BASE = 'https://raw.githubusercontent.com/cuzohh/pablo/main/images/';
+        
+        // Trading data with recaps
+        // Image naming: dec825.png = December 8, 2025
         const tradingData = {
             '2025-12-08': {
+                image: 'dec825.png',
+                notes: 'Pablo took 3 stop losses before catching a 5.38 RR winner. Patience pays off.',
                 trades: [
                     { time: '09:32', type: 'long', result: 'loss', pnl: -250 },
                     { time: '09:45', type: 'long', result: 'loss', pnl: -250 },
@@ -1212,6 +1057,8 @@
             },
             // December 9th - No trades taken
             '2025-12-10': {
+                image: 'dec1025.png',
+                notes: 'Massive day! Pablo caught a 10.08 RR winner and a 5.34 RR winner despite taking 3 losses.',
                 trades: [
                     { time: '09:35', type: 'long', result: 'loss', pnl: -250 },
                     { time: '09:52', type: 'long', result: 'loss', pnl: -250 },
@@ -1545,6 +1392,15 @@
             if (data && data.trades && data.trades.length > 0) {
                 const dayStats = calculateDayStats(data);
                 
+                // Calculate best RR
+                const bestRR = Math.max(...data.trades.filter(t => t.rr).map(t => t.rr), 0);
+                
+                // Calculate loss and win totals
+                const lossTrades = data.trades.filter(t => t.result === 'loss');
+                const winTrades = data.trades.filter(t => t.result === 'win');
+                const lossTotal = lossTrades.reduce((sum, t) => sum + t.pnl, 0);
+                const winTotal = winTrades.reduce((sum, t) => sum + t.pnl, 0);
+                
                 const tradesHtml = data.trades.map(t => `
                     <div class="trade-item">
                         <span class="trade-time">${t.time}</span>
@@ -1553,7 +1409,18 @@
                     </div>
                 `).join('');
                 
+                // Build image HTML if available
+                const imageHtml = data.image 
+                    ? `<img class="modal-image" src="${IMAGE_BASE}${data.image}" alt="Trade Recap">`
+                    : '';
+                
+                // Build notes HTML if available
+                const notesHtml = data.notes 
+                    ? `<div class="modal-notes">📝 ${data.notes}</div>`
+                    : '';
+                
                 content.innerHTML = `
+                    ${imageHtml}
                     <div class="modal-stats">
                         <div class="modal-stat">
                             <div class="modal-stat-value" style="color: ${dayStats.totalPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
@@ -1568,8 +1435,41 @@
                             <div class="modal-stat-label">Win Rate</div>
                         </div>
                     </div>
+                    <div class="modal-breakdown">
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Trades</div>
+                            <div class="modal-breakdown-value">${dayStats.totalTrades}</div>
+                        </div>
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Wins</div>
+                            <div class="modal-breakdown-value" style="color: var(--green)">${dayStats.wins}</div>
+                        </div>
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Losses</div>
+                            <div class="modal-breakdown-value" style="color: var(--red)">${dayStats.losses}</div>
+                        </div>
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">BE</div>
+                            <div class="modal-breakdown-value">${dayStats.breakevens}</div>
+                        </div>
+                        ${bestRR > 0 ? `
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Best RR</div>
+                            <div class="modal-breakdown-value" style="color: var(--green)">+${bestRR.toFixed(2)}</div>
+                        </div>
+                        ` : ''}
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Loss $</div>
+                            <div class="modal-breakdown-value" style="color: var(--red)">${formatPnL(lossTotal)}</div>
+                        </div>
+                        <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Win $</div>
+                            <div class="modal-breakdown-value" style="color: var(--green)">${formatPnL(winTotal)}</div>
+                        </div>
+                    </div>
+                    ${notesHtml}
                     <div class="modal-trades">
-                        <div class="modal-trades-title">Trade Log (${dayStats.totalTrades} trades)</div>
+                        <div class="modal-trades-title">Trade Log</div>
                         ${tradesHtml}
                     </div>
                 `;
