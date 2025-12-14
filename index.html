@@ -675,7 +675,7 @@
 
         .modal-breakdown {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
             gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
@@ -683,24 +683,67 @@
         .modal-breakdown-item {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
-            padding: 0.75rem 0.5rem;
+            padding: 0.6rem 0.4rem;
             border-radius: 10px;
             text-align: center;
+            overflow: hidden;
         }
 
         .modal-breakdown-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             margin-bottom: 0.2rem;
+            white-space: nowrap;
         }
 
         .modal-breakdown-value {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
+
+        .modal-pnl-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-pnl-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-pnl-item.loss {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .modal-pnl-item.win {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .modal-pnl-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .modal-pnl-value {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .modal-pnl-item.loss .modal-pnl-value { color: var(--red); }
+        .modal-pnl-item.win .modal-pnl-value { color: var(--green); }
 
         .modal-notes {
             background: rgba(255, 255, 255, 0.02);
@@ -944,6 +987,8 @@
         <div class="disclaimer">
             ⚠️ <strong>Paper Trading Only:</strong> Pablo is not placing actual trades. This page documents signals Pablo <em>would have</em> taken. 
             No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade, compounding daily.
+            Pablo trades a lower win rate, higher risk-to-reward strategy with tight stop losses. 
+            Pablo may not find a valid entry every day. Trade tracking began <strong>December 8th, 2025</strong>.
         </div>
 
         <!-- Account Stats -->
@@ -1554,13 +1599,15 @@
                             <div class="modal-breakdown-value" style="color: var(--green)">+${bestRR.toFixed(2)}</div>
                         </div>
                         ` : ''}
-                        <div class="modal-breakdown-item">
-                            <div class="modal-breakdown-label">Loss $</div>
-                            <div class="modal-breakdown-value" style="color: var(--red)">${formatPnL(dayStats.lossTotal)}</div>
+                    </div>
+                    <div class="modal-pnl-row">
+                        <div class="modal-pnl-item loss">
+                            <span class="modal-pnl-label">Losses</span>
+                            <span class="modal-pnl-value">${formatPnL(dayStats.lossTotal)}</span>
                         </div>
-                        <div class="modal-breakdown-item">
-                            <div class="modal-breakdown-label">Win $</div>
-                            <div class="modal-breakdown-value" style="color: var(--green)">${formatPnL(dayStats.winTotal)}</div>
+                        <div class="modal-pnl-item win">
+                            <span class="modal-pnl-label">Wins</span>
+                            <span class="modal-pnl-value">${formatPnL(dayStats.winTotal)}</span>
                         </div>
                     </div>
                     ${notesHtml}
