@@ -396,16 +396,17 @@
 
         .recap-stat-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 0.3rem;
+            white-space: nowrap;
         }
 
         .recap-stat-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.05em;
         }
 
         /* Calendar section */
@@ -989,14 +990,14 @@
             No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade, compounding daily.
             Pablo trades a lower win rate, higher risk-to-reward strategy with tight stop losses. 
             Pablo may not find a valid entry every day. Trade tracking began <strong>December 8th, 2025</strong>.
-        </div>
+            </div>
 
         <!-- Account Stats -->
         <section class="account-section">
             <div class="account-card">
                 <div class="stat-value neutral">$100,000</div>
                 <div class="stat-label">Starting Balance</div>
-            </div>
+        </div>
             <div class="account-card">
                 <div class="stat-value positive" id="currentBalance">—</div>
                 <div class="stat-label">Current Balance</div>
@@ -1276,6 +1277,8 @@
             let tradingDays = 0;
             let greenDays = 0;
             let redDays = 0;
+            let totalRR = 0;
+            let winCount = 0;
 
             Object.entries(tradingData).forEach(([dateStr, dayData]) => {
                 const date = new Date(dateStr + 'T12:00:00');
@@ -1290,14 +1293,23 @@
                         totalPnL += dayStats.totalPnL;
                         if (dayStats.totalPnL > 0) greenDays++;
                         else if (dayStats.totalPnL < 0) redDays++;
+                        
+                        // Calculate total RR for averaging
+                        dayData.trades.forEach(t => {
+                            if (t.result === 'win' && t.rr) {
+                                totalRR += t.rr;
+                                winCount++;
+                            }
+                        });
                     }
                 }
             });
 
             const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
             const avgPerTrade = totalTrades > 0 ? Math.round(totalPnL / totalTrades) : 0;
+            const avgRR = winCount > 0 ? (totalRR / winCount).toFixed(2) : 0;
 
-            return { totalTrades, wins, losses, breakevens, totalPnL, winRate, tradingDays, greenDays, redDays, avgPerTrade };
+            return { totalTrades, wins, losses, breakevens, totalPnL, winRate, tradingDays, greenDays, redDays, avgPerTrade, avgRR };
         }
 
         // Animate counting up
@@ -1372,7 +1384,7 @@
             recapStats.innerHTML = `
                 <div class="recap-stat">
                     <div class="recap-stat-value" style="color: ${stats.totalPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
-                        ${stats.totalPnL >= 0 ? '+' : ''}$${stats.totalPnL.toLocaleString()}
+                        ${stats.totalPnL >= 0 ? '+' : '-'}$${Math.abs(Math.round(stats.totalPnL)).toLocaleString()}
                     </div>
                     <div class="recap-stat-label">Month P&L</div>
                 </div>
@@ -1383,8 +1395,12 @@
                     <div class="recap-stat-label">Win Rate</div>
                 </div>
                 <div class="recap-stat">
+                    <div class="recap-stat-value" style="color: var(--green)">${stats.avgRR}</div>
+                    <div class="recap-stat-label">Avg RR</div>
+                </div>
+                <div class="recap-stat">
                     <div class="recap-stat-value" style="color: var(--accent)">${stats.totalTrades}</div>
-                    <div class="recap-stat-label">Total Trades</div>
+                    <div class="recap-stat-label">Trades</div>
                 </div>
                 <div class="recap-stat">
                     <div class="recap-stat-value" style="color: var(--green)">${stats.wins}</div>
@@ -1393,10 +1409,6 @@
                 <div class="recap-stat">
                     <div class="recap-stat-value" style="color: var(--red)">${stats.losses}</div>
                     <div class="recap-stat-label">Losses</div>
-                </div>
-                <div class="recap-stat">
-                    <div class="recap-stat-value" style="color: var(--accent)">${stats.breakevens}</div>
-                    <div class="recap-stat-label">Breakevens</div>
                 </div>
                 <div class="recap-stat">
                     <div class="recap-stat-value" style="color: var(--green)">${stats.greenDays}</div>
