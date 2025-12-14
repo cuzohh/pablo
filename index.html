@@ -875,6 +875,27 @@
         .legend-icon.orange { color: #f97316; }
         .legend-icon.teal { color: #06b6d4; }
 
+        /* Disclaimer */
+        .disclaimer {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            color: #fbbf24;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .disclaimer strong {
+            color: #fcd34d;
+        }
+
+        .disclaimer em {
+            font-style: italic;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 2rem 1rem; }
@@ -918,6 +939,12 @@
                 <a href="#calendar">View Calendar</a>
         </div>
         </section>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            ⚠️ <strong>Paper Trading Only:</strong> Pablo is not placing actual trades. This page documents signals Pablo <em>would have</em> taken. 
+            No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade, compounding daily.
+        </div>
 
         <!-- Account Stats -->
         <section class="account-section">
@@ -1044,15 +1071,17 @@
         
         // Trading data with recaps
         // Image naming: dec825.png = December 8, 2025
+        // Trades only need: time, type, result, rr (for wins)
+        // P&L is calculated dynamically based on compounding 0.25% risk
         const tradingData = {
             '2025-12-08': {
                 image: 'dec825.png',
                 notes: 'Pablo took 3 stop losses before catching a 5.38 RR winner. Patience pays off.',
                 trades: [
-                    { time: '09:32', type: 'long', result: 'loss', pnl: -250 },
-                    { time: '09:45', type: 'long', result: 'loss', pnl: -250 },
-                    { time: '10:02', type: 'long', result: 'loss', pnl: -250 },
-                    { time: '10:15', type: 'long', result: 'win', pnl: 1345, rr: 5.38 }
+                    { time: '09:32', type: 'long', result: 'loss' },
+                    { time: '09:45', type: 'long', result: 'loss' },
+                    { time: '10:02', type: 'long', result: 'loss' },
+                    { time: '10:15', type: 'long', result: 'win', rr: 5.38 }
                 ]
             },
             // December 9th - No trades taken
@@ -1060,15 +1089,56 @@
                 image: 'dec1025.png',
                 notes: 'Massive day! Pablo caught a 10.08 RR winner and a 5.34 RR winner despite taking 3 losses.',
                 trades: [
-                    { time: '09:35', type: 'long', result: 'loss', pnl: -250 },
-                    { time: '09:52', type: 'long', result: 'loss', pnl: -250 },
-                    { time: '10:08', type: 'long', result: 'win', pnl: 2520, rr: 10.08 },
-                    { time: '11:15', type: 'short', result: 'loss', pnl: -250 },
-                    { time: '13:42', type: 'short', result: 'be', pnl: 0 },
-                    { time: '14:55', type: 'short', result: 'win', pnl: 1335, rr: 5.34 }
+                    { time: '09:35', type: 'long', result: 'loss' },
+                    { time: '09:52', type: 'long', result: 'loss' },
+                    { time: '10:08', type: 'long', result: 'win', rr: 10.08 },
+                    { time: '11:15', type: 'short', result: 'loss' },
+                    { time: '13:42', type: 'short', result: 'be' },
+                    { time: '14:55', type: 'short', result: 'win', rr: 5.34 }
+                ]
+            },
+            '2025-12-11': {
+                image: 'dec1125.png',
+                notes: 'Clean day. Pablo waited for the perfect setup and nailed a 10.02 RR winner.',
+                trades: [
+                    { time: '10:22', type: 'long', result: 'win', rr: 10.02 }
                 ]
             }
         };
+        
+        // Calculate running balances and risk for each day (compounding)
+        function calculateDailyBalances() {
+            const sortedDates = Object.keys(tradingData).sort();
+            const balances = {};
+            let runningBalance = STARTING_BALANCE;
+            
+            sortedDates.forEach(dateStr => {
+                const dayRisk = runningBalance * RISK_PERCENT;
+                balances[dateStr] = { 
+                    startBalance: runningBalance, 
+                    risk: dayRisk 
+                };
+                
+                // Calculate day's P&L
+                const dayData = tradingData[dateStr];
+                if (dayData && dayData.trades) {
+                    dayData.trades.forEach(trade => {
+                        if (trade.result === 'loss') {
+                            runningBalance -= dayRisk;
+                        } else if (trade.result === 'win' && trade.rr) {
+                            runningBalance += dayRisk * trade.rr;
+                        }
+                        // breakevens don't change balance
+                    });
+                }
+                
+                balances[dateStr].endBalance = runningBalance;
+            });
+            
+            return balances;
+        }
+        
+        const dailyBalances = calculateDailyBalances();
 
         // Weekend jokes for Pablo
         const weekendJokes = [
@@ -1087,48 +1157,68 @@
             "Bro really tried to trade on a weekend. 💀"
         ];
 
-        // Calculate stats for a day
-        function calculateDayStats(dayData) {
+        // Calculate stats for a day (with compounding risk)
+        function calculateDayStats(dayData, dateStr) {
             if (!dayData || !dayData.trades || dayData.trades.length === 0) return null;
+            
+            const dayBalance = dailyBalances[dateStr] || { risk: STARTING_BALANCE * RISK_PERCENT };
+            const dayRisk = dayBalance.risk;
             
             let wins = 0;
             let losses = 0;
             let breakevens = 0;
             let totalPnL = 0;
+            let lossTotal = 0;
+            let winTotal = 0;
 
             dayData.trades.forEach(trade => {
-                totalPnL += trade.pnl;
-                if (trade.result === 'win') wins++;
-                else if (trade.result === 'loss') losses++;
-                else breakevens++;
+                if (trade.result === 'win') {
+                    wins++;
+                    const pnl = dayRisk * (trade.rr || 1);
+                    winTotal += pnl;
+                    totalPnL += pnl;
+                } else if (trade.result === 'loss') {
+                    losses++;
+                    lossTotal -= dayRisk;
+                    totalPnL -= dayRisk;
+                } else {
+                    breakevens++;
+                }
             });
 
             const totalTrades = dayData.trades.length;
             const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
 
-            return { wins, losses, breakevens, totalPnL, totalTrades, winRate };
+            return { wins, losses, breakevens, totalPnL, totalTrades, winRate, dayRisk, lossTotal, winTotal };
         }
 
-        // Calculate overall stats from all trading data
+        // Calculate overall stats from all trading data (with compounding)
         function calculateOverallStats() {
             let totalTrades = 0;
             let wins = 0;
             let totalPnL = 0;
+            
+            const sortedDates = Object.keys(tradingData).sort();
+            const lastDate = sortedDates[sortedDates.length - 1];
+            const currentBalance = lastDate && dailyBalances[lastDate] 
+                ? dailyBalances[lastDate].endBalance 
+                : STARTING_BALANCE;
+            
+            totalPnL = currentBalance - STARTING_BALANCE;
 
             Object.values(tradingData).forEach(day => {
                 if (day.trades) {
                     day.trades.forEach(trade => {
                         totalTrades++;
                         if (trade.result === 'win') wins++;
-                        totalPnL += trade.pnl;
                     });
                 }
             });
 
             const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
-            const currentBalance = STARTING_BALANCE + totalPnL;
+            const currentRisk = currentBalance * RISK_PERCENT;
             
-            return { winRate, totalTrades, totalPnL, currentBalance };
+            return { winRate, totalTrades, totalPnL, currentBalance, currentRisk };
         }
 
         // Calculate monthly stats
@@ -1145,7 +1235,7 @@
             Object.entries(tradingData).forEach(([dateStr, dayData]) => {
                 const date = new Date(dateStr + 'T12:00:00');
                 if (date.getFullYear() === year && date.getMonth() === month && dayData.trades) {
-                    const dayStats = calculateDayStats(dayData);
+                    const dayStats = calculateDayStats(dayData, dateStr);
                     if (dayStats) {
                         tradingDays++;
                         totalTrades += dayStats.totalTrades;
@@ -1334,7 +1424,7 @@
                 } else {
                     // Check if has data
                     if (tradingData[dateStr]) {
-                        const dayStats = calculateDayStats(tradingData[dateStr]);
+                        const dayStats = calculateDayStats(tradingData[dateStr], dateStr);
                         if (dayStats) {
                             dayEl.classList.add('has-data');
                             dayEl.classList.add(dayStats.totalPnL > 0 ? 'positive' : dayStats.totalPnL < 0 ? 'negative' : 'neutral');
@@ -1390,24 +1480,26 @@
             const data = tradingData[dateStr];
             
             if (data && data.trades && data.trades.length > 0) {
-                const dayStats = calculateDayStats(data);
+                const dayStats = calculateDayStats(data, dateStr);
+                const dayRisk = dayStats.dayRisk;
                 
                 // Calculate best RR
                 const bestRR = Math.max(...data.trades.filter(t => t.rr).map(t => t.rr), 0);
                 
-                // Calculate loss and win totals
-                const lossTrades = data.trades.filter(t => t.result === 'loss');
-                const winTrades = data.trades.filter(t => t.result === 'win');
-                const lossTotal = lossTrades.reduce((sum, t) => sum + t.pnl, 0);
-                const winTotal = winTrades.reduce((sum, t) => sum + t.pnl, 0);
-                
-                const tradesHtml = data.trades.map(t => `
-                    <div class="trade-item">
-                        <span class="trade-time">${t.time}</span>
-                        <span class="trade-type ${t.type}">${t.type.toUpperCase()}</span>
-                        <span class="trade-result ${t.result}">${formatPnL(t.pnl)}</span>
-                    </div>
-                `).join('');
+                // Calculate P&L for each trade
+                const tradesHtml = data.trades.map(t => {
+                    let pnl = 0;
+                    if (t.result === 'loss') pnl = -dayRisk;
+                    else if (t.result === 'win' && t.rr) pnl = dayRisk * t.rr;
+                    
+                    return `
+                        <div class="trade-item">
+                            <span class="trade-time">${t.time}</span>
+                            <span class="trade-type ${t.type}">${t.type.toUpperCase()}</span>
+                            <span class="trade-result ${t.result}">${formatPnL(pnl)}</span>
+                        </div>
+                    `;
+                }).join('');
                 
                 // Build image HTML if available
                 const imageHtml = data.image 
@@ -1437,6 +1529,10 @@
                     </div>
                     <div class="modal-breakdown">
                         <div class="modal-breakdown-item">
+                            <div class="modal-breakdown-label">Risk/Trade</div>
+                            <div class="modal-breakdown-value">$${Math.round(dayRisk).toLocaleString()}</div>
+                        </div>
+                        <div class="modal-breakdown-item">
                             <div class="modal-breakdown-label">Trades</div>
                             <div class="modal-breakdown-value">${dayStats.totalTrades}</div>
                         </div>
@@ -1460,11 +1556,11 @@
                         ` : ''}
                         <div class="modal-breakdown-item">
                             <div class="modal-breakdown-label">Loss $</div>
-                            <div class="modal-breakdown-value" style="color: var(--red)">${formatPnL(lossTotal)}</div>
+                            <div class="modal-breakdown-value" style="color: var(--red)">${formatPnL(dayStats.lossTotal)}</div>
                         </div>
                         <div class="modal-breakdown-item">
                             <div class="modal-breakdown-label">Win $</div>
-                            <div class="modal-breakdown-value" style="color: var(--green)">${formatPnL(winTotal)}</div>
+                            <div class="modal-breakdown-value" style="color: var(--green)">${formatPnL(dayStats.winTotal)}</div>
                         </div>
                     </div>
                     ${notesHtml}
