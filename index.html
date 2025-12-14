@@ -755,6 +755,179 @@
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
 
+        /* Account Section */
+        .account-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.65s both;
+        }
+
+        .account-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .account-card .stat-value {
+            font-size: 1.5rem;
+        }
+
+        .account-card .stat-label {
+            font-size: 0.75rem;
+        }
+
+        /* Signal Legend */
+        .legend {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.7s both;
+        }
+
+        .legend h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .legend-icon {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .legend-icon.green { color: var(--green); }
+        .legend-icon.orange { color: #f97316; }
+        .legend-icon.teal { color: #06b6d4; }
+
+        /* Daily Recap Section */
+        .daily-recaps {
+            margin-top: 3rem;
+            animation: fadeInUp 1s ease-out 1.1s both;
+        }
+
+        .daily-recaps h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recap-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .recap-card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .recap-date {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .recap-pnl {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .recap-pnl.positive { color: var(--green); }
+        .recap-pnl.negative { color: var(--red); }
+
+        .recap-body {
+            padding: 1.5rem;
+        }
+
+        .recap-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .recap-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .breakdown-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .breakdown-value.positive { color: var(--green); }
+        .breakdown-value.negative { color: var(--red); }
+
+        .recap-notes {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+        }
+
+        .recap-notes strong {
+            color: var(--green);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 2rem 1rem; }
@@ -764,6 +937,8 @@
             .calendar { padding: 1rem; }
             .calendar-day { font-size: 0.8rem; }
             .recap-stats { grid-template-columns: repeat(2, 1fr); }
+            .legend-grid { grid-template-columns: 1fr; }
+            .account-card .stat-value { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -797,6 +972,27 @@
             </div>
         </section>
 
+        <!-- Account Stats -->
+        <section class="account-section">
+            <div class="account-card">
+                <div class="stat-value neutral">$100,000</div>
+                <div class="stat-label">Starting Balance</div>
+            </div>
+            <div class="account-card">
+                <div class="stat-value positive" id="currentBalance">—</div>
+                <div class="stat-label">Current Balance</div>
+            </div>
+            <div class="account-card">
+                <div class="stat-value neutral">$250</div>
+                <div class="stat-label">Risk Per Trade</div>
+            </div>
+            <div class="account-card">
+                <div class="stat-value neutral">0.25%</div>
+                <div class="stat-label">Risk %</div>
+            </div>
+        </section>
+
+        <!-- Main Stats -->
         <section class="stats">
             <div class="stat-card">
                 <div class="stat-value positive" id="winRate">—</div>
@@ -811,6 +1007,33 @@
                 <div class="stat-label">Total P&L</div>
             </div>
         </section>
+
+        <!-- Signal Legend -->
+        <div class="legend">
+            <h3>📍 Signal Legend</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <span class="legend-icon green">▲</span>
+                    <span>Green Arrow — Pablo entered</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon orange">✕</span>
+                    <span>Orange X — Stop loss hit</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon teal">■</span>
+                    <span>Teal Box — Moved SL to breakeven</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon teal">✕</span>
+                    <span>Teal X — Hit breakeven</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon green">◆</span>
+                    <span>Green Diamond — Took profit</span>
+                </div>
+            </div>
+        </div>
 
         <section class="calendar-section" id="calendar">
             <div class="section-header">
@@ -846,6 +1069,53 @@
                 <div class="calendar-grid" id="calendarGrid"></div>
             </div>
         </section>
+
+        <!-- Daily Recaps -->
+        <section class="daily-recaps">
+            <h2><span>📈</span> Daily Recaps</h2>
+
+            <div class="recap-card">
+                <div class="recap-card-header">
+                    <span class="recap-date">December 8th, 2025</span>
+                    <span class="recap-pnl positive">+$595</span>
+                </div>
+                <div class="recap-body">
+                    <img class="recap-image" src="https://private-user-images.githubusercontent.com/93789257/526258654-f3d4472b-7fbe-425f-b7ce-5d8f43cfabdb.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjU2OTY0MTYsIm5iZiI6MTc2NTY5NjExNiwicGF0aCI6Ii85Mzc4OTI1Ny81MjYyNTg2NTQtZjNkNDQ3MmItN2ZiZS00MjVmLWI3Y2UtNWQ4ZjQzY2ZhYmRiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEyMTQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMjE0VDA3MDgzNlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWZjNmU3ODg3M2M4YzZjY2I4ODYwNzZlNmQzM2FkMDM4ZjQ2ZmRmYzY3ODAzYjNjMjVlNjFhMzgxYWI5NDg3NzYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.xq7KzASXOmusMlPQCcL_ZhBexUL0vAU_fHCEGUOONLU" alt="December 8th, 2025 Trade Recap">
+                    
+                    <div class="recap-breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trades</div>
+                            <div class="breakdown-value">4</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Wins</div>
+                            <div class="breakdown-value positive">1</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Losses</div>
+                            <div class="breakdown-value negative">3</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Best Trade</div>
+                            <div class="breakdown-value positive">+5.38 RR</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Loss Total</div>
+                            <div class="breakdown-value negative">-$750</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Win Total</div>
+                            <div class="breakdown-value positive">+$1,345</div>
+                        </div>
+                    </div>
+
+                    <p class="recap-notes">
+                        Pablo took 3 stop losses before catching a 5.38 RR winner. Patience pays off. 
+                        Account balance after today: <strong>$100,595</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
     </div>
 
     <footer>
@@ -864,37 +1134,21 @@
     </div>
 
     <script>
-        // Sample trading data (replace with real data)
-        // P&L values should be numbers, they'll be formatted automatically
+        // Configuration
+        const STARTING_BALANCE = 100000;
+        const RISK_PER_TRADE = 250; // $250 or 0.25% of $100k
+
+        // Trading data - P&L calculated from RR (risk-reward ratio)
+        // For losses: pnl = -RISK_PER_TRADE (-$250)
+        // For wins: pnl = RR × RISK_PER_TRADE (e.g., 5.38 RR = +$1,345)
+        // For breakevens: pnl = 0
         const tradingData = {
-            '2024-12-09': {
+            '2025-12-08': {
                 trades: [
-                    { time: '09:35', type: 'short', result: 'win', pnl: 156 },
-                    { time: '10:52', type: 'long', result: 'be', pnl: 2 },
-                    { time: '13:55', type: 'short', result: 'win', pnl: 89 }
-                ]
-            },
-            '2024-12-10': {
-                trades: [
-                    { time: '09:32', type: 'long', result: 'loss', pnl: -45 },
-                    { time: '11:02', type: 'short', result: 'win', pnl: 203 }
-                ]
-            },
-            '2024-12-11': {
-                trades: [
-                    { time: '09:38', type: 'short', result: 'win', pnl: 178 },
-                    { time: '14:53', type: 'long', result: 'win', pnl: 92 }
-                ]
-            },
-            '2024-12-12': {
-                trades: [
-                    { time: '10:55', type: 'long', result: 'loss', pnl: -67 },
-                    { time: '12:52', type: 'short', result: 'loss', pnl: -54 }
-                ]
-            },
-            '2024-12-13': {
-                trades: [
-                    { time: '09:31', type: 'short', result: 'win', pnl: 312 }
+                    { time: '09:32', type: 'short', result: 'loss', pnl: -250 },
+                    { time: '09:45', type: 'short', result: 'loss', pnl: -250 },
+                    { time: '10:02', type: 'short', result: 'loss', pnl: -250 },
+                    { time: '10:15', type: 'short', result: 'win', pnl: 1345, rr: 5.38 }
                 ]
             }
         };
@@ -955,8 +1209,9 @@
             });
 
             const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
+            const currentBalance = STARTING_BALANCE + totalPnL;
             
-            return { winRate, totalTrades, totalPnL };
+            return { winRate, totalTrades, totalPnL, currentBalance };
         }
 
         // Calculate monthly stats
@@ -1030,6 +1285,27 @@
             animateValue('winRate', 0, stats.winRate, '%', stats.winRate >= 50 ? 'positive' : 'negative');
             animateValue('totalTrades', 0, stats.totalTrades, '', 'neutral');
             animateValue('totalPnL', 0, stats.totalPnL, '', stats.totalPnL >= 0 ? 'positive' : 'negative', true);
+            
+            // Update current balance
+            const balanceEl = document.getElementById('currentBalance');
+            if (balanceEl) {
+                const duration = 1500;
+                const startTime = performance.now();
+                const startVal = STARTING_BALANCE;
+                const endVal = stats.currentBalance;
+                
+                balanceEl.className = 'stat-value ' + (endVal >= STARTING_BALANCE ? 'positive' : 'negative');
+                
+                function updateBalance(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeProgress = 1 - Math.pow(1 - progress, 4);
+                    const current = Math.round(startVal + (endVal - startVal) * easeProgress);
+                    balanceEl.textContent = '$' + current.toLocaleString();
+                    if (progress < 1) requestAnimationFrame(updateBalance);
+                }
+                requestAnimationFrame(updateBalance);
+            }
         }
 
         // Update monthly recap display
