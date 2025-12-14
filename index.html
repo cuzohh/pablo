@@ -409,6 +409,36 @@
             letter-spacing: 0.05em;
         }
 
+        .days-bar-container {
+            padding: 1rem !important;
+        }
+
+        .days-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.6rem;
+        }
+
+        .days-bar {
+            display: flex;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .days-bar-green {
+            background: var(--green);
+            transition: width 0.5s ease;
+        }
+
+        .days-bar-red {
+            background: var(--red);
+            transition: width 0.5s ease;
+        }
+
         /* Calendar section */
         .calendar-section {
             margin: 5rem 0;
@@ -772,13 +802,13 @@
 
         .trade-item {
             display: grid;
-            grid-template-columns: 60px 60px 1fr;
+            grid-template-columns: 55px 55px 55px 1fr;
             align-items: center;
-            gap: 1rem;
-            padding: 0.8rem 0;
+            gap: 0.5rem;
+            padding: 0.6rem 0;
             border-bottom: 1px solid var(--border);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .trade-item:last-child { border-bottom: none; }
@@ -787,7 +817,8 @@
         .trade-type { font-weight: 600; text-align: center; }
         .trade-type.long { color: var(--green); }
         .trade-type.short { color: var(--red); }
-        .trade-result { text-align: right; }
+        .trade-risk { color: var(--text-dim); text-align: center; font-size: 0.75rem; }
+        .trade-result { text-align: right; font-weight: 600; }
         .trade-result.win { color: var(--green); }
         .trade-result.loss { color: var(--red); }
         .trade-result.be { color: var(--accent); }
@@ -1149,36 +1180,56 @@
                 trades: [
                     { time: '10:22', type: 'long', result: 'win', rr: 10.02 }
                 ]
+            },
+            '2025-12-12': {
+                image: 'dec1225.png',
+                notes: 'Rough day. Pablo took 3 stop losses and 2 breakevens. No winners today.',
+                trades: [
+                    { time: '09:35', type: 'long', result: 'be' },
+                    { time: '10:02', type: 'long', result: 'loss' },
+                    { time: '10:48', type: 'long', result: 'loss' },
+                    { time: '11:15', type: 'long', result: 'be' },
+                    { time: '13:22', type: 'long', result: 'loss' }
+                ]
             }
         };
         
-        // Calculate running balances and risk for each day (compounding)
+        // Calculate running balances with INTRADAY compounding
+        // Risk is recalculated after each trade based on current balance
         function calculateDailyBalances() {
             const sortedDates = Object.keys(tradingData).sort();
             const balances = {};
             let runningBalance = STARTING_BALANCE;
             
             sortedDates.forEach(dateStr => {
-                const dayRisk = runningBalance * RISK_PERCENT;
-                balances[dateStr] = { 
-                    startBalance: runningBalance, 
-                    risk: dayRisk 
-                };
+                const startBalance = runningBalance;
+                const tradeDetails = []; // Store each trade's risk and P&L
                 
-                // Calculate day's P&L
+                // Calculate each trade with intraday compounding
                 const dayData = tradingData[dateStr];
                 if (dayData && dayData.trades) {
                     dayData.trades.forEach(trade => {
+                        const tradeRisk = runningBalance * RISK_PERCENT;
+                        let tradePnL = 0;
+                        
                         if (trade.result === 'loss') {
-                            runningBalance -= dayRisk;
+                            tradePnL = -tradeRisk;
+                            runningBalance -= tradeRisk;
                         } else if (trade.result === 'win' && trade.rr) {
-                            runningBalance += dayRisk * trade.rr;
+                            tradePnL = tradeRisk * trade.rr;
+                            runningBalance += tradePnL;
                         }
                         // breakevens don't change balance
+                        
+                        tradeDetails.push({ risk: tradeRisk, pnl: tradePnL });
                     });
                 }
                 
-                balances[dateStr].endBalance = runningBalance;
+                balances[dateStr] = { 
+                    startBalance: startBalance,
+                    endBalance: runningBalance,
+                    trades: tradeDetails
+                };
             });
             
             return balances;
@@ -1203,12 +1254,12 @@
             "Bro really tried to trade on a weekend. 💀"
         ];
 
-        // Calculate stats for a day (with compounding risk)
+        // Calculate stats for a day (with INTRADAY compounding)
         function calculateDayStats(dayData, dateStr) {
             if (!dayData || !dayData.trades || dayData.trades.length === 0) return null;
             
-            const dayBalance = dailyBalances[dateStr] || { risk: STARTING_BALANCE * RISK_PERCENT };
-            const dayRisk = dayBalance.risk;
+            const dayBalance = dailyBalances[dateStr] || { startBalance: STARTING_BALANCE, trades: [] };
+            const tradeDetails = dayBalance.trades || [];
             
             let wins = 0;
             let losses = 0;
@@ -1217,16 +1268,17 @@
             let lossTotal = 0;
             let winTotal = 0;
 
-            dayData.trades.forEach(trade => {
+            dayData.trades.forEach((trade, i) => {
+                const detail = tradeDetails[i] || { risk: STARTING_BALANCE * RISK_PERCENT, pnl: 0 };
+                
                 if (trade.result === 'win') {
                     wins++;
-                    const pnl = dayRisk * (trade.rr || 1);
-                    winTotal += pnl;
-                    totalPnL += pnl;
+                    winTotal += detail.pnl;
+                    totalPnL += detail.pnl;
                 } else if (trade.result === 'loss') {
                     losses++;
-                    lossTotal -= dayRisk;
-                    totalPnL -= dayRisk;
+                    lossTotal += detail.pnl;
+                    totalPnL += detail.pnl;
                 } else {
                     breakevens++;
                 }
@@ -1234,8 +1286,11 @@
 
             const totalTrades = dayData.trades.length;
             const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
+            
+            // Use starting risk for display (first trade's risk)
+            const displayRisk = tradeDetails.length > 0 ? tradeDetails[0].risk : STARTING_BALANCE * RISK_PERCENT;
 
-            return { wins, losses, breakevens, totalPnL, totalTrades, winRate, dayRisk, lossTotal, winTotal };
+            return { wins, losses, breakevens, totalPnL, totalTrades, winRate, dayRisk: displayRisk, lossTotal, winTotal, tradeDetails };
         }
 
         // Calculate overall stats from all trading data (with compounding)
@@ -1410,15 +1465,27 @@
                     <div class="recap-stat-value" style="color: var(--red)">${stats.losses}</div>
                     <div class="recap-stat-label">Losses</div>
                 </div>
-                <div class="recap-stat">
-                    <div class="recap-stat-value" style="color: var(--green)">${stats.greenDays}</div>
-                    <div class="recap-stat-label">Green Days</div>
-                </div>
-                <div class="recap-stat">
-                    <div class="recap-stat-value" style="color: var(--red)">${stats.redDays}</div>
-                    <div class="recap-stat-label">Red Days</div>
-                </div>
             `;
+            
+            // Add the days bar if there are trading days
+            if (stats.tradingDays > 0) {
+                const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
+                const redPercent = (stats.redDays / stats.tradingDays) * 100;
+                
+                recapStats.innerHTML += `
+                    <div class="recap-stat days-bar-container" style="grid-column: span 2;">
+                        <div class="days-bar-header">
+                            <span style="color: var(--green)">${stats.greenDays} Green</span>
+                            <span style="color: var(--text-dim)">${stats.tradingDays} Days</span>
+                            <span style="color: var(--red)">${stats.redDays} Red</span>
+                        </div>
+                        <div class="days-bar">
+                            <div class="days-bar-green" style="width: ${greenPercent}%"></div>
+                            <div class="days-bar-red" style="width: ${redPercent}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // Format currency for display
@@ -1543,16 +1610,18 @@
                 // Calculate best RR
                 const bestRR = Math.max(...data.trades.filter(t => t.rr).map(t => t.rr), 0);
                 
-                // Calculate P&L for each trade
-                const tradesHtml = data.trades.map(t => {
-                    let pnl = 0;
-                    if (t.result === 'loss') pnl = -dayRisk;
-                    else if (t.result === 'win' && t.rr) pnl = dayRisk * t.rr;
+                // Build trade log with actual intraday P&L
+                const tradeDetails = dayStats.tradeDetails || [];
+                const tradesHtml = data.trades.map((t, i) => {
+                    const detail = tradeDetails[i] || { pnl: 0, risk: dayRisk };
+                    const pnl = detail.pnl;
+                    const risk = detail.risk;
                     
                     return `
                         <div class="trade-item">
                             <span class="trade-time">${t.time}</span>
                             <span class="trade-type ${t.type}">${t.type.toUpperCase()}</span>
+                            <span class="trade-risk">$${Math.round(risk)}</span>
                             <span class="trade-result ${t.result}">${formatPnL(pnl)}</span>
                         </div>
                     `;
@@ -1586,7 +1655,7 @@
                     </div>
                     <div class="modal-breakdown">
                         <div class="modal-breakdown-item">
-                            <div class="modal-breakdown-label">Risk/Trade</div>
+                            <div class="modal-breakdown-label">Start Risk</div>
                             <div class="modal-breakdown-value">$${Math.round(dayRisk).toLocaleString()}</div>
                         </div>
                         <div class="modal-breakdown-item">
