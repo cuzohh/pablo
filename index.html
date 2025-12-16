@@ -189,8 +189,6 @@
             margin-bottom: 1.5rem;
             font-weight: 400;
             animation: fadeInUp 1s ease-out 0.2s both;
-            line-height: 1.5;
-            padding-bottom: 0.2em;
         }
 
         .trust {
@@ -200,8 +198,6 @@
             margin-bottom: 2.5rem;
             animation: fadeInUp 1s ease-out 0.3s both;
             text-shadow: 0 0 40px var(--accent-glow);
-            line-height: 1.3;
-            padding-bottom: 0.2em;
         }
 
         .status {
@@ -325,8 +321,6 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            line-height: 1.2;
-            padding-bottom: 0.1em;
         }
 
         .stat-value.positive { color: var(--green); }
@@ -338,8 +332,6 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            line-height: 1.4;
-            padding-top: 0.1em;
         }
 
         /* Monthly Recap Section */
@@ -368,8 +360,6 @@
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            line-height: 1.4;
-            padding-bottom: 0.2em;
         }
 
         .recap-title span {
@@ -396,10 +386,9 @@
         .recap-stat {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
-            padding: 1.2rem 1.2rem 1.4rem;
+            padding: 1.2rem;
             text-align: center;
             transition: all 0.3s ease;
-            overflow: visible;
         }
 
         .recap-stat:hover {
@@ -413,8 +402,6 @@
             font-weight: 700;
             margin-bottom: 0.3rem;
             white-space: nowrap;
-            line-height: 1.3;
-            padding-bottom: 0.1em;
         }
 
         .recap-stat-label {
@@ -422,8 +409,6 @@
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            line-height: 1.4;
-            padding-top: 0.1em;
         }
 
         .days-bar-container {
@@ -439,8 +424,6 @@
             font-family: 'JetBrains Mono', monospace;
             margin-bottom: 0.75rem;
             font-weight: 600;
-            line-height: 1.5;
-            padding-bottom: 0.2em;
         }
 
         .days-bar {
@@ -483,8 +466,6 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            line-height: 1.3;
-            padding-bottom: 0.2em;
         }
 
         .section-title span {
@@ -674,8 +655,6 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 1.3rem;
             color: var(--accent);
-            line-height: 1.4;
-            padding-bottom: 0.2em;
         }
 
         .modal-close {
@@ -715,8 +694,6 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.3rem;
-            line-height: 1.3;
-            padding-bottom: 0.1em;
         }
 
         .modal-stat-label {
@@ -724,8 +701,6 @@
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            line-height: 1.4;
-            padding-top: 0.1em;
         }
 
         .modal-image {
@@ -748,6 +723,7 @@
             padding: 0.6rem 0.4rem;
             border-radius: 10px;
             text-align: center;
+            overflow: hidden;
         }
 
         .modal-breakdown-label {
@@ -757,8 +733,6 @@
             letter-spacing: 0.02em;
             margin-bottom: 0.2rem;
             white-space: nowrap;
-            line-height: 1.4;
-            padding-top: 0.1em;
         }
 
         .modal-breakdown-value {
@@ -766,8 +740,6 @@
             font-weight: 600;
             font-size: 0.85rem;
             white-space: nowrap;
-            line-height: 1.3;
-            padding-bottom: 0.1em;
         }
 
         .modal-pnl-row {
@@ -1189,10 +1161,10 @@
                 image: 'dec825.png',
                 notes: 'Pablo took 3 stop losses before catching a 5.38 RR winner. Patience pays off.',
                 trades: [
-                    { time: '09:32', type: 'long', result: 'loss' },
-                    { time: '09:45', type: 'long', result: 'loss' },
-                    { time: '10:02', type: 'long', result: 'loss' },
-                    { time: '10:15', type: 'long', result: 'win', rr: 5.38 }
+                    { time: '12:00', type: 'long', result: 'loss' },
+                    { time: '01:53', type: 'long', result: 'loss' },
+                    { time: '02:56', type: 'long', result: 'loss' },
+                    { time: '03:15', type: 'long', result: 'win', rr: 5.38 }
                 ]
             },
             // December 9th - No trades taken
@@ -1200,30 +1172,30 @@
                 image: 'dec1025.png',
                 notes: 'Massive day! Pablo caught a 10.08 RR winner and a 5.34 RR winner despite taking 3 losses.',
                 trades: [
-                    { time: '09:35', type: 'long', result: 'loss' },
-                    { time: '09:52', type: 'long', result: 'loss' },
-                    { time: '10:08', type: 'long', result: 'win', rr: 10.08 },
-                    { time: '11:15', type: 'short', result: 'loss' },
-                    { time: '13:42', type: 'short', result: 'be' },
-                    { time: '14:55', type: 'short', result: 'win', rr: 5.34 }
+                    { time: '10:55', type: 'long', result: 'loss' },
+                    { time: '11:00', type: 'long', result: 'loss' },
+                    { time: '11:06', type: 'long', result: 'win', rr: 10.08 },
+                    { time: '03:04', type: 'short', result: 'loss' },
+                    { time: '03:15', type: 'short', result: 'be' },
+                    { time: '03:34', type: 'short', result: 'win', rr: 5.34 }
                 ]
             },
             '2025-12-11': {
                 image: 'dec1125.png',
                 notes: 'Clean day. Pablo waited for the perfect setup and nailed a 10.02 RR winner.',
                 trades: [
-                    { time: '10:22', type: 'long', result: 'win', rr: 10.02 }
+                    { time: '09:56', type: 'long', result: 'win', rr: 10.02 }
                 ]
             },
             '2025-12-12': {
                 image: 'dec1225.png',
                 notes: 'Rough day. Pablo took 3 stop losses and 2 breakevens. No winners today.',
                 trades: [
-                    { time: '09:35', type: 'long', result: 'be' },
-                    { time: '10:02', type: 'long', result: 'loss' },
-                    { time: '10:48', type: 'long', result: 'loss' },
-                    { time: '11:15', type: 'long', result: 'be' },
-                    { time: '13:22', type: 'long', result: 'loss' }
+                    { time: '04:54', type: 'long', result: 'be' },
+                    { time: '10:07', type: 'long', result: 'loss' },
+                    { time: '10:54', type: 'long', result: 'loss' },
+                    { time: '01:01', type: 'long', result: 'be' },
+                    { time: '02:06', type: 'long', result: 'loss' }
                 ]
             }
         };
