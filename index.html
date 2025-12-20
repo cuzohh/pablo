@@ -1783,12 +1783,38 @@
                     </div>
                 `;
             } else {
+                // Random messages for days with no trades
+                const noTradeMessages = [
+                    { emoji: '😴', text: 'Maybe Pablo was taking a nap.' },
+                    { emoji: '🎨', text: 'Pablo was busy painting masterpieces instead of trading.' },
+                    { emoji: '🧘', text: 'Pablo was meditating on market conditions. No valid setups found.' },
+                    { emoji: '☕', text: 'Pablo was sipping coffee, waiting for the perfect entry. None came.' },
+                    { emoji: '🔍', text: 'Pablo searched all day but found no valid setups. Patience is key.' },
+                    { emoji: '📚', text: 'Pablo was studying the charts. Sometimes the best trade is no trade.' },
+                    { emoji: '🎯', text: 'Pablo was waiting for the perfect setup. Today wasn\'t the day.' },
+                    { emoji: '🌊', text: 'The market waves weren\'t right. Pablo stayed on the beach.' },
+                    { emoji: '🎲', text: 'Pablo rolled the dice and decided to sit this one out.' },
+                    { emoji: '🔮', text: 'Pablo consulted the crystal ball. It said "wait for tomorrow."' },
+                    { emoji: '🎪', text: 'Pablo was at the circus, watching the market clowns perform.' },
+                    { emoji: '🏖️', text: 'Pablo took a mental health day. Markets can wait.' },
+                    { emoji: '🎸', text: 'Pablo was jamming out. No trades, just vibes.' },
+                    { emoji: '🧪', text: 'Pablo was in the lab, perfecting the algorithm. No live trades today.' },
+                    { emoji: '🎭', text: 'Pablo was performing on stage. Trading can wait for the encore.' },
+                    { emoji: '🌙', text: 'Pablo was stargazing, looking for signals in the cosmos.' },
+                    { emoji: '🎮', text: 'Pablo was grinding in a video game. Markets were too boring.' },
+                    { emoji: '🍕', text: 'Pablo was ordering pizza. Sometimes you just need a break.' },
+                    { emoji: '🎪', text: 'Pablo was at the fair, riding the emotional rollercoaster of patience.' },
+                    { emoji: '🔇', text: 'Pablo muted the market noise. Silence is golden.' }
+                ];
+                
+                const randomMessage = noTradeMessages[Math.floor(Math.random() * noTradeMessages.length)];
+                
                 content.innerHTML = `
                     <div class="no-data">
-                        <span class="no-data-emoji">📊</span>
+                        <span class="no-data-emoji">${randomMessage.emoji}</span>
                         <p>No trades recorded for this day.</p>
                         <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-dim);">
-                            Maybe Pablo was taking a nap. 😴
+                            ${randomMessage.text}
                         </p>
                     </div>
                 `;
