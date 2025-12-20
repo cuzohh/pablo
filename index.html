@@ -1366,6 +1366,8 @@
                     totalPnL += detail.pnl;
                 } else {
                     breakevens++;
+                    // Count breakevens as wins for win rate calculation
+                    wins++;
                 }
             });
 
@@ -1396,7 +1398,8 @@
                 if (day.trades) {
                     day.trades.forEach(trade => {
                         totalTrades++;
-                        if (trade.result === 'win') wins++;
+                        // Count wins and breakevens as wins for win rate
+                        if (trade.result === 'win' || trade.result === 'be') wins++;
                     });
                 }
             });
@@ -1427,6 +1430,7 @@
                     if (dayStats) {
                         tradingDays++;
                         totalTrades += dayStats.totalTrades;
+                        // Wins already includes breakevens from calculateDayStats
                         wins += dayStats.wins;
                         losses += dayStats.losses;
                         breakevens += dayStats.breakevens;
