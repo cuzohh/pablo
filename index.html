@@ -444,31 +444,12 @@
             border-radius: 16px;
             padding: 1.5rem;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .recap-stats > div::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .recap-stats > div:hover::before {
-            left: 100%;
+            transition: all 0.3s ease;
         }
 
         .recap-stats > div:hover {
-            transform: translateY(-6px) scale(1.05);
-            border-color: var(--accent);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 25px var(--accent-glow);
+            transform: translateY(-2px);
+            border-color: var(--border);
         }
 
         .recap-stat {
@@ -630,32 +611,32 @@
         }
 
         .calendar-grid.fade-out {
-            animation: fadeOut 0.3s ease-out forwards;
+            animation: fadeOut 0.5s ease-out forwards;
         }
 
         .calendar-grid.fade-in {
-            animation: fadeIn 0.3s ease-in forwards;
+            animation: fadeIn 0.5s ease-in forwards;
         }
 
         @keyframes fadeOut {
             from {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) scale(1);
             }
             to {
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateX(-40px) scale(0.95);
             }
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateX(20px);
+                transform: translateX(40px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) scale(1);
             }
         }
 
@@ -1008,29 +989,35 @@
             60% { transform: scale(1); }
         }
 
-        /* Theme Toggle Button */
+        /* Theme Toggle Button - Minimalist */
         .theme-toggle {
             position: fixed;
             top: 2rem;
             right: 2rem;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--bg-card);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: transparent;
             border: 1px solid var(--border);
-            color: var(--text);
-            font-size: 1.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 100;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
         }
 
         .theme-icon {
+            position: absolute;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1039,21 +1026,29 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: var(--text-dim);
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            background: var(--accent);
-            border-color: var(--accent);
-            box-shadow: 0 6px 20px var(--accent-glow);
+        .moon-icon {
+            opacity: 1;
+            color: var(--text);
         }
 
-        .theme-toggle:active {
-            transform: scale(0.95);
+        .sun-icon {
+            opacity: 0;
+            color: var(--text-dim);
         }
 
-        :root[data-theme="light"] .theme-toggle {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        :root[data-theme="light"] .moon-icon {
+            opacity: 0;
+            color: var(--text-dim);
+        }
+
+        :root[data-theme="light"] .sun-icon {
+            opacity: 1;
+            color: var(--text);
         }
 
         /* Scrollbar */
@@ -1256,8 +1251,8 @@
     <div class="container">
         <!-- Theme Toggle -->
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-            <span class="theme-icon moon-icon">🌙</span>
-            <span class="theme-icon sun-icon">☀️</span>
+            <span class="theme-icon moon-icon">●</span>
+            <span class="theme-icon sun-icon">○</span>
         </button>
 
         <section class="hero">
@@ -2210,7 +2205,7 @@
             if (grid) {
                 grid.classList.add('fade-out');
                 if (monthLabel) {
-                    monthLabel.style.transition = 'opacity 0.3s ease';
+                    monthLabel.style.transition = 'opacity 0.5s ease';
                     monthLabel.style.opacity = '0';
                 }
                 
@@ -2224,8 +2219,8 @@
                         if (monthLabel) {
                             monthLabel.style.opacity = '1';
                         }
-                    }, 300);
-                }, 300);
+                    }, 500);
+                }, 500);
             } else {
                 callback();
             }
