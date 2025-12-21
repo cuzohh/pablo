@@ -565,8 +565,9 @@
         }
 
         .days-bar-header > span:nth-child(2) {
-            flex: 0 0 auto;
-            width: 3rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
         }
 
@@ -2226,7 +2227,7 @@
                     <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
                         <div class="days-bar-header">
                             <span style="color: var(--green)">${stats.greenDays} Green</span>
-                            <span style="color: var(--text-dim); flex: 0 0 auto; width: 3rem; text-align: center;">${stats.tradingDays} Days</span>
+                            <span style="color: var(--text-dim); position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">${stats.tradingDays} Days</span>
                             <span style="color: var(--red)">${stats.redDays} Red</span>
                         </div>
                         <div class="days-bar">
@@ -2252,6 +2253,10 @@
                 const pabloColor = vsSp500 > 0 ? 'var(--green)' : vsSp500 < 0 ? 'var(--red)' : (monthlyReturn >= 0 ? 'var(--green)' : 'var(--red)');
                 const sp500Color = sp500Return >= 0 ? 'var(--green)' : 'var(--red)';
                 
+                // Determine color classes (green or red) for proper gradient matching
+                const pabloColorClass = vsSp500 > 0 ? 'green' : vsSp500 < 0 ? 'red' : (monthlyReturn >= 0 ? 'green' : 'red');
+                const sp500ColorClass = sp500Return >= 0 ? 'green' : 'red';
+                
                 // Calculate proportional bar widths based on absolute returns
                 // Normalize to show proportional comparison
                 const absPablo = Math.abs(monthlyReturn);
@@ -2271,12 +2276,12 @@
                     <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
                         <div class="days-bar-header">
                             <span style="color: ${pabloColor}; font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
-                            <span style="color: var(--text-dim)">vs</span>
+                            <span style="color: var(--text-dim); position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">vs</span>
                             <span style="color: ${sp500Color}; font-weight: 600;">S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
                         </div>
                         <div class="sp500-comparison-bar">
-                            <div class="sp500-bar-pablo" style="width: ${pabloWidth}%; background: ${pabloColor};"></div>
-                            <div class="sp500-bar-sp500" style="width: ${sp500Width}%; background: ${sp500Color};"></div>
+                            <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%;"></div>
+                            <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%;"></div>
                         </div>
                         ${funnyMessage ? `<div style="margin-top: 0.75rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
                     </div>
