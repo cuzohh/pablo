@@ -1418,8 +1418,12 @@
                 <div class="stat-label">Current Balance</div>
         </div>
             <div class="account-card">
-                <div class="stat-value neutral" id="percentReturn">—</div>
-                <div class="stat-label">Percent Return</div>
+                <div class="stat-value neutral" id="totalPercentReturn">—</div>
+                <div class="stat-label">Total Percent Return</div>
+            </div>
+            <div class="account-card">
+                <div class="stat-value neutral" id="monthlyPercentReturn">—</div>
+                <div class="stat-label">Monthly Percent Return</div>
             </div>
             <div class="account-card">
                 <div class="stat-value neutral">0.25%</div>
@@ -1567,6 +1571,11 @@
         const STARTING_BALANCE = 100000;
         const RISK_PERCENT = 0.0025; // 0.25% risk per trade
         const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT; // $250 at start, scales with balance
+        
+        // S&P 500 monthly returns (year-month format: "YYYY-MM")
+        const sp500MonthlyReturns = {
+            '2025-12': -0.21
+        };
 
         // Trading data - P&L calculated from RR (risk-reward ratio)
         // For losses: pnl = -RISK_PER_TRADE (-$250)
@@ -1897,6 +1906,45 @@
             animateValue('totalTrades', 0, stats.totalTrades, '', 'neutral');
             animateValue('totalPnL', 0, stats.totalPnL, '', stats.totalPnL >= 0 ? 'positive' : 'negative', true);
             
+            // Calculate monthly percent return
+            function getMonthlyStartBalance() {
+                const sortedDates = Object.keys(tradingData).sort();
+                if (sortedDates.length === 0) return STARTING_BALANCE;
+                
+                const lastDate = sortedDates[sortedDates.length - 1];
+                const lastDateObj = new Date(lastDate + 'T12:00:00');
+                const lastYear = lastDateObj.getFullYear();
+                const lastMonth = lastDateObj.getMonth();
+                
+                // Find the first day of the current month
+                const firstDayOfMonth = new Date(lastYear, lastMonth, 1);
+                const firstDayStr = `${lastYear}-${String(lastMonth + 1).padStart(2, '0')}-01`;
+                
+                // Check if we have data for the first day of the month
+                if (dailyBalances[firstDayStr]) {
+                    return dailyBalances[firstDayStr].startBalance;
+                }
+                
+                // If not, find the last day before this month
+                let monthStartBalance = STARTING_BALANCE;
+                for (let i = sortedDates.length - 1; i >= 0; i--) {
+                    const dateStr = sortedDates[i];
+                    const dateObj = new Date(dateStr + 'T12:00:00');
+                    const dateYear = dateObj.getFullYear();
+                    const dateMonth = dateObj.getMonth();
+                    
+                    // If this date is from a previous month, use its end balance
+                    if (dateYear < lastYear || (dateYear === lastYear && dateMonth < lastMonth)) {
+                        if (dailyBalances[dateStr]) {
+                            monthStartBalance = dailyBalances[dateStr].endBalance;
+                        }
+                        break;
+                    }
+                }
+                
+                return monthStartBalance;
+            }
+            
             // Update current balance
             const balanceEl = document.getElementById('currentBalance');
             if (balanceEl) {
@@ -1907,7 +1955,9 @@
                 
                 balanceEl.className = 'stat-value ' + (endVal >= STARTING_BALANCE ? 'positive' : 'negative');
                 
-                const percentEl = document.getElementById('percentReturn');
+                const totalPercentEl = document.getElementById('totalPercentReturn');
+                const monthlyPercentEl = document.getElementById('monthlyPercentReturn');
+                const monthlyStartBalance = getMonthlyStartBalance();
                 
                 function updateBalance(currentTime) {
                     const elapsed = currentTime - startTime;
@@ -1916,22 +1966,54 @@
                     const current = startVal + (endVal - startVal) * easeProgress;
                     balanceEl.textContent = '$' + current.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                     
-                    // Update percent return
-                    if (percentEl) {
-                        const percent = ((current - STARTING_BALANCE) / STARTING_BALANCE) * 100;
-                        percentEl.className = 'stat-value ' + (percent >= 0 ? 'positive' : 'negative');
-                        percentEl.textContent = `${percent >= 0 ? '+' : ''}${percent.toFixed(2)}%`;
+                    // Update total percent return
+                    if (totalPercentEl) {
+                        const totalPercent = ((current - STARTING_BALANCE) / STARTING_BALANCE) * 100;
+                        totalPercentEl.className = 'stat-value ' + (totalPercent >= 0 ? 'positive' : 'negative');
+                        totalPercentEl.textContent = `${totalPercent >= 0 ? '+' : ''}${totalPercent.toFixed(2)}%`;
+                    }
+                    
+                    // Update monthly percent return
+                    if (monthlyPercentEl) {
+                        const monthlyPercent = ((current - monthlyStartBalance) / monthlyStartBalance) * 100;
+                        const sortedDates = Object.keys(tradingData).sort();
+                        const lastDate = sortedDates[sortedDates.length - 1];
+                        let monthlyReturnText = `${monthlyPercent >= 0 ? '+' : ''}${monthlyPercent.toFixed(2)}%`;
+                        
+                        // Add S&P 500 comparison if available
+                        if (lastDate) {
+                            const lastDateObj = new Date(lastDate + 'T12:00:00');
+                            const yearMonth = `${lastDateObj.getFullYear()}-${String(lastDateObj.getMonth() + 1).padStart(2, '0')}`;
+                            const sp500Return = sp500MonthlyReturns[yearMonth];
+                            
+                            if (sp500Return !== undefined) {
+                                const vsSp500 = monthlyPercent - sp500Return;
+                                monthlyReturnText += ` vs S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%`;
+                                monthlyPercentEl.className = 'stat-value ' + (vsSp500 >= 0 ? 'positive' : 'negative');
+                            } else {
+                                monthlyPercentEl.className = 'stat-value ' + (monthlyPercent >= 0 ? 'positive' : 'negative');
+                            }
+                        } else {
+                            monthlyPercentEl.className = 'stat-value ' + (monthlyPercent >= 0 ? 'positive' : 'negative');
+                        }
+                        
+                        monthlyPercentEl.textContent = monthlyReturnText;
                     }
                     
                     if (progress < 1) {
                         requestAnimationFrame(updateBalance);
                     } else {
                         balanceEl.textContent = '$' + endVal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                        // Final percent return
-                        if (percentEl) {
-                            const finalPercent = ((endVal - STARTING_BALANCE) / STARTING_BALANCE) * 100;
-                            percentEl.className = 'stat-value ' + (finalPercent >= 0 ? 'positive' : 'negative');
-                            percentEl.textContent = `${finalPercent >= 0 ? '+' : ''}${finalPercent.toFixed(2)}%`;
+                        // Final percent returns
+                        if (totalPercentEl) {
+                            const finalTotalPercent = ((endVal - STARTING_BALANCE) / STARTING_BALANCE) * 100;
+                            totalPercentEl.className = 'stat-value ' + (finalTotalPercent >= 0 ? 'positive' : 'negative');
+                            totalPercentEl.textContent = `${finalTotalPercent >= 0 ? '+' : ''}${finalTotalPercent.toFixed(2)}%`;
+                        }
+                        if (monthlyPercentEl) {
+                            const finalMonthlyPercent = ((endVal - monthlyStartBalance) / monthlyStartBalance) * 100;
+                            monthlyPercentEl.className = 'stat-value ' + (finalMonthlyPercent >= 0 ? 'positive' : 'negative');
+                            monthlyPercentEl.textContent = `${finalMonthlyPercent >= 0 ? '+' : ''}${finalMonthlyPercent.toFixed(2)}%`;
                         }
                     }
                 }
