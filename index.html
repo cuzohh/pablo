@@ -883,10 +883,34 @@
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
+        /* Modern Scrollbar */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.5);
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
 
         /* Account Section */
         .account-section {
@@ -1161,10 +1185,47 @@
     </div>
 
     <footer>
-        Made with <span>😤</span> spite and stubbornness.
+        Built during <span>🌙</span> countless sleepless nights.
     </footer>
 
-    <!-- Modal -->
+    <!-- Disclaimer Modal -->
+    <div class="modal-overlay" id="disclaimerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-date">⚠️ Disclaimers & Important Information</span>
+                <button class="modal-close" id="disclaimerClose">×</button>
+            </div>
+            <div style="color: var(--text); line-height: 1.8;">
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Paper Trading Only</h3>
+                    <p style="color: var(--text-dim); margin-bottom: 1rem;">
+                        Pablo is not placing actual trades. This page documents signals Pablo <em>would have</em> taken. 
+                        No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade, compounding daily.
+                        Pablo trades a lower win rate, higher risk-to-reward strategy with tight stop losses. 
+                        Pablo may not find a valid entry every day. Trade tracking began <strong>December 8th, 2025</strong>.
+                    </p>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Algorithm Development</h3>
+                    <p style="color: var(--text-dim); margin-bottom: 1rem;">
+                        Past profits/losses may be misrepresented due to active algorithm development and updates. 
+                        The trading strategy is continuously being refined, and significant updates that alter trading behavior are documented in the Updates section.
+                        Historical performance should be viewed with this context in mind.
+                    </p>
+                </div>
+                <div>
+                    <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Breakeven Note</h3>
+                    <p style="color: var(--text-dim);">
+                        Breakevens are actually small wins — Pablo moves the stop loss to be slightly in profit (typically 1 tick above/below entry). 
+                        Therefore, breakevens count as wins in the win rate calculation. However, for P&L tracking purposes, breakevens are treated as $0 (true breakeven) 
+                        because tracking the tiny profits from each breakeven trade is too tedious. This means the actual P&L is slightly higher than displayed.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade Detail Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <div class="modal-header">
@@ -1602,6 +1663,11 @@
             const grid = document.getElementById('calendarGrid');
             const monthLabel = document.getElementById('currentMonth');
             
+            if (!grid || !monthLabel) {
+                console.error('Calendar elements not found');
+                return;
+            }
+            
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
@@ -1841,48 +1907,86 @@
             document.getElementById('modalOverlay').classList.remove('active');
         }
 
-        // Event listeners
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        });
-
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        });
-
-        // Disclaimer modal
-        document.getElementById('disclaimerBtn').addEventListener('click', () => {
-            document.getElementById('disclaimerModal').classList.add('active');
-        });
-
-        document.getElementById('disclaimerClose').addEventListener('click', () => {
-            document.getElementById('disclaimerModal').classList.remove('active');
-        });
-
-        document.getElementById('disclaimerModal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                document.getElementById('disclaimerModal').classList.remove('active');
+        // Event listeners - wait for DOM to be ready
+        function setupEventListeners() {
+            // Month navigation
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
+            if (prevMonthBtn) {
+                prevMonthBtn.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    renderCalendar();
+                });
             }
-        });
-
-        // Trade detail modal
-        document.getElementById('modalClose').addEventListener('click', closeModal);
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-                document.getElementById('disclaimerModal').classList.remove('active');
+            if (nextMonthBtn) {
+                nextMonthBtn.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    renderCalendar();
+                });
             }
-        });
 
-        // Initialize
-        renderCalendar();
-        setTimeout(updateOverallStats, 800);
+            // Disclaimer modal
+            const disclaimerBtn = document.getElementById('disclaimerBtn');
+            const disclaimerClose = document.getElementById('disclaimerClose');
+            const disclaimerModal = document.getElementById('disclaimerModal');
+            
+            if (disclaimerBtn && disclaimerModal) {
+                disclaimerBtn.addEventListener('click', () => {
+                    disclaimerModal.classList.add('active');
+                });
+            }
+            
+            if (disclaimerClose && disclaimerModal) {
+                disclaimerClose.addEventListener('click', () => {
+                    disclaimerModal.classList.remove('active');
+                });
+            }
+            
+            if (disclaimerModal) {
+                disclaimerModal.addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) {
+                        disclaimerModal.classList.remove('active');
+                    }
+                });
+            }
+
+            // Trade detail modal
+            const modalClose = document.getElementById('modalClose');
+            const modalOverlay = document.getElementById('modalOverlay');
+            
+            if (modalClose) {
+                modalClose.addEventListener('click', closeModal);
+            }
+            
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === e.currentTarget) closeModal();
+                });
+            }
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    if (disclaimerModal) {
+                        disclaimerModal.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Initialize - ensure DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setupEventListeners();
+                renderCalendar();
+                setTimeout(updateOverallStats, 800);
+            });
+        } else {
+            setupEventListeners();
+            renderCalendar();
+            setTimeout(updateOverallStats, 800);
+        }
     </script>
 </body>
 </html>
