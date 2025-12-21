@@ -2646,6 +2646,19 @@
             document.getElementById('modalOverlay').classList.remove('active');
         }
 
+        // Initialize monthly recap state from localStorage
+        function initRecapState() {
+            const monthlyRecap = document.getElementById('monthlyRecap');
+            if (monthlyRecap) {
+                const savedState = localStorage.getItem('monthlyRecapCollapsed');
+                if (savedState === 'true') {
+                    monthlyRecap.classList.add('collapsed');
+                } else {
+                    monthlyRecap.classList.remove('collapsed');
+                }
+            }
+        }
+
         // Event listeners - wait for DOM to be ready
         function setupEventListeners() {
             // Monthly recap collapse/expand
@@ -2654,6 +2667,8 @@
             if (recapHeader && monthlyRecap) {
                 recapHeader.addEventListener('click', () => {
                     monthlyRecap.classList.toggle('collapsed');
+                    // Save state to localStorage
+                    localStorage.setItem('monthlyRecapCollapsed', monthlyRecap.classList.contains('collapsed'));
                 });
             }
             
