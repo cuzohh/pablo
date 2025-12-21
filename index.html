@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pablo — Trust the Process</title>
+    <title>pablo</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
     <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -955,6 +955,7 @@
         }
 
         .legend-icon.green { color: var(--green); }
+        .legend-icon.red { color: var(--red); }
         .legend-icon.orange { color: #f97316; }
         .legend-icon.teal { color: #06b6d4; }
 
@@ -977,6 +978,14 @@
 
         .disclaimer em {
             font-style: italic;
+        }
+
+        /* Disclaimer button hover */
+        #disclaimerBtn:hover {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.2);
         }
 
         /* Responsive */
@@ -1023,20 +1032,11 @@
         </div>
         </section>
 
-        <!-- Disclaimer -->
-        <div class="disclaimer">
-            ⚠️ <strong>Paper Trading Only:</strong> Pablo is not placing actual trades. This page documents signals Pablo <em>would have</em> taken. 
-            No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade, compounding daily.
-            Pablo trades a lower win rate, higher risk-to-reward strategy with tight stop losses. 
-            Pablo may not find a valid entry every day. Trade tracking began <strong>December 8th, 2025</strong>.
-            <br><br>
-            <strong>⚠️ Important:</strong> Past profits/losses may be misrepresented due to active algorithm development and updates. 
-            The trading strategy is continuously being refined, and significant updates that alter trading behavior are documented below.
-            Historical performance should be viewed with this context in mind.
-            <br><br>
-            <strong>📊 Breakeven Note:</strong> Breakevens are actually small wins — Pablo moves the stop loss to be slightly in profit (typically 1 tick above/below entry). 
-            Therefore, breakevens count as wins in the win rate calculation. However, for P&L tracking purposes, breakevens are treated as $0 (true breakeven) 
-            because tracking the tiny profits from each breakeven trade is too tedious. This means the actual P&L is slightly higher than displayed.
+        <!-- Disclaimer Button -->
+        <div style="text-align: center; margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.6s both;">
+            <button id="disclaimerBtn" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; font-size: 0.9rem; font-family: 'Syne', sans-serif; transition: all 0.3s ease;">
+                ⚠️ View Disclaimers & Important Information
+            </button>
         </div>
 
         <!-- Updates Section -->
@@ -1099,7 +1099,11 @@
             <div class="legend-grid">
                 <div class="legend-item">
                     <span class="legend-icon green">▲</span>
-                    <span>Green Arrow — Pablo entered</span>
+                    <span>Green Arrow — Long entry</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon red">▼</span>
+                    <span>Red Arrow — Short entry</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-icon orange">✕</span>
@@ -1848,13 +1852,32 @@
             renderCalendar();
         });
 
+        // Disclaimer modal
+        document.getElementById('disclaimerBtn').addEventListener('click', () => {
+            document.getElementById('disclaimerModal').classList.add('active');
+        });
+
+        document.getElementById('disclaimerClose').addEventListener('click', () => {
+            document.getElementById('disclaimerModal').classList.remove('active');
+        });
+
+        document.getElementById('disclaimerModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('disclaimerModal').classList.remove('active');
+            }
+        });
+
+        // Trade detail modal
         document.getElementById('modalClose').addEventListener('click', closeModal);
         document.getElementById('modalOverlay').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeModal();
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Escape') {
+                closeModal();
+                document.getElementById('disclaimerModal').classList.remove('active');
+            }
         });
 
         // Initialize
