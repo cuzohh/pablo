@@ -424,12 +424,42 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 25px var(--accent-glow);
         }
 
+        .recap-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            max-height: 2000px;
+            opacity: 1;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0;
+        }
+
         .monthly-recap.collapsed .recap-stats {
-            display: none;
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+        }
+
+        .recap-toggle-icon {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: rotate(180deg);
+            font-size: 1.2rem;
+            color: var(--text-dim);
         }
 
         .monthly-recap.collapsed .recap-toggle-icon {
             transform: rotate(0deg);
+        }
+
+        .monthly-recap:not(.collapsed) .recap-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .recap-header:hover .recap-toggle-icon {
+            color: var(--accent);
         }
 
         .recap-header {
@@ -439,6 +469,12 @@
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
             gap: 1rem;
+            cursor: pointer;
+            transition: margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .monthly-recap.collapsed .recap-header {
+            margin-bottom: 0;
         }
 
         .recap-title {
@@ -1477,10 +1513,6 @@
                 <div class="stat-label">Total Percent Return</div>
             </div>
             <div class="account-card">
-                <div class="stat-value neutral" id="monthlyPercentReturn">—</div>
-                <div class="stat-label">Monthly Percent Return</div>
-            </div>
-            <div class="account-card">
                 <div class="stat-value neutral">0.25%</div>
                 <div class="stat-label">Risk Per Trade</div>
             </div>
@@ -2063,8 +2095,6 @@
                 balanceEl.className = 'stat-value ' + (endVal >= STARTING_BALANCE ? 'positive' : 'negative');
                 
                 const totalPercentEl = document.getElementById('totalPercentReturn');
-                const monthlyPercentEl = document.getElementById('monthlyPercentReturn');
-                const monthlyStartBalance = getMonthlyStartBalance();
                 
                 function updateBalance(currentTime) {
                     const elapsed = currentTime - startTime;
@@ -2080,13 +2110,6 @@
                         totalPercentEl.textContent = `${totalPercent >= 0 ? '+' : ''}${totalPercent.toFixed(2)}%`;
                     }
                     
-                    // Update monthly percent return
-                    if (monthlyPercentEl) {
-                        const monthlyPercent = ((current - monthlyStartBalance) / monthlyStartBalance) * 100;
-                        monthlyPercentEl.className = 'stat-value ' + (monthlyPercent >= 0 ? 'positive' : 'negative');
-                        monthlyPercentEl.textContent = `${monthlyPercent >= 0 ? '+' : ''}${monthlyPercent.toFixed(2)}%`;
-                    }
-                    
                     if (progress < 1) {
                         requestAnimationFrame(updateBalance);
                     } else {
@@ -2096,11 +2119,6 @@
                             const finalTotalPercent = ((endVal - STARTING_BALANCE) / STARTING_BALANCE) * 100;
                             totalPercentEl.className = 'stat-value ' + (finalTotalPercent >= 0 ? 'positive' : 'negative');
                             totalPercentEl.textContent = `${finalTotalPercent >= 0 ? '+' : ''}${finalTotalPercent.toFixed(2)}%`;
-                        }
-                        if (monthlyPercentEl) {
-                            const finalMonthlyPercent = ((endVal - monthlyStartBalance) / monthlyStartBalance) * 100;
-                            monthlyPercentEl.className = 'stat-value ' + (finalMonthlyPercent >= 0 ? 'positive' : 'negative');
-                            monthlyPercentEl.textContent = `${finalMonthlyPercent >= 0 ? '+' : ''}${finalMonthlyPercent.toFixed(2)}%`;
                         }
                         
                         // Update monthly recap to refresh S&P 500 comparison
