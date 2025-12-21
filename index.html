@@ -224,6 +224,26 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
+        @keyframes slideOutLeft {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-50px); }
+        }
+
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         h1 {
             font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 800;
@@ -684,6 +704,7 @@
             font-size: 1.1rem;
             min-width: 180px;
             text-align: center;
+            display: inline-block;
         }
 
         .calendar {
@@ -2137,7 +2158,20 @@
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                            'July', 'August', 'September', 'October', 'November', 'December'];
             
-            document.getElementById('recapMonth').textContent = `${months[month]} ${year}`;
+            // Don't update recap month text here - it's handled by renderCalendar() with animation
+            // This function is called from other places too, so we'll only update if not currently animating
+            const recapMonthEl = document.getElementById('recapMonth');
+            if (recapMonthEl) {
+                const expectedText = `${months[month]} ${year}`;
+                // Only update if text is different and not currently animating
+                if (recapMonthEl.textContent !== expectedText && 
+                    !recapMonthEl.classList.contains('slide-out-left') && 
+                    !recapMonthEl.classList.contains('slide-out-right') &&
+                    !recapMonthEl.classList.contains('slide-in-left') &&
+                    !recapMonthEl.classList.contains('slide-in-right')) {
+                    recapMonthEl.textContent = expectedText;
+                }
+            }
             
             // Calculate monthly return for this month
             const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`;
@@ -2297,8 +2331,43 @@
 
         // Calendar logic
         let currentDate = new Date();
+        let monthDirection = 'next'; // Track direction for animation
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function animateMonthText(element, direction) {
+            if (!element) return;
+            
+            // Remove any existing animation classes
+            element.classList.remove('slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
+            
+            // Add slide out animation
+            if (direction === 'prev') {
+                element.classList.add('slide-out-right');
+            } else {
+                element.classList.add('slide-out-left');
+            }
+            
+            // After slide out, change text and slide in
+            setTimeout(() => {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                element.textContent = `${months[month]} ${year}`;
+                
+                // Remove slide out, add slide in
+                element.classList.remove('slide-out-left', 'slide-out-right');
+                if (direction === 'prev') {
+                    element.classList.add('slide-in-left');
+                } else {
+                    element.classList.add('slide-in-right');
+                }
+                
+                // Remove animation class after animation completes
+                setTimeout(() => {
+                    element.classList.remove('slide-in-left', 'slide-in-right');
+                }, 300);
+            }, 150);
+        }
 
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
@@ -2312,7 +2381,21 @@
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
-            monthLabel.textContent = `${months[month]} ${year}`;
+            // Animate month text change
+            animateMonthText(monthLabel, monthDirection);
+            
+            // Also update recap month with animation
+            const recapMonthLabel = document.getElementById('recapMonth');
+            if (recapMonthLabel) {
+                animateMonthText(recapMonthLabel, monthDirection);
+                // Update monthly recap stats after animation
+                setTimeout(() => {
+                    updateMonthlyRecap(year, month);
+                }, 300);
+            } else {
+                // If recap month label doesn't exist yet, just update stats
+                updateMonthlyRecap(year, month);
+            }
             
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -2372,9 +2455,6 @@
                 
                 grid.appendChild(dayEl);
             }
-
-            // Update monthly recap
-            updateMonthlyRecap(year, month);
         }
 
         function openModal(dateStr, isWeekend = false) {
@@ -2570,12 +2650,14 @@
             const nextMonthBtn = document.getElementById('nextMonth');
             if (prevMonthBtn) {
                 prevMonthBtn.addEventListener('click', () => {
+                    monthDirection = 'prev';
                     currentDate.setMonth(currentDate.getMonth() - 1);
                     renderCalendar();
                 });
             }
             if (nextMonthBtn) {
                 nextMonthBtn.addEventListener('click', () => {
+                    monthDirection = 'next';
                     currentDate.setMonth(currentDate.getMonth() + 1);
                     renderCalendar();
                 });
@@ -2691,11 +2773,13 @@
         // Initialize - ensure DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
+                initRecapState(); // Initialize recap state after DOM is ready
                 setupEventListeners();
                 renderCalendar();
                 setTimeout(updateOverallStats, 800);
             });
         } else {
+            initRecapState(); // Initialize recap state if DOM is already ready
             setupEventListeners();
             renderCalendar();
             setTimeout(updateOverallStats, 800);
