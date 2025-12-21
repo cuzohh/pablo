@@ -2255,76 +2255,79 @@
                     <div class="recap-stat-value" style="color: var(--red)">${stats.losses}</div>
                     <div class="recap-stat-label">Losses</div>
                 </div>
-            `;
-            
-            // Add the days bar if there are trading days (spans full width at bottom)
-            if (stats.tradingDays > 0) {
-                const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
-                const redPercent = (stats.redDays / stats.tradingDays) * 100;
-                
-                recapStats.innerHTML += `
-                    <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
-                        <div class="days-bar-header">
-                            <span style="color: var(--green)">${stats.greenDays} Green</span>
-                            <span style="color: var(--text-dim); position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">${stats.tradingDays} Days</span>
-                            <span style="color: var(--red)">${stats.redDays} Red</span>
-                        </div>
-                        <div class="days-bar">
-                            <div class="days-bar-green" style="width: ${greenPercent}%"></div>
-                            <div class="days-bar-red" style="width: ${redPercent}%"></div>
-                        </div>
-                    </div>
                 `;
-            }
-            
-            // Add S&P 500 comparison bar if monthly return and S&P 500 data are available
-            if (monthlyReturn !== null && sp500MonthlyReturns[yearMonth] !== undefined) {
-                const sp500Return = sp500MonthlyReturns[yearMonth];
-                const vsSp500 = monthlyReturn - sp500Return;
-                const funnyMessage = vsSp500 > 0 
-                    ? pabloWinningMessages[Math.floor(Math.random() * pabloWinningMessages.length)]
-                    : vsSp500 < 0 
-                    ? pabloLosingMessages[Math.floor(Math.random() * pabloLosingMessages.length)]
-                    : '';
                 
-                // Create visual comparison - show proportional bars based on actual returns
-                // Pablo's color: green if winning vs S&P 500, red if losing
-                const pabloColor = vsSp500 > 0 ? 'var(--green)' : vsSp500 < 0 ? 'var(--red)' : (monthlyReturn >= 0 ? 'var(--green)' : 'var(--red)');
-                const sp500Color = sp500Return >= 0 ? 'var(--green)' : 'var(--red)';
-                
-                // Determine color classes (green or red) for proper gradient matching
-                const pabloColorClass = vsSp500 > 0 ? 'green' : vsSp500 < 0 ? 'red' : (monthlyReturn >= 0 ? 'green' : 'red');
-                const sp500ColorClass = sp500Return >= 0 ? 'green' : 'red';
-                
-                // Calculate proportional bar widths based on absolute returns
-                // Normalize to show proportional comparison
-                const absPablo = Math.abs(monthlyReturn);
-                const absSp500 = Math.abs(sp500Return);
-                const totalAbs = absPablo + absSp500;
-                
-                // If both are zero or very small, show 50/50
-                let pabloWidth = 50;
-                let sp500Width = 50;
-                
-                if (totalAbs > 0.01) {
-                    pabloWidth = (absPablo / totalAbs) * 100;
-                    sp500Width = (absSp500 / totalAbs) * 100;
+                // Add the days bar if there are trading days (spans full width at bottom)
+                if (stats.tradingDays > 0) {
+                    const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
+                    const redPercent = (stats.redDays / stats.tradingDays) * 100;
+                    
+                    recapStats.innerHTML += `
+                        <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
+                            <div class="days-bar-header">
+                                <span style="color: var(--green)">${stats.greenDays} Green</span>
+                                <span style="color: var(--text-dim); position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">${stats.tradingDays} Days</span>
+                                <span style="color: var(--red)">${stats.redDays} Red</span>
+                            </div>
+                            <div class="days-bar">
+                                <div class="days-bar-green" style="width: ${greenPercent}%"></div>
+                                <div class="days-bar-red" style="width: ${redPercent}%"></div>
+                            </div>
+                        </div>
+                    `;
                 }
                 
-                recapStats.innerHTML += `
-                    <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
-                        <div class="days-bar-header">
-                            <span style="color: ${pabloColor}; font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
-                            <span style="color: var(--text-dim); position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">vs</span>
-                            <span style="color: ${sp500Color}; font-weight: 600;">S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
+                // Add S&P 500 comparison bar if monthly return and S&P 500 data are available
+                if (monthlyReturn !== null && sp500MonthlyReturns[yearMonth] !== undefined) {
+                    const sp500Return = sp500MonthlyReturns[yearMonth];
+                    const vsSp500 = monthlyReturn - sp500Return;
+                    const funnyMessage = vsSp500 > 0 
+                        ? pabloWinningMessages[Math.floor(Math.random() * pabloWinningMessages.length)]
+                        : vsSp500 < 0 
+                        ? pabloLosingMessages[Math.floor(Math.random() * pabloLosingMessages.length)]
+                        : '';
+                    
+                    // Create visual comparison - show proportional bars based on actual returns
+                    // Pablo's color: green if winning vs S&P 500, red if losing
+                    const pabloColor = vsSp500 > 0 ? 'var(--green)' : vsSp500 < 0 ? 'var(--red)' : (monthlyReturn >= 0 ? 'var(--green)' : 'var(--red)');
+                    const sp500Color = sp500Return >= 0 ? 'var(--green)' : 'var(--red)';
+                    
+                    // Determine color classes (green or red) for proper gradient matching
+                    const pabloColorClass = vsSp500 > 0 ? 'green' : vsSp500 < 0 ? 'red' : (monthlyReturn >= 0 ? 'green' : 'red');
+                    const sp500ColorClass = sp500Return >= 0 ? 'green' : 'red';
+                    
+                    // Calculate proportional bar widths based on absolute returns
+                    // Normalize to show proportional comparison
+                    const absPablo = Math.abs(monthlyReturn);
+                    const absSp500 = Math.abs(sp500Return);
+                    const totalAbs = absPablo + absSp500;
+                    
+                    // If both are zero or very small, show 50/50
+                    let pabloWidth = 50;
+                    let sp500Width = 50;
+                    
+                    if (totalAbs > 0.01) {
+                        pabloWidth = (absPablo / totalAbs) * 100;
+                        sp500Width = (absSp500 / totalAbs) * 100;
+                    }
+                    
+                    recapStats.innerHTML += `
+                        <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
+                            <div class="days-bar-header">
+                                <span style="color: ${pabloColor}; font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
+                                <span style="color: var(--text-dim); position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">vs</span>
+                                <span style="color: ${sp500Color}; font-weight: 600;">S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
+                            </div>
+                            <div class="sp500-comparison-bar">
+                                <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%;"></div>
+                                <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%;"></div>
+                            </div>
+                            ${funnyMessage ? `<div style="margin-top: 0.75rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
                         </div>
-                        <div class="sp500-comparison-bar">
-                            <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%;"></div>
-                            <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%;"></div>
-                        </div>
-                        ${funnyMessage ? `<div style="margin-top: 0.75rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
-                    </div>
-                `;
+                    `;
+                }
+            } catch (error) {
+                console.error('Error updating monthly recap:', error);
             }
         }
 
