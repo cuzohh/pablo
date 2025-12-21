@@ -2284,6 +2284,12 @@
                 if (monthlyReturn !== null && sp500MonthlyReturns[yearMonth] !== undefined) {
                     const sp500Return = sp500MonthlyReturns[yearMonth];
                     const vsSp500 = monthlyReturn - sp500Return;
+                    const absDifference = Math.abs(vsSp500);
+                    const winLossMessage = vsSp500 > 0 
+                        ? `Pablo's winning by ${absDifference.toFixed(2)}%`
+                        : vsSp500 < 0 
+                        ? `Pablo's losing by ${absDifference.toFixed(2)}%`
+                        : 'Pablo's tied with the S&P 500';
                     const funnyMessage = vsSp500 > 0 
                         ? pabloWinningMessages[Math.floor(Math.random() * pabloWinningMessages.length)]
                         : vsSp500 < 0 
@@ -2325,7 +2331,8 @@
                                 <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%;"></div>
                                 <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%;"></div>
                             </div>
-                            ${funnyMessage ? `<div style="margin-top: 0.75rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
+                            <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: ${pabloColor}; text-align: center;">${winLossMessage}</div>
+                            ${funnyMessage ? `<div style="margin-top: 0.5rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
                         </div>
                     `;
                 }
