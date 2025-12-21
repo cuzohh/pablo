@@ -73,8 +73,9 @@
 
         :root[data-theme="light"] .grid-bg {
             background-image: 
-                linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+                linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+            opacity: 0.6;
         }
 
         @keyframes gridMove {
@@ -112,7 +113,7 @@
         }
 
         :root[data-theme="light"] .orb-2 {
-            background: radial-gradient(circle, rgba(5, 150, 105, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(5, 150, 105, 0.12) 0%, transparent 70%);
         }
 
         .orb-3 {
@@ -126,7 +127,11 @@
         }
 
         :root[data-theme="light"] .orb-3 {
-            background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.08) 0%, transparent 70%);
+        }
+
+        :root[data-theme="light"] .orb-1 {
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
         }
 
         @keyframes float1 {
@@ -768,23 +773,59 @@
         .modal-breakdown-item,
         .modal-pnl-item,
         .modal-trades-title,
-        .trade-item {
+        .trade-item,
+        .modal-image,
+        .modal-notes {
             animation: fadeInUp 0.4s ease-out both;
         }
 
+        .modal-image { animation-delay: 0.05s; }
         .modal-stat:nth-child(1) { animation-delay: 0.1s; }
         .modal-stat:nth-child(2) { animation-delay: 0.15s; }
-        .modal-stat:nth-child(3) { animation-delay: 0.2s; }
-        .modal-breakdown-item:nth-child(1) { animation-delay: 0.25s; }
-        .modal-breakdown-item:nth-child(2) { animation-delay: 0.3s; }
-        .modal-breakdown-item:nth-child(3) { animation-delay: 0.35s; }
-        .modal-pnl-item:nth-child(1) { animation-delay: 0.4s; }
-        .modal-pnl-item:nth-child(2) { animation-delay: 0.45s; }
-        .trade-item:nth-child(1) { animation-delay: 0.5s; }
-        .trade-item:nth-child(2) { animation-delay: 0.55s; }
-        .trade-item:nth-child(3) { animation-delay: 0.6s; }
-        .trade-item:nth-child(4) { animation-delay: 0.65s; }
-        .trade-item:nth-child(n+5) { animation-delay: 0.7s; }
+        .modal-breakdown-item:nth-child(1) { animation-delay: 0.2s; }
+        .modal-breakdown-item:nth-child(2) { animation-delay: 0.25s; }
+        .modal-breakdown-item:nth-child(3) { animation-delay: 0.3s; }
+        .modal-breakdown-item:nth-child(4) { animation-delay: 0.35s; }
+        .modal-breakdown-item:nth-child(5) { animation-delay: 0.4s; }
+        .modal-breakdown-item:nth-child(6) { animation-delay: 0.45s; }
+        .modal-pnl-item:nth-child(1) { animation-delay: 0.5s; }
+        .modal-pnl-item:nth-child(2) { animation-delay: 0.55s; }
+        .modal-notes { animation-delay: 0.6s; }
+        .modal-trades-title { animation-delay: 0.65s; }
+        .trade-item:nth-child(1) { animation-delay: 0.7s; }
+        .trade-item:nth-child(2) { animation-delay: 0.75s; }
+        .trade-item:nth-child(3) { animation-delay: 0.8s; }
+        .trade-item:nth-child(4) { animation-delay: 0.85s; }
+        .trade-item:nth-child(n+5) { animation-delay: 0.9s; }
+
+        /* Animate modal values */
+        .modal-stat-value,
+        .modal-breakdown-value,
+        .modal-pnl-value {
+            animation: fadeInScale 0.5s ease-out both;
+        }
+
+        .modal-stat:nth-child(1) .modal-stat-value { animation-delay: 0.15s; }
+        .modal-stat:nth-child(2) .modal-stat-value { animation-delay: 0.2s; }
+        .modal-breakdown-item:nth-child(1) .modal-breakdown-value { animation-delay: 0.25s; }
+        .modal-breakdown-item:nth-child(2) .modal-breakdown-value { animation-delay: 0.3s; }
+        .modal-breakdown-item:nth-child(3) .modal-breakdown-value { animation-delay: 0.35s; }
+        .modal-breakdown-item:nth-child(4) .modal-breakdown-value { animation-delay: 0.4s; }
+        .modal-breakdown-item:nth-child(5) .modal-breakdown-value { animation-delay: 0.45s; }
+        .modal-breakdown-item:nth-child(6) .modal-breakdown-value { animation-delay: 0.5s; }
+        .modal-pnl-item:nth-child(1) .modal-pnl-value { animation-delay: 0.55s; }
+        .modal-pnl-item:nth-child(2) .modal-pnl-value { animation-delay: 0.6s; }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
         .modal-header {
             display: flex;
