@@ -718,6 +718,7 @@
             padding: 2rem;
             overflow: hidden;
             transition: all 0.4s ease;
+            overflow-x: auto;
         }
 
         .calendar:hover {
@@ -741,6 +742,9 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
             padding: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .calendar-header span.weekend {
@@ -1440,6 +1444,22 @@
             .recap-stats { grid-template-columns: repeat(2, 1fr); }
             .legend-grid { grid-template-columns: 1fr; }
             .account-card .stat-value { font-size: 1.2rem; }
+            
+            /* Fix calendar header alignment on mobile */
+            .calendar-header {
+                gap: 0.25rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .calendar-header span {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.1rem;
+                letter-spacing: 0.05em;
+            }
+            
+            .calendar-grid {
+                gap: 0.25rem;
+            }
         }
     </style>
 </head>
