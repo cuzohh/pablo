@@ -1460,6 +1460,28 @@
             .calendar-grid {
                 gap: 0.25rem;
             }
+            
+            /* Fix S&P 500 comparison text overlap on mobile */
+            .days-bar-header {
+                font-size: 0.7rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .days-bar-header > span:nth-child(2) {
+                position: static;
+                transform: none;
+                left: auto;
+                padding: 0;
+                background: transparent;
+                width: 100%;
+                text-align: left;
+            }
+            
+            .days-bar-container {
+                padding: 1rem 0.5rem;
+            }
         }
     </style>
 </head>
