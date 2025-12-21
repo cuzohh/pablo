@@ -2171,6 +2171,9 @@
                     !recapMonthEl.classList.contains('slide-in-right')) {
                     recapMonthEl.textContent = expectedText;
                 }
+            } else {
+                // If element doesn't exist yet, this function might be called before DOM is ready
+                // Just continue with stats calculation
             }
             
             // Calculate monthly return for this month
@@ -2331,12 +2334,13 @@
 
         // Calendar logic
         let currentDate = new Date();
-        let monthDirection = 'next'; // Track direction for animation
+        let monthDirection = null; // Track direction for animation (null = no animation)
+        let isFirstRender = true;
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
 
         function animateMonthText(element, direction) {
-            if (!element) return;
+            if (!element || !direction) return;
             
             // Remove any existing animation classes
             element.classList.remove('slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
@@ -2381,21 +2385,33 @@
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
-            // Animate month text change
-            animateMonthText(monthLabel, monthDirection);
-            
-            // Also update recap month with animation
-            const recapMonthLabel = document.getElementById('recapMonth');
-            if (recapMonthLabel) {
-                animateMonthText(recapMonthLabel, monthDirection);
-                // Update monthly recap stats after animation
-                setTimeout(() => {
-                    updateMonthlyRecap(year, month);
-                }, 300);
+            // On first render, just set text without animation
+            if (isFirstRender) {
+                monthLabel.textContent = `${months[month]} ${year}`;
+                const recapMonthLabel = document.getElementById('recapMonth');
+                if (recapMonthLabel) {
+                    recapMonthLabel.textContent = `${months[month]} ${year}`;
+                }
+                isFirstRender = false;
             } else {
-                // If recap month label doesn't exist yet, just update stats
-                updateMonthlyRecap(year, month);
+                // Animate month text change only if direction is set
+                if (monthDirection) {
+                    animateMonthText(monthLabel, monthDirection);
+                    const recapMonthLabel = document.getElementById('recapMonth');
+                    if (recapMonthLabel) {
+                        animateMonthText(recapMonthLabel, monthDirection);
+                    }
+                } else {
+                    monthLabel.textContent = `${months[month]} ${year}`;
+                    const recapMonthLabel = document.getElementById('recapMonth');
+                    if (recapMonthLabel) {
+                        recapMonthLabel.textContent = `${months[month]} ${year}`;
+                    }
+                }
             }
+            
+            // Update monthly recap stats (always call this)
+            updateMonthlyRecap(year, month);
             
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -2455,6 +2471,9 @@
                 
                 grid.appendChild(dayEl);
             }
+            
+            // Update monthly recap stats after calendar is rendered
+            updateMonthlyRecap(year, month);
         }
 
         function openModal(dateStr, isWeekend = false) {
