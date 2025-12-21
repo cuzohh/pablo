@@ -2154,77 +2154,79 @@
 
         // Update monthly recap display
         function updateMonthlyRecap(year, month) {
-            const stats = calculateMonthlyStats(year, month);
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                           'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            // Don't update recap month text here - it's handled by renderCalendar() with animation
-            // This function is called from other places too, so we'll only update if not currently animating
-            const recapMonthEl = document.getElementById('recapMonth');
-            if (recapMonthEl) {
-                const expectedText = `${months[month]} ${year}`;
-                // Only update if text is different and not currently animating
-                if (recapMonthEl.textContent !== expectedText && 
-                    !recapMonthEl.classList.contains('slide-out-left') && 
-                    !recapMonthEl.classList.contains('slide-out-right') &&
-                    !recapMonthEl.classList.contains('slide-in-left') &&
-                    !recapMonthEl.classList.contains('slide-in-right')) {
-                    recapMonthEl.textContent = expectedText;
+            try {
+                const stats = calculateMonthlyStats(year, month);
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+                
+                // Don't update recap month text here - it's handled by renderCalendar() with animation
+                // This function is called from other places too, so we'll only update if not currently animating
+                const recapMonthEl = document.getElementById('recapMonth');
+                if (recapMonthEl) {
+                    const expectedText = `${months[month]} ${year}`;
+                    // Only update if text is different and not currently animating
+                    if (recapMonthEl.textContent !== expectedText && 
+                        !recapMonthEl.classList.contains('slide-out-left') && 
+                        !recapMonthEl.classList.contains('slide-out-right') &&
+                        !recapMonthEl.classList.contains('slide-in-left') &&
+                        !recapMonthEl.classList.contains('slide-in-right')) {
+                        recapMonthEl.textContent = expectedText;
+                    }
                 }
-            } else {
-                // If element doesn't exist yet, this function might be called before DOM is ready
-                // Just continue with stats calculation
-            }
-            
-            // Calculate monthly return for this month
-            const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`;
-            const sortedDates = Object.keys(tradingData).sort();
-            let monthlyReturn = null;
-            let monthlyStartBalance = STARTING_BALANCE;
-            
-            // Find first day of this month
-            const firstDayOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-            if (dailyBalances[firstDayOfMonth]) {
-                monthlyStartBalance = dailyBalances[firstDayOfMonth].startBalance;
-            } else {
-                // Find last day before this month
+                
+                // Calculate monthly return for this month
+                const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`;
+                const sortedDates = Object.keys(tradingData).sort();
+                let monthlyReturn = null;
+                let monthlyStartBalance = STARTING_BALANCE;
+                
+                // Find first day of this month
+                const firstDayOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+                if (dailyBalances[firstDayOfMonth]) {
+                    monthlyStartBalance = dailyBalances[firstDayOfMonth].startBalance;
+                } else {
+                    // Find last day before this month
+                    for (let i = sortedDates.length - 1; i >= 0; i--) {
+                        const dateStr = sortedDates[i];
+                        const dateObj = new Date(dateStr + 'T12:00:00');
+                        const dateYear = dateObj.getFullYear();
+                        const dateMonth = dateObj.getMonth();
+                        
+                        if (dateYear < year || (dateYear === year && dateMonth < month)) {
+                            if (dailyBalances[dateStr]) {
+                                monthlyStartBalance = dailyBalances[dateStr].endBalance;
+                            }
+                            break;
+                        }
+                    }
+                }
+                
+                // Find last day of this month
+                let monthlyEndBalance = monthlyStartBalance;
                 for (let i = sortedDates.length - 1; i >= 0; i--) {
                     const dateStr = sortedDates[i];
                     const dateObj = new Date(dateStr + 'T12:00:00');
                     const dateYear = dateObj.getFullYear();
                     const dateMonth = dateObj.getMonth();
                     
-                    if (dateYear < year || (dateYear === year && dateMonth < month)) {
+                    if (dateYear === year && dateMonth === month) {
                         if (dailyBalances[dateStr]) {
-                            monthlyStartBalance = dailyBalances[dateStr].endBalance;
+                            monthlyEndBalance = dailyBalances[dateStr].endBalance;
                         }
                         break;
                     }
                 }
-            }
-            
-            // Find last day of this month
-            let monthlyEndBalance = monthlyStartBalance;
-            for (let i = sortedDates.length - 1; i >= 0; i--) {
-                const dateStr = sortedDates[i];
-                const dateObj = new Date(dateStr + 'T12:00:00');
-                const dateYear = dateObj.getFullYear();
-                const dateMonth = dateObj.getMonth();
                 
-                if (dateYear === year && dateMonth === month) {
-                    if (dailyBalances[dateStr]) {
-                        monthlyEndBalance = dailyBalances[dateStr].endBalance;
-                    }
-                    break;
+                if (monthlyEndBalance !== monthlyStartBalance) {
+                    monthlyReturn = ((monthlyEndBalance - monthlyStartBalance) / monthlyStartBalance) * 100;
                 }
-            }
-            
-            if (monthlyEndBalance !== monthlyStartBalance) {
-                monthlyReturn = ((monthlyEndBalance - monthlyStartBalance) / monthlyStartBalance) * 100;
-            }
-            
-            const recapStats = document.getElementById('recapStats');
-            recapStats.innerHTML = `
+                
+                const recapStats = document.getElementById('recapStats');
+                if (!recapStats) {
+                    console.error('recapStats element not found');
+                    return;
+                }
+                recapStats.innerHTML = `
                 <div class="recap-stat">
                     <div class="recap-stat-value" style="color: ${stats.totalPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
                         ${stats.totalPnL >= 0 ? '+' : '-'}$${Math.abs(stats.totalPnL).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -2335,7 +2337,6 @@
         // Calendar logic
         let currentDate = new Date();
         let monthDirection = null; // Track direction for animation (null = no animation)
-        let isFirstRender = true;
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -2385,33 +2386,22 @@
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
-            // On first render, just set text without animation
-            if (isFirstRender) {
-                monthLabel.textContent = `${months[month]} ${year}`;
-                const recapMonthLabel = document.getElementById('recapMonth');
-                if (recapMonthLabel) {
-                    recapMonthLabel.textContent = `${months[month]} ${year}`;
-                }
-                isFirstRender = false;
+            // Update month text (with animation if direction is set)
+            if (monthDirection) {
+                animateMonthText(monthLabel, monthDirection);
             } else {
-                // Animate month text change only if direction is set
-                if (monthDirection) {
-                    animateMonthText(monthLabel, monthDirection);
-                    const recapMonthLabel = document.getElementById('recapMonth');
-                    if (recapMonthLabel) {
-                        animateMonthText(recapMonthLabel, monthDirection);
-                    }
-                } else {
-                    monthLabel.textContent = `${months[month]} ${year}`;
-                    const recapMonthLabel = document.getElementById('recapMonth');
-                    if (recapMonthLabel) {
-                        recapMonthLabel.textContent = `${months[month]} ${year}`;
-                    }
-                }
+                monthLabel.textContent = `${months[month]} ${year}`;
             }
             
-            // Update monthly recap stats (always call this)
-            updateMonthlyRecap(year, month);
+            // Also update recap month
+            const recapMonthLabel = document.getElementById('recapMonth');
+            if (recapMonthLabel) {
+                if (monthDirection) {
+                    animateMonthText(recapMonthLabel, monthDirection);
+                } else {
+                    recapMonthLabel.textContent = `${months[month]} ${year}`;
+                }
+            }
             
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
