@@ -417,13 +417,19 @@
             margin-bottom: 3rem;
             animation: fadeInUp 1s ease-out 0.95s both;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
         }
 
         .monthly-recap:hover {
-            transform: translateY(-4px);
             border-color: var(--accent);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 25px var(--accent-glow);
+        }
+
+        .monthly-recap.collapsed .recap-stats {
+            display: none;
+        }
+
+        .monthly-recap.collapsed .recap-toggle-icon {
+            transform: rotate(0deg);
         }
 
         .recap-header {
@@ -1538,10 +1544,13 @@
             </div>
 
             <!-- Monthly Recap -->
-            <div class="monthly-recap">
-                <div class="recap-header">
+            <div class="monthly-recap collapsed" id="monthlyRecap">
+                <div class="recap-header" id="recapHeader">
                     <h3 class="recap-title"><span>📊</span> Monthly Recap</h3>
-                    <span class="recap-month" id="recapMonth"></span>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span class="recap-month" id="recapMonth"></span>
+                        <span class="recap-toggle-icon">▼</span>
+                    </div>
                 </div>
                 <div class="recap-stats" id="recapStats">
                     <!-- Filled by JS -->
@@ -1647,7 +1656,8 @@
             "Pablo's showing them how it's done.",
             "The market is taking notes.",
             "Pablo's unstoppable.",
-            "S&P 500? More like S&P 500 steps behind."
+            "S&P 500? More like S&P 500 steps behind.",
+            "skill issue"
         ];
 
         // Funny messages for when Pablo loses to S&P 500
@@ -2223,21 +2233,36 @@
                     ? pabloLosingMessages[Math.floor(Math.random() * pabloLosingMessages.length)]
                     : '';
                 
-                // Calculate bar percentages (normalize to show both returns)
-                // Create visual comparison - show both bars side by side
-                const pabloColor = monthlyReturn >= 0 ? 'var(--green)' : 'var(--red)';
+                // Create visual comparison - show proportional bars based on actual returns
+                // Pablo's color: green if winning vs S&P 500, red if losing
+                const pabloColor = vsSp500 > 0 ? 'var(--green)' : vsSp500 < 0 ? 'var(--red)' : (monthlyReturn >= 0 ? 'var(--green)' : 'var(--red)');
                 const sp500Color = sp500Return >= 0 ? 'var(--green)' : 'var(--red)';
+                
+                // Calculate proportional bar widths based on absolute returns
+                // Normalize to show proportional comparison
+                const absPablo = Math.abs(monthlyReturn);
+                const absSp500 = Math.abs(sp500Return);
+                const totalAbs = absPablo + absSp500;
+                
+                // If both are zero or very small, show 50/50
+                let pabloWidth = 50;
+                let sp500Width = 50;
+                
+                if (totalAbs > 0.01) {
+                    pabloWidth = (absPablo / totalAbs) * 100;
+                    sp500Width = (absSp500 / totalAbs) * 100;
+                }
                 
                 recapStats.innerHTML += `
                     <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
                         <div class="days-bar-header">
-                            <span style="color: var(--accent); font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
+                            <span style="color: ${pabloColor}; font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
                             <span style="color: var(--text-dim)">vs</span>
                             <span style="color: ${sp500Color}; font-weight: 600;">S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
                         </div>
                         <div class="sp500-comparison-bar">
-                            <div class="sp500-bar-pablo" style="width: 50%; background: ${pabloColor};"></div>
-                            <div class="sp500-bar-sp500" style="width: 50%; background: ${sp500Color};"></div>
+                            <div class="sp500-bar-pablo" style="width: ${pabloWidth}%; background: ${pabloColor};"></div>
+                            <div class="sp500-bar-sp500" style="width: ${sp500Width}%; background: ${sp500Color};"></div>
                         </div>
                         ${funnyMessage ? `<div style="margin-top: 0.75rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
                     </div>
@@ -2512,6 +2537,15 @@
 
         // Event listeners - wait for DOM to be ready
         function setupEventListeners() {
+            // Monthly recap collapse/expand
+            const recapHeader = document.getElementById('recapHeader');
+            const monthlyRecap = document.getElementById('monthlyRecap');
+            if (recapHeader && monthlyRecap) {
+                recapHeader.addEventListener('click', () => {
+                    monthlyRecap.classList.toggle('collapsed');
+                });
+            }
+            
             // Month navigation
             const prevMonthBtn = document.getElementById('prevMonth');
             const nextMonthBtn = document.getElementById('nextMonth');
