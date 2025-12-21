@@ -583,9 +583,9 @@
         }
 
         .calendar:hover {
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-4px);
             border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--accent-glow);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 0 20px var(--accent-glow);
         }
 
         .calendar-header {
@@ -732,11 +732,6 @@
             background: rgba(0, 0, 0, 0.5);
         }
 
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
         .modal {
             background: linear-gradient(135deg, rgba(20, 20, 30, 0.95) 0%, rgba(10, 10, 15, 0.98) 100%);
             border: 1px solid var(--border);
@@ -746,9 +741,10 @@
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            transform: scale(0.8) translateY(30px);
+            transform: scale(0.9) translateY(20px);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 50px var(--accent-glow);
+            opacity: 0;
         }
 
         :root[data-theme="light"] .modal {
@@ -756,9 +752,39 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 50px var(--accent-glow);
         }
 
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .modal-overlay.active .modal {
             transform: scale(1) translateY(0);
+            opacity: 1;
         }
+
+        /* Modal content animations */
+        .modal-header,
+        .modal-stat,
+        .modal-breakdown-item,
+        .modal-pnl-item,
+        .modal-trades-title,
+        .trade-item {
+            animation: fadeInUp 0.4s ease-out both;
+        }
+
+        .modal-stat:nth-child(1) { animation-delay: 0.1s; }
+        .modal-stat:nth-child(2) { animation-delay: 0.15s; }
+        .modal-stat:nth-child(3) { animation-delay: 0.2s; }
+        .modal-breakdown-item:nth-child(1) { animation-delay: 0.25s; }
+        .modal-breakdown-item:nth-child(2) { animation-delay: 0.3s; }
+        .modal-breakdown-item:nth-child(3) { animation-delay: 0.35s; }
+        .modal-pnl-item:nth-child(1) { animation-delay: 0.4s; }
+        .modal-pnl-item:nth-child(2) { animation-delay: 0.45s; }
+        .trade-item:nth-child(1) { animation-delay: 0.5s; }
+        .trade-item:nth-child(2) { animation-delay: 0.55s; }
+        .trade-item:nth-child(3) { animation-delay: 0.6s; }
+        .trade-item:nth-child(4) { animation-delay: 0.65s; }
+        .trade-item:nth-child(n+5) { animation-delay: 0.7s; }
 
         .modal-header {
             display: flex;
@@ -1113,8 +1139,9 @@
         }
 
         .account-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--border);
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--accent-glow);
         }
 
         .account-card .stat-value {
@@ -1980,7 +2007,10 @@
                         </p>
                     </div>
                 `;
-                overlay.classList.add('active');
+                // Add active class with slight delay for calendar day animation
+                setTimeout(() => {
+                    overlay.classList.add('active');
+                }, 100);
                 return;
             }
             
@@ -2118,7 +2148,10 @@
                 `;
             }
             
-            overlay.classList.add('active');
+            // Add active class with slight delay for calendar day animation
+            setTimeout(() => {
+                overlay.classList.add('active');
+            }, 100);
         }
 
         function closeModal() {
