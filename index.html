@@ -579,13 +579,13 @@
             border-radius: 24px;
             padding: 2rem;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
 
         .calendar:hover {
-            transform: translateY(-2px);
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 20px var(--accent-glow);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--accent-glow);
         }
 
         .calendar-header {
@@ -1025,38 +1025,31 @@
 
         .theme-icon {
             position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-size: 12px;
+            width: 14px;
+            height: 14px;
             transition: all 0.3s ease;
-            filter: grayscale(100%);
-            opacity: 0.4;
+            color: var(--text-dim);
+            opacity: 0.3;
         }
 
         .moon-icon {
             opacity: 1;
-            filter: grayscale(0%);
+            color: var(--text);
         }
 
         .sun-icon {
             opacity: 0;
-            filter: grayscale(100%);
+            color: var(--text-dim);
         }
 
         :root[data-theme="light"] .moon-icon {
             opacity: 0;
-            filter: grayscale(100%);
+            color: var(--text-dim);
         }
 
         :root[data-theme="light"] .sun-icon {
             opacity: 1;
-            filter: grayscale(0%);
+            color: var(--text);
         }
 
         /* Scrollbar */
@@ -1181,14 +1174,13 @@
 
         /* Updates Section */
         .updates-section {
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: all 0.4s ease;
         }
 
         .updates-section:hover {
-            transform: translateY(-2px);
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 20px var(--accent-glow);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--accent-glow);
         }
 
         /* Disclaimer */
@@ -1243,8 +1235,20 @@
     <div class="container">
         <!-- Theme Toggle -->
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-            <span class="theme-icon moon-icon">●</span>
-            <span class="theme-icon sun-icon">○</span>
+            <svg class="theme-icon moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="theme-icon sun-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
         </button>
 
         <section class="hero">
