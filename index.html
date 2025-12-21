@@ -838,6 +838,21 @@
         .modal-pnl-item:nth-child(1) .modal-pnl-value { animation-delay: 0.55s; }
         .modal-pnl-item:nth-child(2) .modal-pnl-value { animation-delay: 0.6s; }
 
+        /* Animate modal breakdown labels and P&L labels */
+        .modal-breakdown-label,
+        .modal-pnl-label {
+            animation: fadeInUp 0.4s ease-out both;
+        }
+
+        .modal-breakdown-item:nth-child(1) .modal-breakdown-label { animation-delay: 0.2s; }
+        .modal-breakdown-item:nth-child(2) .modal-breakdown-label { animation-delay: 0.25s; }
+        .modal-breakdown-item:nth-child(3) .modal-breakdown-label { animation-delay: 0.3s; }
+        .modal-breakdown-item:nth-child(4) .modal-breakdown-label { animation-delay: 0.35s; }
+        .modal-breakdown-item:nth-child(5) .modal-breakdown-label { animation-delay: 0.4s; }
+        .modal-breakdown-item:nth-child(6) .modal-breakdown-label { animation-delay: 0.45s; }
+        .modal-pnl-item:nth-child(1) .modal-pnl-label { animation-delay: 0.5s; }
+        .modal-pnl-item:nth-child(2) .modal-pnl-label { animation-delay: 0.55s; }
+
         @keyframes fadeInScale {
             from {
                 opacity: 0;
@@ -1395,13 +1410,17 @@
         <!-- Account Stats -->
         <section class="account-section">
             <div class="account-card">
-                <div class="stat-value neutral">$100,000</div>
+                <div class="stat-value neutral">$100,000.00</div>
                 <div class="stat-label">Starting Balance</div>
         </div>
             <div class="account-card">
                 <div class="stat-value positive" id="currentBalance">—</div>
                 <div class="stat-label">Current Balance</div>
         </div>
+            <div class="account-card">
+                <div class="stat-value neutral" id="percentReturn">—</div>
+                <div class="stat-label">Percent Return</div>
+            </div>
             <div class="account-card">
                 <div class="stat-value neutral">0.25%</div>
                 <div class="stat-label">Risk Per Trade</div>
@@ -1848,16 +1867,22 @@
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const easeProgress = 1 - Math.pow(1 - progress, 4);
-                const current = Math.round(start + (end - start) * easeProgress);
+                const current = start + (end - start) * easeProgress;
                 
                 if (isCurrency) {
-                    el.textContent = (current >= 0 ? '+$' : '-$') + Math.abs(current).toLocaleString();
+                    el.textContent = (current >= 0 ? '+$' : '-$') + Math.abs(current).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 } else {
-                    el.textContent = current + suffix;
+                    el.textContent = Math.round(current) + suffix;
                 }
                 
                 if (progress < 1) {
                     requestAnimationFrame(update);
+                } else {
+                    if (isCurrency) {
+                        el.textContent = (end >= 0 ? '+$' : '-$') + Math.abs(end).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    } else {
+                        el.textContent = end + suffix;
+                    }
                 }
             }
             
@@ -1882,13 +1907,33 @@
                 
                 balanceEl.className = 'stat-value ' + (endVal >= STARTING_BALANCE ? 'positive' : 'negative');
                 
+                const percentEl = document.getElementById('percentReturn');
+                
                 function updateBalance(currentTime) {
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
                     const easeProgress = 1 - Math.pow(1 - progress, 4);
-                    const current = Math.round(startVal + (endVal - startVal) * easeProgress);
-                    balanceEl.textContent = '$' + current.toLocaleString();
-                    if (progress < 1) requestAnimationFrame(updateBalance);
+                    const current = startVal + (endVal - startVal) * easeProgress;
+                    balanceEl.textContent = '$' + current.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    
+                    // Update percent return
+                    if (percentEl) {
+                        const percent = ((current - STARTING_BALANCE) / STARTING_BALANCE) * 100;
+                        percentEl.className = 'stat-value ' + (percent >= 0 ? 'positive' : 'negative');
+                        percentEl.textContent = `${percent >= 0 ? '+' : ''}${percent.toFixed(2)}%`;
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateBalance);
+                    } else {
+                        balanceEl.textContent = '$' + endVal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        // Final percent return
+                        if (percentEl) {
+                            const finalPercent = ((endVal - STARTING_BALANCE) / STARTING_BALANCE) * 100;
+                            percentEl.className = 'stat-value ' + (finalPercent >= 0 ? 'positive' : 'negative');
+                            percentEl.textContent = `${finalPercent >= 0 ? '+' : ''}${finalPercent.toFixed(2)}%`;
+                        }
+                    }
                 }
                 requestAnimationFrame(updateBalance);
             }
@@ -1955,10 +2000,10 @@
             }
         }
 
-        // Format currency for display
+        // Format currency for display (2 decimal places)
         function formatPnL(value) {
             const sign = value >= 0 ? '+' : '';
-            return `${sign}$${Math.abs(value).toLocaleString()}`;
+            return `${sign}$${Math.abs(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
         }
 
         // Calendar logic
@@ -2131,7 +2176,7 @@
                     <div class="modal-breakdown">
                         <div class="modal-breakdown-item">
                             <div class="modal-breakdown-label">Start Risk</div>
-                            <div class="modal-breakdown-value">$${Math.round(dayRisk).toLocaleString()}</div>
+                            <div class="modal-breakdown-value">$${dayRisk.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
                         </div>
                         <div class="modal-breakdown-item">
                             <div class="modal-breakdown-label">Trades</div>
