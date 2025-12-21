@@ -52,6 +52,28 @@
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.5;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top right, var(--accent-glow) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+            transition: opacity 0.3s ease, background 0.3s ease;
+        }
+
+        :root[data-theme="light"] body::before {
+            background: radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(5, 150, 105, 0.1) 0%, transparent 50%);
+            opacity: 1;
         }
 
         /* Animated grid background */
@@ -73,9 +95,9 @@
 
         :root[data-theme="light"] .grid-bg {
             background-image: 
-                linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
-            opacity: 0.6;
+                linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
+            opacity: 0.8;
         }
 
         @keyframes gridMove {
@@ -113,7 +135,7 @@
         }
 
         :root[data-theme="light"] .orb-2 {
-            background: radial-gradient(circle, rgba(5, 150, 105, 0.12) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(5, 150, 105, 0.15) 0%, transparent 70%);
         }
 
         .orb-3 {
