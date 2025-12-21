@@ -518,6 +518,8 @@
             font-family: 'JetBrains Mono', monospace;
             color: var(--accent);
             font-size: 1rem;
+            display: inline-block;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         .recap-stats {
@@ -703,6 +705,8 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 1.1rem;
             min-width: 180px;
+            display: inline-block;
+            transition: transform 0.3s ease, opacity 0.3s ease;
             text-align: center;
             display: inline-block;
         }
@@ -2373,6 +2377,8 @@
                 // Remove animation class after animation completes
                 setTimeout(() => {
                     element.classList.remove('slide-in-left', 'slide-in-right');
+                    // Reset monthDirection after animation completes
+                    monthDirection = null;
                 }, 300);
             }, 150);
         }
@@ -2391,17 +2397,20 @@
             
             // Update month text (with animation if direction is set)
             if (monthDirection) {
-                animateMonthText(monthLabel, monthDirection);
+                const direction = monthDirection;
+                animateMonthText(monthLabel, direction);
+                // Also update recap month with animation
+                const recapMonthLabel = document.getElementById('recapMonth');
+                if (recapMonthLabel) {
+                    animateMonthText(recapMonthLabel, direction);
+                }
+                // Reset monthDirection after starting animations (so it doesn't re-animate)
+                monthDirection = null;
             } else {
                 monthLabel.textContent = `${months[month]} ${year}`;
-            }
-            
-            // Also update recap month
-            const recapMonthLabel = document.getElementById('recapMonth');
-            if (recapMonthLabel) {
-                if (monthDirection) {
-                    animateMonthText(recapMonthLabel, monthDirection);
-                } else {
+                // Also update recap month
+                const recapMonthLabel = document.getElementById('recapMonth');
+                if (recapMonthLabel) {
                     recapMonthLabel.textContent = `${months[month]} ${year}`;
                 }
             }
