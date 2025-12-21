@@ -2287,11 +2287,14 @@
                     const sp500Return = sp500MonthlyReturns[yearMonth];
                     const vsSp500 = monthlyReturn - sp500Return;
                     const absDifference = Math.abs(vsSp500);
-                    const winLossMessage = vsSp500 > 0 
-                        ? `Pablo's winning by ${absDifference.toFixed(2)}%`
-                        : vsSp500 < 0 
-                        ? `Pablo's losing by ${absDifference.toFixed(2)}%`
-                        : 'Pablo's tied with the S&P 500';
+                    let winLossMessage = "";
+                    if (vsSp500 > 0) {
+                        winLossMessage = `Pablo's winning by ${absDifference.toFixed(2)}%`;
+                    } else if (vsSp500 < 0) {
+                        winLossMessage = `Pablo's losing by ${absDifference.toFixed(2)}%`;
+                    } else {
+                        winLossMessage = "Pablo's tied with the S&P 500";
+                    }
                     const funnyMessage = vsSp500 > 0 
                         ? pabloWinningMessages[Math.floor(Math.random() * pabloWinningMessages.length)]
                         : vsSp500 < 0 
