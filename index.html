@@ -578,6 +578,14 @@
         .days-bar-container {
             padding: 1.25rem 1.5rem !important;
             text-align: center;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+        
+        .days-bar-container .days-bar,
+        .days-bar-container .sp500-comparison-bar {
+            width: 100%;
+            min-height: 12px;
         }
 
         .days-bar-header {
@@ -588,6 +596,7 @@
             font-family: 'JetBrains Mono', monospace;
             margin-bottom: 0.75rem;
             font-weight: 600;
+            position: relative;
         }
 
         .days-bar-header > span:nth-child(2) {
@@ -609,11 +618,13 @@
         .days-bar-green {
             background: linear-gradient(90deg, var(--green) 0%, #22c55e 100%);
             transition: width 0.5s ease;
+            min-width: 2px;
         }
 
         .days-bar-red {
             background: linear-gradient(90deg, var(--red) 0%, #ef4444 100%);
             transition: width 0.5s ease;
+            min-width: 2px;
         }
 
         /* S&P 500 Comparison Bar */
@@ -632,6 +643,7 @@
             height: 100%;
             transition: all 0.5s ease;
             opacity: 0.9;
+            min-width: 2px;
         }
 
         .sp500-bar-pablo.green {
@@ -1430,29 +1442,31 @@
             color: var(--text-dim);
         }
 
-        .updates-list.collapsed {
-            max-height: 0;
-            opacity: 0;
-            margin-bottom: 0;
-        }
-
-        .updates-list:not(.collapsed) {
+        .updates-list {
             max-height: 2000px;
             opacity: 1;
+            margin-bottom: 0;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .updates-list.collapsed {
             max-height: 0 !important;
             opacity: 0 !important;
             margin-bottom: 0 !important;
+            overflow: hidden;
         }
 
-        #updatesList.collapsed ~ #updatesHeader .updates-toggle-icon {
+        .updates-toggle-icon {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+            transform: rotate(180deg);
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        .updates-section.collapsed .updates-toggle-icon {
             transform: rotate(0deg) !important;
-        }
-
-        #updatesList:not(.collapsed) ~ #updatesHeader .updates-toggle-icon {
-            transform: rotate(180deg) !important;
         }
 
         .updates-header:hover .updates-toggle-icon {
@@ -1716,16 +1730,19 @@
         </div>
 
         <!-- Updates Section -->
-        <section class="updates-section" style="background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; margin-bottom: 3rem; animation: fadeInUp 1s ease-out 0.95s both; transition: all 0.3s ease; cursor: pointer;">
-            <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
-                <span>📝</span> Algorithm Updates
-            </h3>
+        <section class="updates-section" style="background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; margin-bottom: 3rem; animation: fadeInUp 1s ease-out 0.95s both; transition: all 0.3s ease;">
+            <div class="updates-header" id="updatesHeader">
+                <h3 class="section-title" style="font-size: 1.5rem; margin: 0; display: flex; align-items: center; gap: 0.8rem;">
+                    <span>📝</span> Algorithm Updates
+                </h3>
+                <span class="updates-toggle-icon">▼</span>
+            </div>
             <p style="color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.6;">
                 Significant updates that alter trading behavior are documented here. These changes may affect how historical trades would have been executed.
                 <br><br>
                 <em>Note: Only major updates are tracked here. Minor updates and refinements occur every day as the algorithm is continuously improved.</em>
             </p>
-            <div class="updates-list" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="updates-list" id="updatesList" style="display: flex; flex-direction: column; gap: 1rem; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
                 <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
                         <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December 22, 2025</span>
@@ -2910,12 +2927,15 @@
         // Initialize updates list state from localStorage
         function initUpdatesState() {
             const updatesList = document.getElementById('updatesList');
-            if (updatesList) {
+            const updatesSection = document.querySelector('.updates-section');
+            if (updatesList && updatesSection) {
                 const savedState = localStorage.getItem('updatesListCollapsed');
                 if (savedState === 'true') {
                     updatesList.classList.add('collapsed');
+                    updatesSection.classList.add('collapsed');
                 } else {
                     updatesList.classList.remove('collapsed');
+                    updatesSection.classList.remove('collapsed');
                 }
             }
         }
@@ -2954,9 +2974,11 @@
             // Updates list collapse/expand
             const updatesHeader = document.getElementById('updatesHeader');
             const updatesList = document.getElementById('updatesList');
-            if (updatesHeader && updatesList) {
+            const updatesSection = document.querySelector('.updates-section');
+            if (updatesHeader && updatesList && updatesSection) {
                 updatesHeader.addEventListener('click', () => {
                     updatesList.classList.toggle('collapsed');
+                    updatesSection.classList.toggle('collapsed');
                     // Save state to localStorage
                     localStorage.setItem('updatesListCollapsed', updatesList.classList.contains('collapsed'));
                     // Force reflow to ensure CSS updates
