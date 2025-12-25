@@ -1905,8 +1905,9 @@
                     <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Breakeven Note</h3>
                     <p style="color: var(--text-dim);">
                         Breakevens are actually small wins — Pablo moves the stop loss to be slightly in profit (typically 1 tick above/below entry). 
-                        Therefore, breakevens count as wins in the win rate calculation. However, for P&L tracking purposes, breakevens are treated as $0 (true breakeven) 
-                        because tracking the tiny profits from each breakeven trade is too tedious. This means the actual P&L is slightly higher than displayed.
+                        However, breakevens are excluded from win rate calculations (only wins vs losses are counted). 
+                        For P&L tracking purposes, breakevens are treated as $0 (true breakeven) because tracking the tiny profits from each breakeven trade is too tedious. 
+                        This means the actual P&L is slightly higher than displayed.
                     </p>
                 </div>
             </div>
@@ -2089,6 +2090,16 @@
                     { time: '10:51', type: 'short', result: 'loss' },
                     { time: '11:51', type: 'short', result: 'loss' }
                 ]
+            },
+            '2025-12-22': {
+                image: 'dec2225.png',
+                notes: 'Tough start with a breakeven and two losses, but Pablo caught a 2.82 RR winner to end the day positive.',
+                trades: [
+                    { time: '03:05', type: 'short', result: 'be' },
+                    { time: '05:02', type: 'short', result: 'loss' },
+                    { time: '07:52', type: 'short', result: 'loss' },
+                    { time: '09:28', type: 'short', result: 'win', rr: 2.82 }
+                ]
             }
         };
         
@@ -2179,13 +2190,13 @@
                     totalPnL += detail.pnl;
                 } else {
                     breakevens++;
-                    // Count breakevens as wins for win rate calculation
-                    wins++;
                 }
             });
 
+            // Calculate win rate excluding breakevens (only wins vs losses)
+            const tradesForWinRate = wins + losses;
+            const winRate = tradesForWinRate > 0 ? Math.round((wins / tradesForWinRate) * 100) : 0;
             const totalTrades = dayData.trades.length;
-            const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
             
             // Use starting risk for display (first trade's risk)
             const displayRisk = tradeDetails.length > 0 ? tradeDetails[0].risk : STARTING_BALANCE * RISK_PERCENT;
@@ -2197,6 +2208,7 @@
         function calculateOverallStats() {
             let totalTrades = 0;
             let wins = 0;
+            let losses = 0;
             let totalPnL = 0;
             
             const sortedDates = Object.keys(tradingData).sort();
@@ -2211,13 +2223,16 @@
                 if (day.trades) {
                     day.trades.forEach(trade => {
                         totalTrades++;
-                        // Count wins and breakevens as wins for win rate
-                        if (trade.result === 'win' || trade.result === 'be') wins++;
+                        // Only count wins and losses for win rate (breakevens excluded)
+                        if (trade.result === 'win') wins++;
+                        else if (trade.result === 'loss') losses++;
                     });
                 }
             });
 
-            const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
+            // Calculate win rate excluding breakevens (only wins vs losses)
+            const tradesForWinRate = wins + losses;
+            const winRate = tradesForWinRate > 0 ? Math.round((wins / tradesForWinRate) * 100) : 0;
             const currentRisk = currentBalance * RISK_PERCENT;
             
             return { winRate, totalTrades, totalPnL, currentBalance, currentRisk };
@@ -2243,7 +2258,6 @@
                     if (dayStats) {
                         tradingDays++;
                         totalTrades += dayStats.totalTrades;
-                        // Wins already includes breakevens from calculateDayStats
                         wins += dayStats.wins;
                         losses += dayStats.losses;
                         breakevens += dayStats.breakevens;
@@ -2262,7 +2276,9 @@
                 }
             });
 
-            const winRate = totalTrades > 0 ? Math.round((wins / totalTrades) * 100) : 0;
+            // Calculate win rate excluding breakevens (only wins vs losses)
+            const tradesForWinRate = wins + losses;
+            const winRate = tradesForWinRate > 0 ? Math.round((wins / tradesForWinRate) * 100) : 0;
             const avgPerTrade = totalTrades > 0 ? Math.round(totalPnL / totalTrades) : 0;
             const avgRR = winCount > 0 ? (totalRR / winCount).toFixed(2) : 0;
 
