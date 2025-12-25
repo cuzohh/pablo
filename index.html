@@ -2930,7 +2930,8 @@
             const updatesSection = document.querySelector('.updates-section');
             if (updatesList && updatesSection) {
                 const savedState = localStorage.getItem('updatesListCollapsed');
-                if (savedState === 'true') {
+                // Default to collapsed on first visit (when no saved state exists)
+                if (savedState === null || savedState === 'true') {
                     updatesList.classList.add('collapsed');
                     updatesSection.classList.add('collapsed');
                 } else {
