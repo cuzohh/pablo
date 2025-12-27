@@ -588,23 +588,28 @@
             min-height: 12px;
         }
 
-        .days-bar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            position: relative;
-        }
+.days-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
 
-        .days-bar-header > span:nth-child(2) {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-        }
+.days-bar-header > span:nth-child(1) {
+    flex: 0 0 auto;
+}
+
+.days-bar-header > span:nth-child(2) {
+    flex: 1;
+    text-align: center;
+}
+
+.days-bar-header > span:nth-child(3) {
+    flex: 0 0 auto;
+}
 
         .days-bar {
             display: flex;
@@ -1933,7 +1938,7 @@
         
         // S&P 500 monthly returns (year-month format: "YYYY-MM")
         const sp500MonthlyReturns = {
-            '2025-12': -0.21
+            '2025-12': 1.18
         };
 
         // Funny messages for when Pablo beats S&P 500
