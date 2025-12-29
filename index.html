@@ -2439,7 +2439,7 @@
             }
         }
 
-       // Update monthly recap display
+   // Update monthly recap display
         function updateMonthlyRecap(year, month) {
             try {
                 const stats = calculateMonthlyStats(year, month);
@@ -2541,7 +2541,7 @@
                 </div>
                 `;
                 
-                // Add the days bar if there are trading days (spans full width at bottom)
+                // Add the days bar if there are trading days
                 if (stats.tradingDays > 0) {
                     const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
                     const redPercent = (stats.redDays / stats.tradingDays) * 100;
@@ -2550,7 +2550,7 @@
                         <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
                             <div class="days-bar-header">
                                 <span style="color: var(--green)">${stats.greenDays} Green</span>
-                                <span style="color: var(--text-dim); text-align: center;">${stats.tradingDays} Days</span>
+                                <span style="color: var(--text-dim);">${stats.tradingDays} Days</span>
                                 <span style="color: var(--red)">${stats.redDays} Red</span>
                             </div>
                             <div class="days-bar">
@@ -2566,6 +2566,7 @@
                     const sp500Return = sp500MonthlyReturns[yearMonth];
                     const vsSp500 = monthlyReturn - sp500Return;
                     const absDifference = Math.abs(vsSp500);
+                    
                     let winLossMessage = "";
                     if (vsSp500 > 0) {
                         winLossMessage = `Pablo's winning by ${absDifference.toFixed(2)}%`;
@@ -2574,42 +2575,59 @@
                     } else {
                         winLossMessage = "Pablo's tied with the S&P 500";
                     }
+                    
                     const funnyMessage = vsSp500 > 0 
                         ? pabloWinningMessages[Math.floor(Math.random() * pabloWinningMessages.length)]
                         : vsSp500 < 0 
                         ? pabloLosingMessages[Math.floor(Math.random() * pabloLosingMessages.length)]
                         : '';
                     
-                    const pabloColor = vsSp500 > 0 ? 'var(--green)' : vsSp500 < 0 ? 'var(--red)' : (monthlyReturn >= 0 ? 'var(--green)' : 'var(--red)');
-                    const sp500Color = sp500Return >= 0 ? 'var(--green)' : 'var(--red)';
-                    const pabloColorClass = vsSp500 > 0 ? 'green' : vsSp500 < 0 ? 'red' : (monthlyReturn >= 0 ? 'green' : 'red');
-                    const sp500ColorClass = sp500Return >= 0 ? 'green' : 'red';
+                    // Force distinctive colors: Pablo (Green) vs S&P (Red)
+                    // This creates the "Hero vs Villain" contrast regardless of P&L
+                    const pabloColor = 'var(--green)';
+                    const sp500Color = 'var(--red)';
+                    const pabloColorClass = 'green';
+                    const sp500ColorClass = 'red';
                     
-                    // Normalization logic for bars
+                    // Normalization logic with MINIMUM WIDTH
+                    // This ensures neither bar disappears completely
                     const absPablo = Math.abs(monthlyReturn);
                     const absSp500 = Math.abs(sp500Return);
-                    const totalAbs = absPablo + absSp500;
                     
                     let pabloWidth = 50;
                     let sp500Width = 50;
                     
-                    if (totalAbs > 0.01) {
-                        pabloWidth = (absPablo / totalAbs) * 100;
-                        sp500Width = (absSp500 / totalAbs) * 100;
-                    }
+                    const totalAbs = absPablo + absSp500;
                     
+                    if (totalAbs > 0.001) {
+                        const rawPabloPct = (absPablo / totalAbs) * 100;
+                        const rawSp500Pct = (absSp500 / totalAbs) * 100;
+                        
+                        // Enforce 15% minimum width for visibility
+                        if (rawPabloPct < 15) {
+                            pabloWidth = 15;
+                            sp500Width = 85;
+                        } else if (rawSp500Pct < 15) {
+                            sp500Width = 15;
+                            pabloWidth = 85;
+                        } else {
+                            pabloWidth = rawPabloPct;
+                            sp500Width = rawSp500Pct;
+                        }
+                    }
+
                     recapStats.innerHTML += `
                         <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
                             <div class="days-bar-header">
                                 <span style="color: ${pabloColor}; font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
-                                <span style="color: var(--text-dim); text-align: center;">vs</span>
+                                <span style="color: var(--text-dim);">vs</span>
                                 <span style="color: ${sp500Color}; font-weight: 600;">S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
                             </div>
-                            <div class="sp500-comparison-bar">
-                                <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%;"></div>
-                                <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%;"></div>
+                            <div class="sp500-comparison-bar" style="gap: 4px; background: transparent; box-shadow: none;">
+                                <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%; border-radius: 4px;"></div>
+                                <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%; border-radius: 4px;"></div>
                             </div>
-                            <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: ${pabloColor}; text-align: center;">${winLossMessage}</div>
+                            <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: ${vsSp500 >= 0 ? 'var(--green)' : 'var(--red)'}; text-align: center;">${winLossMessage}</div>
                             ${funnyMessage ? `<div style="margin-top: 0.5rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
                         </div>
                     `;
@@ -2618,7 +2636,6 @@
                 console.error('Error updating monthly recap:', error);
             }
         }
-
         // Format currency for display (2 decimal places)
         function formatPnL(value) {
             const sign = value >= 0 ? '+' : '';
