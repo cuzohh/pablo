@@ -590,33 +590,41 @@
 
 .days-bar-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             font-size: 0.85rem;
             font-family: 'JetBrains Mono', monospace;
             margin-bottom: 0.75rem;
             font-weight: 600;
-            width: 100%; /* Ensure full width */
-            gap: 0.5rem; /* Add spacing between elements */
+            width: 100%;
         }
 
-        /* Remove the absolute positioning that was causing overlap */
-        .days-bar-header > span:nth-child(2) {
-            text-align: center;
-            flex-shrink: 0; /* Prevent the middle text from crushing */
-        }
-
-        /* Ensure left and right spans can shrink if needed but prefer full width */
-        .days-bar-header > span:nth-child(1),
-        .days-bar-header > span:nth-child(3) {
+        /* Force left and right items to take equal space, creating a perfect center */
+        .days-bar-header > span:nth-child(1) {
+            flex: 1;
+            text-align: left;
             white-space: nowrap;
         }
 
-        /* Update mobile view to handle stacking cleanly */
+        .days-bar-header > span:nth-child(3) {
+            flex: 1;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        /* The middle item just sits in the exact center now */
+        .days-bar-header > span:nth-child(2) {
+            text-align: center;
+            padding: 0 10px;
+            white-space: nowrap;
+            color: var(--text-dim); /* Ensure consistency for the grey text */
+        }
+
         @media (max-width: 768px) {
             .days-bar-header {
                 font-size: 0.7rem;
-                flex-wrap: wrap; /* Allow wrapping on very small screens */
+            }
+            .days-bar-header > span:nth-child(2) {
+                padding: 0 5px;
             }
         }
         .days-bar {
