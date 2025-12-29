@@ -1385,7 +1385,7 @@
             transition: color 0.3s ease;
         }
 
-        /* Signal Legend */
+/* Signal Legend */
         .legend {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
@@ -1394,6 +1394,14 @@
             padding: 1.5rem 2rem;
             margin-bottom: 2rem;
             animation: fadeInUp 0.8s ease-out 0.7s both;
+            transition: all 0.4s ease; /* Added transition for smooth hover */
+        }
+
+        /* Added hover effect to match other cards */
+        .legend:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--accent-glow);
         }
 
         .legend h3 {
@@ -1417,6 +1425,13 @@
             gap: 0.6rem;
             font-size: 0.85rem;
             color: var(--text-dim);
+            transition: color 0.3s ease, transform 0.3s ease; /* Added transition for items */
+        }
+
+        /* Subtle interactive effect for individual items */
+        .legend:hover .legend-item:hover {
+            color: var(--text);
+            transform: translateX(5px);
         }
 
         .legend-icon {
