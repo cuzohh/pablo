@@ -2439,7 +2439,14 @@
             }
         }
 
- // Update monthly recap display
+)';
+                    const sp500Color = 'var(--red)';
+                    const pabloColorClass = 'green';
+                    const sp500ColorClass = 'red';
+                    
+                    const absPablo = Math.abs(monthlyReturn);
+                    const absSp500 = Math.abs(sp500Return);
+                    // Update monthly recap display
         function updateMonthlyRecap(year, month) {
             try {
                 const stats = calculateMonthlyStats(year, month);
@@ -2541,7 +2548,7 @@
                 </div>
                 `;
                 
-                // Add the days bar with SEPARATION (gap + rounded corners)
+                // Add the days bar
                 if (stats.tradingDays > 0) {
                     const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
                     const redPercent = (stats.redDays / stats.tradingDays) * 100;
@@ -2582,17 +2589,35 @@
                         ? pabloLosingMessages[Math.floor(Math.random() * pabloLosingMessages.length)]
                         : '';
                     
-                    const pabloColor = 'var(--green)';
-                    const sp500Color = 'var(--red)';
-                    const pabloColorClass = 'green';
-                    const sp500ColorClass = 'red';
+                    // --- COLOR & ICON LOGIC ---
+                    const blueHex = '#3b82f6'; // Bright blue for S&P positive
                     
+                    // Pablo Colors
+                    const pabloIsPositive = monthlyReturn >= 0;
+                    const pabloColor = pabloIsPositive ? 'var(--green)' : 'var(--red)';
+                    const pabloBg = pabloIsPositive 
+                        ? 'linear-gradient(90deg, var(--green) 0%, #22c55e 100%)' 
+                        : 'linear-gradient(90deg, var(--red) 0%, #ef4444 100%)';
+                    const pabloShadow = pabloIsPositive 
+                        ? '0 0 8px rgba(16, 185, 129, 0.4)' 
+                        : '0 0 8px rgba(239, 68, 68, 0.4)';
+
+                    // S&P Colors & Icons
+                    const spIsPositive = sp500Return >= 0;
+                    const sp500Color = spIsPositive ? blueHex : 'var(--red)';
+                    const sp500Icon = spIsPositive ? '📈' : '📉';
+                    const sp500Bg = spIsPositive 
+                        ? `linear-gradient(90deg, ${blueHex} 0%, #60a5fa 100%)` 
+                        : 'linear-gradient(90deg, var(--red) 0%, #ef4444 100%)';
+                    const sp500Shadow = spIsPositive 
+                        ? `0 0 8px rgba(59, 130, 246, 0.4)` 
+                        : '0 0 8px rgba(239, 68, 68, 0.4)';
+                    
+                    // --- WIDTH CALCULATIONS ---
                     const absPablo = Math.abs(monthlyReturn);
                     const absSp500 = Math.abs(sp500Return);
-                    
                     let pabloWidth = 50;
                     let sp500Width = 50;
-                    
                     const totalAbs = absPablo + absSp500;
                     
                     if (totalAbs > 0.001) {
@@ -2611,18 +2636,21 @@
                         }
                     }
 
+                    // Win/Loss message color (Green if Pablo winning, Red if losing)
+                    const winLossColor = vsSp500 >= 0 ? 'var(--green)' : 'var(--red)';
+
                     recapStats.innerHTML += `
                         <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
                             <div class="days-bar-header">
-                                <span style="color: ${pabloColor}; font-weight: 600;">Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
+                                <span style="color: ${pabloColor}; font-weight: 600;">🎨 Pablo ${monthlyReturn >= 0 ? '+' : ''}${monthlyReturn.toFixed(2)}%</span>
                                 <span style="color: var(--text-dim);">vs</span>
-                                <span style="color: ${sp500Color}; font-weight: 600;">S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
+                                <span style="color: ${sp500Color}; font-weight: 600;">${sp500Icon} S&P 500 ${sp500Return >= 0 ? '+' : ''}${sp500Return.toFixed(2)}%</span>
                             </div>
                             <div class="sp500-comparison-bar" style="gap: 4px; background: transparent; box-shadow: none;">
-                                <div class="sp500-bar-pablo ${pabloColorClass}" style="width: ${pabloWidth}%; border-radius: 4px;"></div>
-                                <div class="sp500-bar-sp500 ${sp500ColorClass}" style="width: ${sp500Width}%; border-radius: 4px;"></div>
+                                <div style="width: ${pabloWidth}%; height: 100%; border-radius: 4px; background: ${pabloBg}; box-shadow: ${pabloShadow}; transition: all 0.5s ease;"></div>
+                                <div style="width: ${sp500Width}%; height: 100%; border-radius: 4px; background: ${sp500Bg}; box-shadow: ${sp500Shadow}; transition: all 0.5s ease;"></div>
                             </div>
-                            <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: ${vsSp500 >= 0 ? 'var(--green)' : 'var(--red)'}; text-align: center;">${winLossMessage}</div>
+                            <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 500; color: ${winLossColor}; text-align: center;">${winLossMessage}</div>
                             ${funnyMessage ? `<div style="margin-top: 0.5rem; font-size: 0.75rem; font-style: italic; opacity: 0.8; color: var(--text-dim); text-align: center;">${funnyMessage}</div>` : ''}
                         </div>
                     `;
