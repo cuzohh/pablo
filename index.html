@@ -2439,7 +2439,7 @@
             }
         }
 
-   // Update monthly recap display
+ // Update monthly recap display
         function updateMonthlyRecap(year, month) {
             try {
                 const stats = calculateMonthlyStats(year, month);
@@ -2541,7 +2541,7 @@
                 </div>
                 `;
                 
-                // Add the days bar if there are trading days
+                // Add the days bar with SEPARATION (gap + rounded corners)
                 if (stats.tradingDays > 0) {
                     const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
                     const redPercent = (stats.redDays / stats.tradingDays) * 100;
@@ -2553,9 +2553,9 @@
                                 <span style="color: var(--text-dim);">${stats.tradingDays} Days</span>
                                 <span style="color: var(--red)">${stats.redDays} Red</span>
                             </div>
-                            <div class="days-bar">
-                                <div class="days-bar-green" style="width: ${greenPercent}%"></div>
-                                <div class="days-bar-red" style="width: ${redPercent}%"></div>
+                            <div class="days-bar" style="gap: 4px; background: transparent; box-shadow: none;">
+                                <div class="days-bar-green" style="width: ${greenPercent}%; border-radius: 4px;"></div>
+                                <div class="days-bar-red" style="width: ${redPercent}%; border-radius: 4px;"></div>
                             </div>
                         </div>
                     `;
@@ -2582,15 +2582,11 @@
                         ? pabloLosingMessages[Math.floor(Math.random() * pabloLosingMessages.length)]
                         : '';
                     
-                    // Force distinctive colors: Pablo (Green) vs S&P (Red)
-                    // This creates the "Hero vs Villain" contrast regardless of P&L
                     const pabloColor = 'var(--green)';
                     const sp500Color = 'var(--red)';
                     const pabloColorClass = 'green';
                     const sp500ColorClass = 'red';
                     
-                    // Normalization logic with MINIMUM WIDTH
-                    // This ensures neither bar disappears completely
                     const absPablo = Math.abs(monthlyReturn);
                     const absSp500 = Math.abs(sp500Return);
                     
@@ -2603,7 +2599,6 @@
                         const rawPabloPct = (absPablo / totalAbs) * 100;
                         const rawSp500Pct = (absSp500 / totalAbs) * 100;
                         
-                        // Enforce 15% minimum width for visibility
                         if (rawPabloPct < 15) {
                             pabloWidth = 15;
                             sp500Width = 85;
