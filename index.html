@@ -2420,12 +2420,15 @@
                 
                 const totalPercentEl = document.getElementById('totalPercentReturn');
                 
-                function updateBalance(currentTime) {
+               function updateBalance(currentTime) {
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
                     const easeProgress = 1 - Math.pow(1 - progress, 4);
                     const current = startVal + (endVal - startVal) * easeProgress;
-                    balanceEl.textContent = '$' + current.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    
+                    if (balanceEl) {
+                        balanceEl.textContent = '$' + current.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
                     
                     // Update total percent return
                     if (totalPercentEl) {
@@ -2437,7 +2440,9 @@
                     if (progress < 1) {
                         requestAnimationFrame(updateBalance);
                     } else {
-                        balanceEl.textContent = '$' + endVal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        if (balanceEl) {
+                            balanceEl.textContent = '$' + endVal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        }
                         // Final percent returns
                         if (totalPercentEl) {
                             const finalTotalPercent = ((endVal - STARTING_BALANCE) / STARTING_BALANCE) * 100;
@@ -2445,18 +2450,11 @@
                             totalPercentEl.textContent = `${finalTotalPercent >= 0 ? '+' : ''}${finalTotalPercent.toFixed(2)}%`;
                         }
                         
-                        // Update monthly recap to refresh S&P 500 comparison
-                        const sortedDates = Object.keys(tradingData).sort();
-                        if (sortedDates.length > 0) {
-                            const lastDate = sortedDates[sortedDates.length - 1];
-                            const lastDateObj = new Date(lastDate + 'T12:00:00');
-                            updateMonthlyRecap(lastDateObj.getFullYear(), lastDateObj.getMonth());
-                        }
+                        // FIX IS HERE: 
+                        // Instead of fetching the last date from tradingData, we sync with the current calendar view.
+                        updateMonthlyRecap(currentDate.getFullYear(), currentDate.getMonth());
                     }
                 }
-                requestAnimationFrame(updateBalance);
-            }
-        }
 
                 // Update monthly recap display
         function updateMonthlyRecap(year, month) {
