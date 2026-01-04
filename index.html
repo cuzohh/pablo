@@ -5176,43 +5176,27 @@
 
                 // Add the days bar
 
-                if (stats.tradingDays > 0) {
-
+           if (stats.tradingDays > 0) {
                     const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
-
                     const redPercent = (stats.redDays / stats.tradingDays) * 100;
                     
+                    // FIX: Logic for singular/plural
                     const dayLabel = stats.tradingDays === 1 ? 'Day' : 'Days';
                     
-
                     recapStats.innerHTML += `
-
                         <div class="recap-stat days-bar-container" style="grid-column: 1 / -1;">
-
                             <div class="days-bar-header">
-
                                 <span style="color: var(--green)">${stats.greenDays} Green</span>
-
-                                <span style="color: var(--text-dim);">${stats.tradingDays} Days</span>
-
+                                <span style="color: var(--text-dim);">${stats.tradingDays} ${dayLabel}</span>
                                 <span style="color: var(--red)">${stats.redDays} Red</span>
-
                             </div>
-
                             <div class="days-bar" style="gap: 4px; background: transparent; box-shadow: none;">
-
                                 <div class="days-bar-green" style="width: ${greenPercent}%; border-radius: 4px;"></div>
-
                                 <div class="days-bar-red" style="width: ${redPercent}%; border-radius: 4px;"></div>
-
                             </div>
-
                         </div>
-
                     `;
-
                 }
-
                 
 
                 // Add S&P 500 comparison bar
