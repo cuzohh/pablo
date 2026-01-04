@@ -912,6 +912,10 @@
                         margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
             margin-bottom: 0;
+            
+            transform: translateX(0); /* Add this line */
+            
+            will-change: transform, opacity; /* Add this for smoother performance */
 
         }
 
@@ -5502,196 +5506,126 @@
         }
 
 
-
-        function renderCalendar() {
-
+function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
-
             const monthLabel = document.getElementById('currentMonth');
-
+            const recapStats = document.getElementById('recapStats');
             
-
             if (!grid || !monthLabel) {
-
                 console.error('Calendar elements not found');
-
                 return;
-
             }
-
             
-
             const year = currentDate.getFullYear();
-
             const month = currentDate.getMonth();
-
             
-
-            // Update month text (with animation if direction is set)
-
+            // Handle Animation and Stats Updates
             if (monthDirection) {
-
                 const direction = monthDirection;
-
+                
+                // 1. Animate the Header Text (using your existing function)
                 animateMonthText(monthLabel, direction);
-
-                // Also update recap month with animation
-
+                
                 const recapMonthLabel = document.getElementById('recapMonth');
-
                 if (recapMonthLabel) {
-
                     animateMonthText(recapMonthLabel, direction);
-
                 }
 
-                // Reset monthDirection after starting animations (so it doesn't re-animate)
+                // 2. Animate the Recap Stats (The Fix)
+                if (recapStats) {
+                    // Fade out and slide slightly in the direction of exit
+                    recapStats.style.transition = 'all 0.15s ease-in';
+                    recapStats.style.opacity = '0';
+                    recapStats.style.transform = direction === 'next' ? 'translateX(-10px)' : 'translateX(10px)';
 
+                    // Wait for the text animation half-point (approx 150ms) to update data
+                    setTimeout(() => {
+                        updateMonthlyRecap(year, month);
+                        
+                        // Prepare for entry (slide in from opposite side)
+                        recapStats.style.transition = 'none'; // Disable transition for instant jump
+                        recapStats.style.transform = direction === 'next' ? 'translateX(10px)' : 'translateX(-10px)';
+                        
+                        // Force a reflow
+                        void recapStats.offsetWidth; 
+
+                        // Fade back in
+                        recapStats.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        recapStats.style.opacity = '1';
+                        recapStats.style.transform = 'translateX(0)';
+                    }, 150);
+                }
+
+                // Reset direction
                 monthDirection = null;
-
             } else {
-
+                // No animation (Initial Load)
                 monthLabel.textContent = `${months[month]} ${year}`;
-
-                // Also update recap month
-
                 const recapMonthLabel = document.getElementById('recapMonth');
-
                 if (recapMonthLabel) {
-
                     recapMonthLabel.textContent = `${months[month]} ${year}`;
-
                 }
-
+                // Update stats immediately on load
+                updateMonthlyRecap(year, month);
             }
-
             
-
+            // --- Grid Generation (Remains the same) ---
             const firstDay = new Date(year, month, 1).getDay();
-
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-
             const today = new Date();
-
             
-
             grid.innerHTML = '';
-
             
-
             // Empty cells for days before month starts
-
             for (let i = 0; i < firstDay; i++) {
-
                 const empty = document.createElement('div');
-
                 empty.className = 'calendar-day empty';
-
                 grid.appendChild(empty);
-
             }
-
             
-
             // Days of month
-
             for (let day = 1; day <= daysInMonth; day++) {
-
                 const dayEl = document.createElement('div');
-
                 dayEl.className = 'calendar-day';
-
                 dayEl.textContent = day;
-
                 
-
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
                 const dayDate = new Date(year, month, day);
-
                 const dayOfWeek = dayDate.getDay();
-
                 const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
                 
-
-                // Mark weekends
-
                 if (isWeekend) {
-
                     dayEl.classList.add('weekend');
-
                 }
-
                 
-
-                // Check if today
-
                 if (dayDate.toDateString() === today.toDateString()) {
-
                     dayEl.classList.add('today');
-
                 }
-
                 
-
-                // Check if future
-
                 if (dayDate > today) {
-
                     dayEl.classList.add('future');
-
                 } else {
-
-                    // Check if has data
-
                     if (tradingData[dateStr]) {
-
                         const dayStats = calculateDayStats(tradingData[dateStr], dateStr);
-
                         if (dayStats) {
-
                             dayEl.classList.add('has-data');
-
                             dayEl.classList.add(dayStats.totalPnL > 0 ? 'positive' : dayStats.totalPnL < 0 ? 'negative' : 'neutral');
-
                         }
-
                     }
-
                     
-
                     dayEl.dataset.date = dateStr;
-
                     dayEl.dataset.isWeekend = isWeekend;
-
                     dayEl.addEventListener('click', () => openModal(dateStr, isWeekend));
-
                 }
-
                 
-
-                // Staggered animation
-
                 dayEl.style.animationDelay = `${(firstDay + day) * 0.02}s`;
-
                 dayEl.style.animation = 'fadeInScale 0.4s ease-out both';
-
                 
-
                 grid.appendChild(dayEl);
-
             }
-
             
-
-            // Update monthly recap stats after calendar is rendered
-
-            updateMonthlyRecap(year, month);
-
+            // NOTE: updateMonthlyRecap call removed from here because it's handled in the logic above
         }
-
-
 
         function openModal(dateStr, isWeekend = false) {
 
