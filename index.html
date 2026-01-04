@@ -3101,68 +3101,72 @@
 
 
 
-/* Responsive Mobile Layout - FINAL FIX */
+/* Responsive Mobile Layout - "Fit All 7 Days" Fix */
         @media (max-width: 768px) {
-            /* 1. Page Containers */
+            /* 1. Page Container */
             .container { 
-                padding: 1.5rem 0.5rem !important; 
+                padding: 1.5rem 0.25rem !important; /* Very narrow margins */
                 width: 100%;
                 overflow-x: hidden;
             }
 
             .hero { padding: 2rem 0 3rem; }
-            .logo { font-size: 3.5rem; } /* Smaller logo prevents width blowout */
+            .logo { font-size: 3.5rem; }
             .stat-value { font-size: 1.8rem; }
             
             /* 2. Calendar Container - The Box */
             .calendar { 
-                padding: 1rem 0.25rem !important; /* Minimal padding */
+                /* Remove side padding almost entirely to give grid maximum room */
+                padding: 1rem 2px !important; 
                 border-radius: 16px;
                 width: 100% !important;
-                overflow: hidden !important; /* FORCE no scroll */
                 box-sizing: border-box;
             }
 
-            /* 3. The Grid System (Header & Days) */
+            /* 3. The Grid System */
             .calendar-header, 
             .calendar-grid {
                 display: grid !important;
-                grid-template-columns: repeat(7, 1fr) !important; /* 7 Equal columns */
-                gap: 2px !important; /* Tiny gap */
+                grid-template-columns: repeat(7, 1fr) !important; 
+                /* Reduce gap to 1px so columns can be wider */
+                gap: 1px !important; 
                 width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 box-sizing: border-box !important;
-                min-width: 0 !important; /* Allow shrinking below content size */
             }
 
-            /* 4. Header Text Alignment */
+            /* 4. Shrink Header Text */
             .calendar-header span {
-                font-size: 0.65rem; /* Small font to fit "Wed" */
-                padding: 0 0 0.5rem 0 !important; /* Remove side padding */
+                font-size: 0.6rem; /* Tiny font for Mon/Tue/Wed */
+                padding: 0 0 0.5rem 0 !important;
                 text-align: center;
                 width: 100%;
-                overflow: hidden; /* Cut off if too long */
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                letter-spacing: 0; /* Save horizontal space */
             }
 
-            /* 5. Day Squares */
+            /* 5. Shrink Day Squares */
             .calendar-day {
                 width: 100% !important;
                 aspect-ratio: 1 / 1;
-                font-size: 0.8rem;
+                /* Smaller font to prevent box expansion */
+                font-size: 0.75rem; 
                 border-radius: 6px;
                 min-height: auto;
                 margin: 0 !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
-            /* 6. Status Dots */
+            /* 6. Adjust Status Dot for tiny squares */
             .calendar-day.has-data::after {
-                width: 4px;
-                height: 4px;
-                bottom: 3px;
+                width: 3px;
+                height: 3px;
+                bottom: 2px;
             }
 
             /* --- Other Elements --- */
@@ -3182,9 +3186,9 @@
             #disclaimerBtn { width: 100%; }
             
             /* Modal Header */
-            .modal-date { font-size: 0.95rem; }
+            .modal-date { font-size: 0.9rem; }
             .modal-nav-btn { width: 32px; height: 32px; font-size: 0.9rem; flex-shrink: 0; }
-            .modal-header { gap: 0.5rem; padding-right: 0; }
+            .modal-header { gap: 0.25rem; padding-right: 0; }
             .modal-header-content { gap: 0.5rem; }
             
             /* S&P Bar */
