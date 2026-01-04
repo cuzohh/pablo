@@ -3101,11 +3101,11 @@
 
 
 
-/* Responsive Mobile Layout - "Fit All 7 Days" Fix */
+/* Responsive Mobile Layout - "Make Boxes Smaller" Fix */
         @media (max-width: 768px) {
             /* 1. Page Container */
             .container { 
-                padding: 1.5rem 0.25rem !important; /* Very narrow margins */
+                padding: 1.5rem 0.25rem !important; 
                 width: 100%;
                 overflow-x: hidden;
             }
@@ -3114,13 +3114,13 @@
             .logo { font-size: 3.5rem; }
             .stat-value { font-size: 1.8rem; }
             
-            /* 2. Calendar Container - The Box */
+            /* 2. Calendar Container */
             .calendar { 
-                /* Remove side padding almost entirely to give grid maximum room */
-                padding: 1rem 2px !important; 
+                padding: 1rem 2px !important; /* Minimal side padding */
                 border-radius: 16px;
                 width: 100% !important;
                 box-sizing: border-box;
+                overflow: hidden !important; /* Hide scrollbar */
             }
 
             /* 3. The Grid System */
@@ -3128,41 +3128,38 @@
             .calendar-grid {
                 display: grid !important;
                 grid-template-columns: repeat(7, 1fr) !important; 
-                /* Reduce gap to 1px so columns can be wider */
-                gap: 1px !important; 
+                gap: 1px !important; /* Tiny 1px gap to save space */
                 width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 box-sizing: border-box !important;
             }
 
-            /* 4. Shrink Header Text */
+            /* 4. Headers */
             .calendar-header span {
-                font-size: 0.6rem; /* Tiny font for Mon/Tue/Wed */
+                font-size: 0.65rem; 
                 padding: 0 0 0.5rem 0 !important;
                 text-align: center;
-                width: 100%;
                 display: flex;
                 justify-content: center;
-                align-items: center;
-                letter-spacing: 0; /* Save horizontal space */
+                width: 100%;
             }
 
-            /* 5. Shrink Day Squares */
+            /* 5. Day Boxes - FORCE SMALLER SIZE */
             .calendar-day {
                 width: 100% !important;
-                aspect-ratio: 1 / 1;
-                /* Smaller font to prevent box expansion */
-                font-size: 0.75rem; 
+                aspect-ratio: 1 / 1; 
+                /* Reduced font size so the number fits in a smaller box */
+                font-size: 0.7rem !important; 
+                padding: 0 !important; /* Remove padding inside the box */
                 border-radius: 6px;
-                min-height: auto;
-                margin: 0 !important;
+                min-height: 0 !important; /* Allow shrinking to tiny sizes */
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
-            /* 6. Adjust Status Dot for tiny squares */
+            /* 6. Tiny Status Dots */
             .calendar-day.has-data::after {
                 width: 3px;
                 height: 3px;
