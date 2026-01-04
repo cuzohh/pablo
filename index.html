@@ -5181,7 +5181,8 @@
                     const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
 
                     const redPercent = (stats.redDays / stats.tradingDays) * 100;
-
+                    
+                    const dayLabel = stats.tradingDays === 1 ? 'Day' : 'Days';
                     
 
                     recapStats.innerHTML += `
@@ -5224,22 +5225,24 @@
 
                     const absDifference = Math.abs(vsSp500);
 
+                    const now = new Date();
                     
+                    const isPast = year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth());
 
                     let winLossMessage = "";
-
+                
                     if (vsSp500 > 0) {
-
-                        winLossMessage = `Pablo's winning by ${absDifference.toFixed(2)}%`;
-
+                    winLossMessage = isPast 
+                        ? `Pablo won by ${absDifference.toFixed(2)}%` 
+                        : `Pablo's winning by ${absDifference.toFixed(2)}%`;
                     } else if (vsSp500 < 0) {
-
-                        winLossMessage = `Pablo's losing by ${absDifference.toFixed(2)}%`;
-
+                    winLossMessage = isPast 
+                        ? `Pablo lost by ${absDifference.toFixed(2)}%` 
+                        : `Pablo's losing by ${absDifference.toFixed(2)}%`;
                     } else {
-
-                        winLossMessage = "Pablo's tied with the S&P 500";
-
+                    winLossMessage = isPast 
+                        ? "Pablo tied with the S&P 500" 
+                        : "Pablo's tied with the S&P 500";
                     }
 
                     
