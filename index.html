@@ -3735,6 +3735,13 @@
                     <span>Green Diamond — Took profit</span>
 
                 </div>
+                
+                <div class="legend-item">
+                    <span class="legend-icon green">✕</span>
+                    
+                    <span>Green X — Trailing stop loss hit</span>
+                    
+                </div>
 
             </div>
 
@@ -4282,6 +4289,22 @@
 
                 ]
 
+            },'2025-12-29': {
+                image: 'dec2925.png', 
+                notes: 'A quiet Monday returning from the holidays. One breakeven in the early morning followed by a stop loss.',
+                trades: [
+                    { time: '03:51', type: 'long', result: 'be' },
+                    { time: '07:59', type: 'long', result: 'loss' }
+                ]
+            },
+            '2025-12-31': {
+                image: 'dec3125.png',
+                notes: 'Closing out the year. Secured a solid 3.41 RR win via trailing stop, though the afternoon session was choppy.',
+                trades: [
+                    { time: '10:56', type: 'long', result: 'win', rr: 3.41 },
+                    { time: '02:46', type: 'long', result: 'loss' },
+                    { time: '03:00', type: 'long', result: 'loss' }
+                ]
             }
 
         };
