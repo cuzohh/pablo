@@ -3443,10 +3443,10 @@
 
         }
         /* --- CALENDAR ANIMATIONS --- */
-        .slide-out-left { animation: slideOutLeft 0.3s forwards; }
-        .slide-out-right { animation: slideOutRight 0.3s forwards; }
-        .slide-in-left { animation: slideInLeft 0.3s forwards; }
-        .slide-in-right { animation: slideInRight 0.3s forwards; }
+        .slide-out-left { animation: slideOutLeft 0.1s forwards; }
+        .slide-out-right { animation: slideOutRight 0.1s forwards; }
+        .slide-in-left { animation: slideInLeft 0.1s forwards; }
+        .slide-in-right { animation: slideInRight 0.1s forwards; }
 
         @keyframes slideOutLeft {
             from { opacity: 1; transform: translateX(0); }
@@ -5742,7 +5742,7 @@ function renderCalendar() {
             if (content) content.classList.add(exitClass);
             if (dateLabel) dateLabel.classList.add(exitClass);
             
-            // 2. Wait 300ms for exit to finish, then update data
+            // 2. Wait 100ms for exit to finish, then update data
             setTimeout(() => {
                 // --- Logic to calculate new date ---
                 const date = new Date(currentModalDateStr + 'T12:00:00');
@@ -5773,14 +5773,14 @@ function renderCalendar() {
                     newDateLabel.classList.add(enterClass);
                 }
                 
-                // 4. Wait 300ms for entry to finish, then cleanup
+                // 4. Wait 100ms for entry to finish, then cleanup
                 setTimeout(() => {
                     if (newContent) newContent.classList.remove('slide-in-left', 'slide-in-right');
                     if (newDateLabel) newDateLabel.classList.remove('slide-in-left', 'slide-in-right');
                     isModalAnimating = false; // Unlock interactions
-                }, 300);
+                }, 100);
                 
-            }, 300); // Match this delay to your CSS animation duration (0.3s)
+            }, 100); // Match this delay to your CSS animation duration (0.3s)
         }
         
         function openModal(dateStr, isWeekend = false) {
