@@ -1863,6 +1863,8 @@
 
             overflow-y: auto;
 
+            overflow-x: hidden;
+
             transform: scale(0.9) translateY(20px);
 
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -4041,6 +4043,8 @@
         
         let currentModalDateStr = null; // Track currently open date
 
+        let isModalAnimating = false; // Prevent double clicks during animation
+
         
 
         // S&P 500 monthly returns (year-month format: "YYYY-MM")
@@ -5719,21 +5723,64 @@ function renderCalendar() {
             
             // NOTE: updateMonthlyRecap call removed from here because it's handled in the logic above
         }
-        function changeModalDay(offset) {
-            if (!currentModalDateStr) return;
-            const date = new Date(currentModalDateStr + 'T12:00:00');
-            date.setDate(date.getDate() + offset);
+       function changeModalDay(offset) {
+            // Prevent action if no date is selected or if animation is already running
+            if (!currentModalDateStr || isModalAnimating) return;
             
-            // Format back to YYYY-MM-DD
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const newDateStr = `${year}-${month}-${day}`;
+            isModalAnimating = true; // Lock interactions
             
-            const dayOfWeek = date.getDay();
-            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+            const content = document.getElementById('modalContent');
+            const dateLabel = document.getElementById('modalDate');
             
-            openModal(newDateStr, isWeekend);
+            // Determine Animation Direction
+            // Next Day (1): Slide out to Left, New comes from Right
+            // Prev Day (-1): Slide out to Right, New comes from Left
+            const exitClass = offset === 1 ? 'slide-out-left' : 'slide-out-right';
+            const enterClass = offset === 1 ? 'slide-in-right' : 'slide-in-left';
+            
+            // 1. Start Exit Animation
+            if (content) content.classList.add(exitClass);
+            if (dateLabel) dateLabel.classList.add(exitClass);
+            
+            // 2. Wait 300ms for exit to finish, then update data
+            setTimeout(() => {
+                // --- Logic to calculate new date ---
+                const date = new Date(currentModalDateStr + 'T12:00:00');
+                date.setDate(date.getDate() + offset);
+                
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const newDateStr = `${year}-${month}-${day}`;
+                
+                const dayOfWeek = date.getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                
+                // Update the Modal Content (This replaces the HTML)
+                openModal(newDateStr, isWeekend);
+                
+                // --- Re-select elements (since HTML might have been rebuilt) ---
+                const newContent = document.getElementById('modalContent');
+                const newDateLabel = document.getElementById('modalDate');
+                
+                // 3. Remove Exit classes and Add Entry classes
+                if (newContent) {
+                    newContent.classList.remove('slide-out-left', 'slide-out-right');
+                    newContent.classList.add(enterClass);
+                }
+                if (newDateLabel) {
+                    newDateLabel.classList.remove('slide-out-left', 'slide-out-right');
+                    newDateLabel.classList.add(enterClass);
+                }
+                
+                // 4. Wait 300ms for entry to finish, then cleanup
+                setTimeout(() => {
+                    if (newContent) newContent.classList.remove('slide-in-left', 'slide-in-right');
+                    if (newDateLabel) newDateLabel.classList.remove('slide-in-left', 'slide-in-right');
+                    isModalAnimating = false; // Unlock interactions
+                }, 300);
+                
+            }, 300); // Match this delay to your CSS animation duration (0.3s)
         }
         
         function openModal(dateStr, isWeekend = false) {
