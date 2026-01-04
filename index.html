@@ -5200,7 +5200,49 @@
 
                 `;
 
-                
+                const displayReturn = monthlyReturn || 0;
+
+recapStats.innerHTML = `
+    <div class="recap-stat" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="recap-stat-value" style="color: ${stats.totalPnL >= 0 ? 'var(--green)' : 'var(--red)'}">
+            ${stats.totalPnL >= 0 ? '+' : '-'}$${Math.abs(stats.totalPnL).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        </div>
+        <div class="recap-stat-label">Month P&L</div>
+    </div>
+
+    <div class="recap-stat">
+        <div class="recap-stat-value" style="color: ${displayReturn >= 0 ? 'var(--green)' : 'var(--red)'}">
+            ${displayReturn >= 0 ? '+' : ''}${displayReturn.toFixed(2)}%
+        </div>
+        <div class="recap-stat-label">Return</div>
+    </div>
+    <div class="recap-stat">
+        <div class="recap-stat-value" style="color: ${stats.winRate >= 50 ? 'var(--green)' : 'var(--red)'}">
+            ${stats.winRate}%
+        </div>
+        <div class="recap-stat-label">Win Rate</div>
+    </div>
+
+    <div class="recap-stat">
+        <div class="recap-stat-value" style="color: var(--green)">${stats.avgRR}</div>
+        <div class="recap-stat-label">Avg RR</div>
+    </div>
+
+    <div class="recap-stat">
+        <div class="recap-stat-value" style="color: var(--accent)">${stats.totalTrades}</div>
+        <div class="recap-stat-label">Trades</div>
+    </div>
+
+    <div class="recap-stat">
+        <div class="recap-stat-value" style="color: var(--green)">${stats.wins}</div>
+        <div class="recap-stat-label">Wins</div>
+    </div>
+
+    <div class="recap-stat">
+        <div class="recap-stat-value" style="color: var(--red)">${stats.losses}</div>
+        <div class="recap-stat-label">Losses</div>
+    </div>
+`;
 
                 // Add the days bar
 
