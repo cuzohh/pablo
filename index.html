@@ -3440,9 +3440,48 @@
                 padding: 1.25rem 1rem;
 
             }
+/* --- FIT CALENDAR TO SCREEN (NO SCROLL) --- */
+            
+            /* 1. Reduce container padding to give grid more room */
+            .calendar {
+                padding: 1rem 0.25rem; 
+                overflow-x: hidden; /* Disable horizontal scroll */
+            }
+
+            /* 2. Force strict 7-column grid layout */
             .calendar-header, 
             .calendar-grid {
-                min-width: 600px; /* Forces alignment */
+                display: grid;
+                grid-template-columns: repeat(7, 1fr); /* 7 equal columns */
+                gap: 3px; /* Very tight gap between squares */
+                min-width: 0; /* Allow shrinking */
+                width: 100%;
+            }
+
+            /* 3. Shrink the day labels (Sun, Mon, etc) */
+            .calendar-header span {
+                font-size: 0.65rem; /* Tiny font */
+                padding: 2px 0;
+                letter-spacing: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            /* 4. Shrink the day squares */
+            .calendar-day {
+                font-size: 0.8rem;
+                border-radius: 8px; /* Slightly smaller corners */
+                aspect-ratio: 1 / 1; /* Keep them square */
+                min-height: 0;
+            }
+
+            /* 5. Adjust the colored dots inside days */
+            .calendar-day.has-data::after {
+                width: 4px;
+                height: 4px;
+                bottom: 4px;
+            }
         }
         /* --- CALENDAR ANIMATIONS --- */
         .slide-out-left { animation: slideOutLeft 0.15s forwards; }
