@@ -3101,392 +3101,93 @@
 
 
 
-        /* Responsive */
-
+/* Responsive Mobile Layout */
         @media (max-width: 768px) {
-
-            .container { padding: 2rem 1rem; }
+            /* 1. Tighten the main page margins */
+            .container { 
+                padding: 2rem 0.5rem !important; /* Very small side padding */
+                overflow-x: hidden;
+            }
 
             .hero { padding: 2rem 0 4rem; }
-
             .logo { font-size: 4rem; }
-
             .stat-value { font-size: 2rem; }
-
-            .calendar { padding: 1rem; }
-
-            .calendar-day { font-size: 0.8rem; }
-
-            .recap-stats { grid-template-columns: repeat(2, 1fr); }
-
-            .legend-grid { grid-template-columns: 1fr; }
-
-            .account-card .stat-value { font-size: 1.2rem; }
-
             
-
-            /* Fix calendar header alignment on mobile */
-
-            .calendar-header {
-
-                gap: 0.25rem;
-
-                margin-bottom: 0.75rem;
-
+            /* 2. Calendar Card: Remove bulk */
+            .calendar { 
+                padding: 1rem 0.25rem !important; 
+                border-radius: 16px;
             }
 
-            
-
-            .calendar-header span {
-
-                font-size: 0.7rem;
-
-                padding: 0.25rem 0.1rem;
-
-                letter-spacing: 0.05em;
-
-            }
-
-            
-
-            .calendar-grid {
-
-                gap: 0.25rem;
-
-            }
-
-            
-
-            /* Fix S&P 500 comparison text overlap on mobile */
-
-            .days-bar-header {
-
-                font-size: 0.7rem;
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                gap: 0.5rem;
-
-            }
-
-            
-
-            .days-bar-header > span:nth-child(2) {
-
-                position: static;
-
-                transform: none;
-
-                left: auto;
-
-                padding: 0;
-
-                background: transparent;
-
-                width: 100%;
-
-                text-align: left;
-
-            }
-
-            
-
-            .days-bar-container {
-
-                padding: 1rem 0.5rem;
-
-            }
-
-            
-
-            /* Fix account stats alignment on mobile */
-
-            .account-stats {
-
-                gap: 1rem;
-
-            }
-
-            
-
-            .account-card {
-
-                padding: 1.25rem 1rem;
-
-            }
-
-            
-
-            .account-card .stat-label {
-
-                font-size: 0.8rem;
-
-            }
-
-            
-
-            /* Fix section headers on mobile */
-
-            .section-header {
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                gap: 1rem;
-
-            }
-
-            
-
-            .month-nav {
-
-                width: 100%;
-
-                justify-content: center;
-
-            }
-
-            
-
-            .current-month {
-
-                min-width: auto;
-
-                font-size: 1rem;
-
-            }
-
-            
-
-            /* Fix monthly recap header on mobile */
-
-            .recap-header {
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                gap: 0.75rem;
-
-            }
-
-            
-
-            .recap-title {
-
-                font-size: 1.2rem;
-
-            }
-
-            
-
-            /* Fix updates section on mobile */
-
-            .updates-section {
-
-                padding: 1.5rem 1rem;
-
-            }
-
-            
-
-            .updates-section h3 {
-
-                font-size: 1.3rem;
-
-            }
-
-            
-
-            /* Fix legend on mobile */
-
-            .legend {
-
-                padding: 1.5rem 1rem;
-
-            }
-
-            
-
-            .legend-grid {
-
-                gap: 0.75rem;
-
-            }
-
-            
-
-            .legend-item {
-
-                font-size: 0.85rem;
-
-            }
-
-            
-
-            /* Fix modal on mobile */
-
-            .modal-content {
-
-                padding: 1.5rem 1rem;
-
-                margin: 1rem;
-
-                max-width: calc(100% - 2rem);
-
-            }
-
-            
-
-            .modal-stats {
-
-                grid-template-columns: repeat(2, 1fr);
-
-                gap: 1rem;
-
-            }
-
-            
-
-            .modal-stat-value {
-
-                font-size: 1.5rem;
-
-            }
-
-            
-
-            /* Center text elements on mobile */
-
-            .tagline {
-
-                font-size: 1.1rem;
-
-                text-align: center;
-
-            }
-
-            
-
-            .section-title {
-
-                font-size: 1.3rem;
-
-                text-align: center;
-
-            }
-
-            
-
-            /* Fix button alignment */
-
-            #disclaimerBtn {
-
-                width: 100%;
-
-                text-align: center;
-
-            }
-
-            
-
-            /* Fix footer on mobile */
-
-            footer {
-
-                text-align: center;
-
-                padding: 2rem 1rem;
-
-            }
-
-            
-
-            /* Fix hero section on mobile */
-
-            .hero {
-
-                text-align: center;
-
-            }
-
-            
-
-            /* Ensure proper spacing */
-
-            .container > section {
-
-                margin-bottom: 2rem;
-
-            }
-
-            
-
-            /* Fix stat cards grid */
-
-            .stats-grid {
-
-                gap: 1rem;
-
-            }
-
-            
-
-            .stat-card {
-
-                padding: 1.25rem 1rem;
-
-            }
-/* --- FIXED MOBILE CALENDAR LAYOUT --- */
-            
-            /* 1. Slim down the container so the grid has room */
-            .calendar {
-                padding: 1.5rem 0.5rem !important; /* Very small side padding */
-                width: 100%;
-                box-sizing: border-box;
-                overflow: hidden; /* Clip anything that might spill */
-            }
-
-            /* 2. Unite Header and Grid logic so they align perfectly */
+            /* 3. THE FIX: Force Header and Grid to match exactly */
             .calendar-header, 
             .calendar-grid {
-                display: grid;
-                grid-template-columns: repeat(7, 1fr); /* Strictly 7 equal columns */
-                gap: 4px; /* Small gap to save space */
-                width: 100%;
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+                display: grid !important;
+                grid-template-columns: repeat(7, 1fr) !important; /* Strictly 7 columns */
+                gap: 2px !important; /* Tiny gap allows days to fit */
+                width: 100% !important;
+                min-width: 0 !important; /* Allow shrinking */
+                margin: 0 !important;
+                box-sizing: border-box !important;
             }
 
-            /* 3. Center the header text perfectly */
+            /* 4. Align Header Text */
             .calendar-header span {
                 font-size: 0.7rem;
+                padding: 0 0 0.5rem 0;
                 text-align: center;
                 display: flex;
-                align-items: center;
                 justify-content: center;
-                padding: 0 0 0.5rem 0;
                 width: 100%;
             }
 
-            /* 4. Ensure days stay square and clickable */
+            /* 5. Scale down Days */
             .calendar-day {
-                width: 100%; /* Fill the grid cell */
-                aspect-ratio: 1 / 1; /* Keep perfect square */
+                width: 100% !important;
+                aspect-ratio: 1 / 1;
+                font-size: 0.8rem;
+                border-radius: 6px;
                 min-height: auto;
-                font-size: 0.85rem;
             }
-            
-            /* 5. Fix dot position for smaller squares */
+
+            /* 6. Adjust Status Dot */
             .calendar-day.has-data::after {
-                bottom: 3px;
                 width: 4px;
                 height: 4px;
+                bottom: 3px;
             }
+
+            /* --- Other Mobile Adjustments --- */
+            .recap-stats { grid-template-columns: repeat(2, 1fr); }
+            .legend-grid { grid-template-columns: 1fr; }
+            .account-card .stat-value { font-size: 1.2rem; }
+            .account-card { padding: 1.25rem 1rem; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .month-nav { width: 100%; justify-content: center; }
+            .current-month { min-width: auto; font-size: 1rem; }
+            .recap-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .recap-title { font-size: 1.2rem; }
+            .updates-section { padding: 1.5rem 1rem; }
+            .updates-section h3 { font-size: 1.3rem; }
+            .legend { padding: 1.5rem 1rem; }
+            .legend-grid { gap: 0.75rem; }
+            .legend-item { font-size: 0.85rem; }
+            .modal-content { padding: 1.5rem 1rem; margin: 1rem; max-width: calc(100% - 2rem); }
+            .modal-stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .modal-stat-value { font-size: 1.5rem; }
+            .tagline, .section-title, .hero, footer, #disclaimerBtn { text-align: center; }
+            #disclaimerBtn { width: 100%; }
+            .stat-card { padding: 1.25rem 1rem; }
+            
+            /* Modal Header Adjustments */
+            .modal-date { font-size: 1rem; }
+            .modal-nav-btn { width: 28px; height: 28px; font-size: 0.9rem; }
+            .modal-header { gap: 0.5rem; }
+            
+            /* S&P Bar Fixes */
+            .days-bar-header { font-size: 0.7rem; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .days-bar-header > span:nth-child(2) { position: static; transform: none; width: 100%; text-align: left; padding: 0; }
+            .days-bar-container { padding: 1rem 0.5rem; }
         }
         /* --- CALENDAR ANIMATIONS --- */
         .slide-out-left { animation: slideOutLeft 0.15s forwards; }
