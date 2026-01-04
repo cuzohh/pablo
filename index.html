@@ -3440,47 +3440,52 @@
                 padding: 1.25rem 1rem;
 
             }
-/* --- FIT CALENDAR TO SCREEN (NO SCROLL) --- */
+/* --- FIXED MOBILE CALENDAR LAYOUT --- */
             
-            /* 1. Reduce container padding to give grid more room */
+            /* 1. Slim down the container so the grid has room */
             .calendar {
-                padding: 1rem 0.25rem; 
-                overflow-x: hidden; /* Disable horizontal scroll */
+                padding: 1.5rem 0.5rem !important; /* Very small side padding */
+                width: 100%;
+                box-sizing: border-box;
+                overflow: hidden; /* Clip anything that might spill */
             }
 
-            /* 2. Force strict 7-column grid layout */
+            /* 2. Unite Header and Grid logic so they align perfectly */
             .calendar-header, 
             .calendar-grid {
                 display: grid;
-                grid-template-columns: repeat(7, 1fr); /* 7 equal columns */
-                gap: 3px; /* Very tight gap between squares */
-                min-width: 0; /* Allow shrinking */
+                grid-template-columns: repeat(7, 1fr); /* Strictly 7 equal columns */
+                gap: 4px; /* Small gap to save space */
                 width: 100%;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
 
-            /* 3. Shrink the day labels (Sun, Mon, etc) */
+            /* 3. Center the header text perfectly */
             .calendar-header span {
-                font-size: 0.65rem; /* Tiny font */
-                padding: 2px 0;
-                letter-spacing: 0;
-                width: 100%;
+                font-size: 0.7rem;
+                text-align: center;
                 display: flex;
+                align-items: center;
                 justify-content: center;
+                padding: 0 0 0.5rem 0;
+                width: 100%;
             }
 
-            /* 4. Shrink the day squares */
+            /* 4. Ensure days stay square and clickable */
             .calendar-day {
-                font-size: 0.8rem;
-                border-radius: 8px; /* Slightly smaller corners */
-                aspect-ratio: 1 / 1; /* Keep them square */
-                min-height: 0;
+                width: 100%; /* Fill the grid cell */
+                aspect-ratio: 1 / 1; /* Keep perfect square */
+                min-height: auto;
+                font-size: 0.85rem;
             }
-
-            /* 5. Adjust the colored dots inside days */
+            
+            /* 5. Fix dot position for smaller squares */
             .calendar-day.has-data::after {
+                bottom: 3px;
                 width: 4px;
                 height: 4px;
-                bottom: 4px;
             }
         }
         /* --- CALENDAR ANIMATIONS --- */
