@@ -6130,35 +6130,50 @@ function renderCalendar() {
             const prevMonthBtn = document.getElementById('prevMonth');
 
             const nextMonthBtn = document.getElementById('nextMonth');
+function updateNavButtons() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth(); // 0-indexed (0=Jan, 11=Dec)
+
+                // Disable if current view is Dec 2025 or earlier
+                if (year < 2025 || (year === 2025 && month <= 11)) { // month 11 is December
+                    prevMonthBtn.style.opacity = '0.3';
+                    prevMonthBtn.style.cursor = 'not-allowed';
+                } else {
+                    prevMonthBtn.style.opacity = '1';
+                    prevMonthBtn.style.cursor = 'pointer';
+                }
+            }
 
             if (prevMonthBtn) {
-
                 prevMonthBtn.addEventListener('click', () => {
+                    const year = currentDate.getFullYear();
+                    const month = currentDate.getMonth();
+
+                    // CHECK: Prevent going before Dec 2025
+                    if (year === 2025 && month === 11) {
+                        return; // Stop execution
+                    }
+                    // Safety check for years before 2025 (though logic shouldn't allow getting here)
+                    if (year < 2025) return;
 
                     monthDirection = 'prev';
-
                     currentDate.setMonth(currentDate.getMonth() - 1);
-
                     renderCalendar();
-
+                    updateNavButtons(); // Update button state after moving
                 });
-
             }
 
             if (nextMonthBtn) {
-
                 nextMonthBtn.addEventListener('click', () => {
-
                     monthDirection = 'next';
-
                     currentDate.setMonth(currentDate.getMonth() + 1);
-
                     renderCalendar();
-
+                    updateNavButtons(); // Update button state after moving
                 });
-
             }
-
+            
+            // Run once on load to set initial state
+            updateNavButtons();
 
 
             // Updates list collapse/expand
