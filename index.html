@@ -3465,6 +3465,43 @@
 
         /* Prevents the calendar from jumping in height during animation */
         .calendar-grid { min-height: 300px; }
+        /* --- Modal Navigation --- */
+        .modal-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .modal-nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .modal-nav-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Update header layout for mobile */
+        @media (max-width: 768px) {
+            .modal-date { font-size: 1rem; }
+            .modal-nav-btn { width: 28px; height: 28px; font-size: 0.9rem; }
+            .modal-header { gap: 0.5rem; }
+        }
 
     </style>
 
@@ -3976,20 +4013,17 @@
 
     <!-- Trade Detail Modal -->
 
-    <div class="modal-overlay" id="modalOverlay">
-
-        <div class="modal">
-
+<div class="modal">
             <div class="modal-header">
-
-                <span class="modal-date" id="modalDate"></span>
-
+                <div class="modal-header-content">
+                    <button class="modal-nav-btn" id="modalPrev">←</button>
+                    <span class="modal-date" id="modalDate"></span>
+                    <button class="modal-nav-btn" id="modalNext">→</button>
+                </div>
+                
                 <button class="modal-close" id="modalClose">×</button>
-
             </div>
-
             <div id="modalContent"></div>
-
         </div>
 
     </div>
@@ -4005,6 +4039,8 @@
         const RISK_PERCENT = 0.0025; // 0.25% risk per trade
 
         const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT; // $250 at start, scales with balance
+        
+        let currentModalDateStr = null; // Track currently open date
 
         
 
@@ -5684,9 +5720,26 @@ function renderCalendar() {
             
             // NOTE: updateMonthlyRecap call removed from here because it's handled in the logic above
         }
-
+        function changeModalDay(offset) {
+            if (!currentModalDateStr) return;
+            const date = new Date(currentModalDateStr + 'T12:00:00');
+            date.setDate(date.getDate() + offset);
+            
+            // Format back to YYYY-MM-DD
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const newDateStr = `${year}-${month}-${day}`;
+            
+            const dayOfWeek = date.getDay();
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+            
+            openModal(newDateStr, isWeekend);
+        }
+        
         function openModal(dateStr, isWeekend = false) {
-
+            currentModalDateStr = dateStr;
+            
             const overlay = document.getElementById('modalOverlay');
 
             const dateEl = document.getElementById('modalDate');
@@ -6283,7 +6336,21 @@ function updateNavButtons() {
             }
 
 
+        // Modal Navigation Arrows
+            const modalPrev = document.getElementById('modalPrev');
+            const modalNext = document.getElementById('modalNext');
+            if (modalPrev) modalPrev.addEventListener('click', () => changeModalDay(-1));
+            if (modalNext) modalNext.addEventListener('click', () => changeModalDay(1));
 
+            // Modal Arrow Keys
+            document.addEventListener('keydown', (e) => {
+                const overlay = document.getElementById('modalOverlay');
+                if (overlay && overlay.classList.contains('active')) {
+                    if (e.key === 'ArrowLeft') changeModalDay(-1);
+                    if (e.key === 'ArrowRight') changeModalDay(1);
+                }
+            });
+            
             // Keyboard shortcuts
 
             document.addEventListener('keydown', (e) => {
