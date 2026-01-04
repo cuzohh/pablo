@@ -3102,70 +3102,86 @@
 
 
 /* Responsive Mobile Layout - "Make Boxes Smaller" Fix */
+/* MOBILE FIXES */
         @media (max-width: 768px) {
-            /* 1. Page Container */
-            .container { 
-                padding: 1.5rem 0.25rem !important; 
+            
+            /* 1. Maximize screen real estate */
+            .container {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
                 width: 100%;
                 overflow-x: hidden;
             }
 
-            .hero { padding: 2rem 0 3rem; }
-            .logo { font-size: 3.5rem; }
-            .stat-value { font-size: 1.8rem; }
-            
-            /* 2. Calendar Container */
-            .calendar { 
-                padding: 1rem 2px !important; /* Minimal side padding */
-                border-radius: 16px;
+            /* 2. Constrain the calendar container */
+            .calendar {
+                padding: 1rem 5px !important; /* Very small side padding */
                 width: 100% !important;
                 box-sizing: border-box;
-                overflow: hidden !important; /* Hide scrollbar */
+                overflow: hidden !important; /* Disable scroll, force fit */
             }
 
-            /* 3. The Grid System */
+            /* 3. Unify Header and Grid layouts */
             .calendar-header, 
             .calendar-grid {
                 display: grid !important;
+                /* Force exactly 7 equal columns */
                 grid-template-columns: repeat(7, 1fr) !important; 
-                gap: 1px !important; /* Tiny 1px gap to save space */
+                /* Tiny gap to save space */
+                gap: 2px !important; 
                 width: 100% !important;
                 margin: 0 !important;
-                padding: 0 !important;
                 box-sizing: border-box !important;
             }
 
-            /* 4. Headers */
+            /* 4. Shrink Header Text so it aligns center */
             .calendar-header span {
-                font-size: 0.65rem; 
-                padding: 0 0 0.5rem 0 !important;
+                font-size: 0.65rem !important;
+                text-transform: uppercase;
+                letter-spacing: 0;
+                padding: 0 0 5px 0 !important;
                 text-align: center;
-                display: flex;
+                display: flex; /* Flex ensures perfect centering */
                 justify-content: center;
+                align-items: center;
                 width: 100%;
             }
 
-            /* 5. Day Boxes - FORCE SMALLER SIZE */
+            /* 5. Force Day Boxes to be squares that shrink */
             .calendar-day {
                 width: 100% !important;
-                aspect-ratio: 1 / 1; 
-                /* Reduced font size so the number fits in a smaller box */
-                font-size: 0.7rem !important; 
-                padding: 0 !important; /* Remove padding inside the box */
-                border-radius: 6px;
-                min-height: 0 !important; /* Allow shrinking to tiny sizes */
+                /* This ensures the height shrinks automatically with the width */
+                aspect-ratio: 1 / 1 !important; 
+                height: auto !important;
+                min-height: 0 !important;
+                
+                /* Center the numbers */
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                
+                /* Smaller font and remove padding that pushes width out */
+                font-size: 0.8rem !important;
+                padding: 0 !important; 
             }
 
-            /* 6. Tiny Status Dots */
+            /* 6. Adjust the status dot for smaller boxes */
             .calendar-day.has-data::after {
-                width: 3px;
-                height: 3px;
-                bottom: 2px;
+                width: 4px;
+                height: 4px;
+                bottom: 3px;
             }
 
+            /* 7. Stack the headers for better mobile layout */
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .month-nav {
+                width: 100%;
+                justify-content: center;
+            }
             /* --- Other Elements --- */
             .recap-stats { grid-template-columns: repeat(2, 1fr); }
             .legend-grid { grid-template-columns: 1fr; }
