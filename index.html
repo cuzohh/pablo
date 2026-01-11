@@ -1085,8 +1085,9 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             
-            /* Reduced padding to ensure they fit on smaller laptops */
-            padding: 1.2rem 0.5rem; 
+            padding: 1.2rem 0.5rem;
+            overflow: hidden;
+            min-width: 0; 
             
             text-align: center;
             transition: all 0.3s ease;
@@ -1155,6 +1156,24 @@
 
             white-space: nowrap;
 
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            max-width: 100%;
+
+        }
+
+        @media (max-width: 1200px) {
+            .recap-stat-value {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .recap-stat-value {
+                font-size: 0.9rem;
+            }
         }
 
 
@@ -1529,11 +1548,13 @@
 
             padding: 2rem;
 
-            overflow: hidden;
+            overflow: visible;
 
             transition: all 0.4s ease;
 
-            overflow-x: auto;
+            width: 100%;
+
+            box-sizing: border-box;
 
         }
 
@@ -1560,6 +1581,10 @@
             gap: 0.5rem;
 
             margin-bottom: 1rem;
+
+            width: 100%;
+
+            box-sizing: border-box;
 
         }
 
@@ -1610,6 +1635,10 @@
             gap: 0.5rem;
 
             position: relative;
+
+            width: 100%;
+
+            box-sizing: border-box;
 
         }
 
@@ -3115,23 +3144,26 @@
 
             /* 2. Constrain the calendar container */
             .calendar {
-                padding: 1rem 5px !important; /* Very small side padding */
+                padding: 1rem 0 !important;
                 width: 100% !important;
                 box-sizing: border-box;
-                overflow: hidden !important; /* Disable scroll, force fit */
+                overflow: visible !important;
             }
 
             /* 3. Unify Header and Grid layouts */
             .calendar-header, 
             .calendar-grid {
                 display: grid !important;
-                /* Force exactly 7 equal columns */
                 grid-template-columns: repeat(7, 1fr) !important; 
-                /* Tiny gap to save space */
                 gap: 2px !important; 
                 width: 100% !important;
                 margin: 0 !important;
+                padding: 0 !important;
                 box-sizing: border-box !important;
+            }
+            
+            .calendar-header {
+                margin-bottom: 0.5rem !important;
             }
 
             /* 4. Shrink Header Text so it aligns center */
@@ -3139,12 +3171,14 @@
                 font-size: 0.65rem !important;
                 text-transform: uppercase;
                 letter-spacing: 0;
-                padding: 0 0 5px 0 !important;
+                padding: 0 !important;
+                margin: 0 0 5px 0 !important;
                 text-align: center;
-                display: flex; /* Flex ensures perfect centering */
+                display: flex;
                 justify-content: center;
                 align-items: center;
                 width: 100%;
+                box-sizing: border-box;
             }
 
             /* 5. Force Day Boxes to be squares that shrink */
