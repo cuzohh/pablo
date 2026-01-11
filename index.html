@@ -3823,11 +3823,10 @@
 
         const RISK_PERCENT = 0.0025; // 0.25% risk per trade
 
-        const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT; // $250 at start, scales with balance
+        const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT;
         
-        let currentModalDateStr = null; // Track currently open date
-
-        let isModalAnimating = false; // Prevent double clicks during animation
+        let currentModalDateStr = null;
+        let isModalAnimating = false;
 
         
 
@@ -3835,8 +3834,8 @@
 
         const sp500MonthlyReturns = {
 
-            '2025-12': -0.05,
-            '2026-01': 0.19
+            '2025-12': -0.22,
+            '2026-01': 1.78
 
         };
 
@@ -3946,27 +3945,7 @@
 
 
 
-        // Trading data - P&L calculated from RR (risk-reward ratio)
-
-        // For losses: pnl = -RISK_PER_TRADE (-$250)
-
-        // For wins: pnl = RR × RISK_PER_TRADE (e.g., 5.38 RR = +$1,345)
-
-        // For breakevens: pnl = 0
-
-        // Image URL base - images stored in github.com/cuzohh/pablo/images/
-
         const IMAGE_BASE = 'https://raw.githubusercontent.com/cuzohh/pablo/main/images/';
-
-        
-
-        // Trading data with recaps
-
-        // Image naming: dec825.png = December 8, 2025
-
-        // Trades only need: time, type, result, rr (for wins)
-
-        // P&L is calculated dynamically based on compounding 0.25% risk
 
         const tradingData = {
 
@@ -4249,10 +4228,6 @@
 
         
 
-        // Calculate running balances with INTRADAY compounding
-
-        // Risk is recalculated after each trade based on current balance
-
         function calculateDailyBalances() {
 
             const sortedDates = Object.keys(tradingData).sort();
@@ -4267,11 +4242,7 @@
 
                 const startBalance = runningBalance;
 
-                const tradeDetails = []; // Store each trade's risk and P&L
-
-                
-
-                // Calculate each trade with intraday compounding
+                const tradeDetails = [];
 
                 const dayData = tradingData[dateStr];
 
@@ -4299,8 +4270,7 @@
 
                         }
 
-                        // breakevens don't change balance
-
+                        // Breakevens don't change balance
                         
 
                         tradeDetails.push({ risk: tradeRisk, pnl: tradePnL });
@@ -4429,8 +4399,6 @@
 
 
 
-            // Calculate win rate excluding breakevens (only wins vs losses)
-
             const tradesForWinRate = wins + losses;
 
             const winRate = tradesForWinRate > 0 ? Math.round((wins / tradesForWinRate) * 100) : 0;
@@ -4438,8 +4406,6 @@
             const totalTrades = dayData.trades.length;
 
             
-
-            // Use starting risk for display (first trade's risk)
 
             const displayRisk = tradeDetails.length > 0 ? tradeDetails[0].risk : STARTING_BALANCE * RISK_PERCENT;
 
@@ -4503,8 +4469,6 @@
 
 
 
-            // Calculate win rate excluding breakevens (only wins vs losses)
-
             const tradesForWinRate = wins + losses;
 
             const winRate = tradesForWinRate > 0 ? Math.round((wins / tradesForWinRate) * 100) : 0;
@@ -4518,8 +4482,6 @@
         }
 
 
-
-        // Calculate monthly stats
 
         function calculateMonthlyStats(year, month) {
 
@@ -4573,8 +4535,6 @@
 
                         
 
-                        // Calculate total RR for averaging
-
                         dayData.trades.forEach(t => {
 
                             if (t.result === 'win' && t.rr) {
@@ -4594,8 +4554,6 @@
             });
 
 
-
-            // Calculate win rate excluding breakevens (only wins vs losses)
 
             const tradesForWinRate = wins + losses;
 
@@ -4685,8 +4643,6 @@
 
 
 
-        // Update overall stats display
-
         function updateOverallStats() {
 
             const stats = calculateOverallStats();
@@ -4700,8 +4656,6 @@
             animateValue('totalPnL', 0, stats.totalPnL, '', stats.totalPnL >= 0 ? 'positive' : 'negative', true);
 
             
-
-            // Calculate monthly percent return
 
             function getMonthlyStartBalance() {
 
@@ -4728,8 +4682,6 @@
                 const firstDayStr = `${lastYear}-${String(lastMonth + 1).padStart(2, '0')}-01`;
 
                 
-
-                // Check if we have data for the first day of the month
 
                 if (dailyBalances[firstDayStr]) {
 
@@ -4779,8 +4731,6 @@
 
             
 
-            // Update current balance
-
             const balanceEl = document.getElementById('currentBalance');
 
             if (balanceEl) {
@@ -4817,8 +4767,6 @@
 
                     
 
-                    // Update total percent return
-
                     if (totalPercentEl) {
 
                         const totalPercent = ((current - STARTING_BALANCE) / STARTING_BALANCE) * 100;
@@ -4853,8 +4801,6 @@
 
                         
 
-                        // Update monthly recap to refresh S&P 500 comparison
-
                         const sortedDates = Object.keys(tradingData).sort();
 
                         if (sortedDates.length > 0) {
@@ -4878,8 +4824,6 @@
         }
 
 
-
-                // Update monthly recap display
 
         function updateMonthlyRecap(year, month) {
 
@@ -4916,8 +4860,6 @@
                 }
 
                 
-
-                // Calculate monthly return for this month
 
                 const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`;
 
@@ -5125,13 +5067,10 @@ recapStats.innerHTML = `
     </div>
 `;
 
-                // Add the days bar
-
-           if (stats.tradingDays > 0) {
+                if (stats.tradingDays > 0) {
                     const greenPercent = (stats.greenDays / stats.tradingDays) * 100;
                     const redPercent = (stats.redDays / stats.tradingDays) * 100;
                     
-                    // FIX: Logic for singular/plural
                     const dayLabel = stats.tradingDays === 1 ? 'Day' : 'Days';
                     
                     recapStats.innerHTML += `
@@ -5148,9 +5087,6 @@ recapStats.innerHTML = `
                         </div>
                     `;
                 }
-                
-
-                // Add S&P 500 comparison bar
 
                 if (monthlyReturn !== null && sp500MonthlyReturns[yearMonth] !== undefined) {
 
@@ -5364,13 +5300,7 @@ recapStats.innerHTML = `
 
             
 
-            // Remove any existing animation classes
-
             element.classList.remove('slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
-
-            
-
-            // Add slide out animation
 
             if (direction === 'prev') {
 
@@ -5382,10 +5312,6 @@ recapStats.innerHTML = `
 
             }
 
-            
-
-            // After slide out, change text and slide in
-
             setTimeout(() => {
 
                 const year = currentDate.getFullYear();
@@ -5393,10 +5319,6 @@ recapStats.innerHTML = `
                 const month = currentDate.getMonth();
 
                 element.textContent = `${months[month]} ${year}`;
-
-                
-
-                // Remove slide out, add slide in
 
                 element.classList.remove('slide-out-left', 'slide-out-right');
 
@@ -5410,16 +5332,9 @@ recapStats.innerHTML = `
 
                 }
 
-                
-
-                // Remove animation class after animation completes
-
                 setTimeout(() => {
 
                     element.classList.remove('slide-in-left', 'slide-in-right');
-
-                    // Reset monthDirection after animation completes
-
                     monthDirection = null;
 
                 }, 300);
@@ -5442,11 +5357,8 @@ function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
-            // Handle Animation and Stats Updates
             if (monthDirection) {
                 const direction = monthDirection;
-                
-                // 1. Animate the Header Text (using your existing function)
                 animateMonthText(monthLabel, direction);
                 
                 const recapMonthLabel = document.getElementById('recapMonth');
@@ -5454,19 +5366,15 @@ function renderCalendar() {
                     animateMonthText(recapMonthLabel, direction);
                 }
 
-                // 2. Animate the Recap Stats (The Fix)
                 if (recapStats) {
-                    // Fade out and slide slightly in the direction of exit
                     recapStats.style.transition = 'all 0.15s ease-in';
                     recapStats.style.opacity = '0';
                     recapStats.style.transform = direction === 'next' ? 'translateX(-10px)' : 'translateX(10px)';
 
-                    // Wait for the text animation half-point (approx 150ms) to update data
                     setTimeout(() => {
                         updateMonthlyRecap(year, month);
                         
-                        // Prepare for entry (slide in from opposite side)
-                        recapStats.style.transition = 'none'; // Disable transition for instant jump
+                        recapStats.style.transition = 'none';
                         recapStats.style.transform = direction === 'next' ? 'translateX(10px)' : 'translateX(-10px)';
                         
                         // Force a reflow
@@ -5482,13 +5390,11 @@ function renderCalendar() {
                 // Reset direction
                 monthDirection = null;
             } else {
-                // No animation (Initial Load)
                 monthLabel.textContent = `${months[month]} ${year}`;
                 const recapMonthLabel = document.getElementById('recapMonth');
                 if (recapMonthLabel) {
                     recapMonthLabel.textContent = `${months[month]} ${year}`;
                 }
-                // Update stats immediately on load
                 updateMonthlyRecap(year, month);
             }
             
@@ -5499,14 +5405,12 @@ function renderCalendar() {
             
             grid.innerHTML = '';
             
-            // Empty cells for days before month starts
             for (let i = 0; i < firstDay; i++) {
                 const empty = document.createElement('div');
                 empty.className = 'calendar-day empty';
                 grid.appendChild(empty);
             }
             
-            // Days of month
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayEl = document.createElement('div');
                 dayEl.className = 'calendar-day';
@@ -5547,30 +5451,22 @@ function renderCalendar() {
                 grid.appendChild(dayEl);
             }
             
-            // NOTE: updateMonthlyRecap call removed from here because it's handled in the logic above
         }
        function changeModalDay(offset) {
-            // Prevent action if no date is selected or if animation is already running
             if (!currentModalDateStr || isModalAnimating) return;
             
-            isModalAnimating = true; // Lock interactions
+            isModalAnimating = true;
             
             const content = document.getElementById('modalContent');
             const dateLabel = document.getElementById('modalDate');
             
-            // Determine Animation Direction
-            // Next Day (1): Slide out to Left, New comes from Right
-            // Prev Day (-1): Slide out to Right, New comes from Left
             const exitClass = offset === 1 ? 'slide-out-left' : 'slide-out-right';
             const enterClass = offset === 1 ? 'slide-in-right' : 'slide-in-left';
             
-            // 1. Start Exit Animation
             if (content) content.classList.add(exitClass);
             if (dateLabel) dateLabel.classList.add(exitClass);
             
-            // 2. Wait 150ms for exit to finish, then update data
             setTimeout(() => {
-                // --- Logic to calculate new date ---
                 const date = new Date(currentModalDateStr + 'T12:00:00');
                 date.setDate(date.getDate() + offset);
                 
@@ -5582,14 +5478,11 @@ function renderCalendar() {
                 const dayOfWeek = date.getDay();
                 const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
                 
-                // Update the Modal Content (This replaces the HTML)
                 openModal(newDateStr, isWeekend);
                 
-                // --- Re-select elements (since HTML might have been rebuilt) ---
                 const newContent = document.getElementById('modalContent');
                 const newDateLabel = document.getElementById('modalDate');
                 
-                // 3. Remove Exit classes and Add Entry classes
                 if (newContent) {
                     newContent.classList.remove('slide-out-left', 'slide-out-right');
                     newContent.classList.add(enterClass);
@@ -5599,14 +5492,13 @@ function renderCalendar() {
                     newDateLabel.classList.add(enterClass);
                 }
                 
-                // 4. Wait 100ms for entry to finish, then cleanup
                 setTimeout(() => {
                     if (newContent) newContent.classList.remove('slide-in-left', 'slide-in-right');
                     if (newDateLabel) newDateLabel.classList.remove('slide-in-left', 'slide-in-right');
-                    isModalAnimating = false; // Unlock interactions
+                    isModalAnimating = false;
                 }, 150);
                 
-            }, 150); // Match this delay to your CSS animation duration (0.3s)
+            }, 150);
         }
         
         function openModal(dateStr, isWeekend = false) {
@@ -5661,8 +5553,6 @@ function renderCalendar() {
                     </div>
 
                 `;
-
-                // Add active class with slight delay for calendar day animation
 
                 setTimeout(() => {
 
@@ -5737,8 +5627,6 @@ function renderCalendar() {
                     : '';
 
                 
-
-                // Build notes HTML if available
 
                 const notesHtml = data.notes 
 
@@ -5870,8 +5758,6 @@ function renderCalendar() {
 
             } else {
 
-                // Random messages for days with no trades
-
                 const noTradeMessages = [
 
                     { emoji: '😴', text: 'Maybe Pablo was taking a nap.' },
@@ -5944,8 +5830,6 @@ function renderCalendar() {
 
             
 
-            // Add active class with slight delay for calendar day animation
-
             setTimeout(() => {
 
                 overlay.classList.add('active');
@@ -5990,8 +5874,6 @@ function renderCalendar() {
 
 
 
-        // Initialize updates list state from localStorage
-
         function initUpdatesState() {
 
             const updatesList = document.getElementById('updatesList');
@@ -6001,8 +5883,6 @@ function renderCalendar() {
             if (updatesList && updatesSection) {
 
                 const savedState = localStorage.getItem('updatesListCollapsed');
-
-                // Default to collapsed on first visit (when no saved state exists)
 
                 if (savedState === null || savedState === 'true') {
 
@@ -6023,8 +5903,6 @@ function renderCalendar() {
         }
 
 
-
-        // Event listeners - wait for DOM to be ready
 
         function setupEventListeners() {
 
@@ -6057,10 +5935,9 @@ function renderCalendar() {
             const nextMonthBtn = document.getElementById('nextMonth');
 function updateNavButtons() {
                 const year = currentDate.getFullYear();
-                const month = currentDate.getMonth(); // 0-indexed (0=Jan, 11=Dec)
+                const month = currentDate.getMonth();
 
-                // Disable if current view is Dec 2025 or earlier
-                if (year < 2025 || (year === 2025 && month <= 11)) { // month 11 is December
+                if (year < 2025 || (year === 2025 && month <= 11)) {
                     prevMonthBtn.style.opacity = '0.3';
                     prevMonthBtn.style.cursor = 'not-allowed';
                 } else {
@@ -6074,11 +5951,9 @@ function updateNavButtons() {
                     const year = currentDate.getFullYear();
                     const month = currentDate.getMonth();
 
-                    // CHECK: Prevent going before Dec 2025
                     if (year === 2025 && month === 11) {
-                        return; // Stop execution
+                        return;
                     }
-                    // Safety check for years before 2025 (though logic shouldn't allow getting here)
                     if (year < 2025) return;
 
                     monthDirection = 'prev';
