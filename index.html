@@ -3146,17 +3146,19 @@
             .calendar {
                 padding: 1rem 0 !important;
                 width: 100% !important;
+                max-width: 100% !important;
                 box-sizing: border-box;
                 overflow: visible !important;
             }
 
-            /* 3. Unify Header and Grid layouts */
+            /* 3. Unify Header and Grid layouts - use minmax(0, 1fr) to prevent overflow */
             .calendar-header, 
             .calendar-grid {
                 display: grid !important;
-                grid-template-columns: repeat(7, 1fr) !important; 
+                grid-template-columns: repeat(7, minmax(0, 1fr)) !important; 
                 gap: 2px !important; 
                 width: 100% !important;
+                max-width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 box-sizing: border-box !important;
@@ -3184,19 +3186,19 @@
             /* 5. Force Day Boxes to be squares that shrink */
             .calendar-day {
                 width: 100% !important;
-                /* This ensures the height shrinks automatically with the width */
+                max-width: 100% !important;
                 aspect-ratio: 1 / 1 !important; 
                 height: auto !important;
                 min-height: 0 !important;
+                min-width: 0 !important;
                 
-                /* Center the numbers */
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 
-                /* Smaller font and remove padding that pushes width out */
                 font-size: 0.8rem !important;
-                padding: 0 !important; 
+                padding: 0 !important;
+                box-sizing: border-box !important;
             }
 
             /* 6. Adjust the status dot for smaller boxes */
