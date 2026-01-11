@@ -1156,29 +1156,29 @@
 
             white-space: nowrap;
 
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-
-            max-width: 100%;
-
         }
 
         @media (max-width: 1200px) {
             .recap-stat-value {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
         }
 
         @media (max-width: 900px) {
             .recap-stat-value {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
         }
         
         @media (max-width: 768px) {
             .recap-stat-value {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .recap-stat-value {
+                font-size: 0.7rem;
             }
         }
 
@@ -2193,12 +2193,6 @@
             margin-bottom: 0.3rem;
 
             white-space: nowrap;
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-
-            max-width: 100%;
 
         }
 
@@ -3322,22 +3316,27 @@
             .modal-header { gap: 0.5rem; }
             
             .modal-stat-value {
-                font-size: 1.2rem !important;
+                font-size: 1.1rem !important;
             }
             
             .modal-stats {
-                gap: 1rem !important;
+                gap: 0.75rem !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
             }
             
             .modal-stat {
-                padding: 1rem 0.75rem !important;
+                padding: 1rem 0.5rem !important;
                 min-width: 0;
-                overflow: hidden;
             }
             
-            .modal-stats {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: 0.75rem !important;
+            @media (max-width: 480px) {
+                .modal-stat-value {
+                    font-size: 0.95rem !important;
+                }
+                
+                .modal-stat {
+                    padding: 0.75rem 0.4rem !important;
+                }
             }
         }
 
