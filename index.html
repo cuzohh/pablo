@@ -3416,6 +3416,23 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
                     
+                    <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">January 5, 2026</span>
+                   
+                    <span style="color: var(--text-dim); font-size: 0.85rem;">Algorithm Refinement</span>
+           
+            </div>
+           
+            <p style="color: var(--text); line-height: 1.6; margin: 0;">
+                Updated entry and exit logic with refined validation criteria. These changes may affect how trades would have been executed historically, potentially resulting in different entry points, exit timing, or trade selection compared to previous algorithm versions.
+
+            </p>
+                    
+            </div>
+
+                <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                    
                     <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December 29, 2025</span>
                    
                     <span style="color: var(--text-dim); font-size: 0.85rem;">Major Algorithm Overhaul</span>
@@ -4183,6 +4200,48 @@
                     { time: '07:50', type: 'short', result: 'loss' },
                     { time: '09:37', type: 'short', result: 'be' },
                     { time: '09:50', type: 'short', result: 'win', rr: 27.41 }
+                ]
+            },
+            '2026-01-05': {
+                image: 'jan0526.png',
+                notes: 'Rough start to the week. Pablo took 4 short losses throughout the morning session.',
+                trades: [
+                    { time: '08:55', type: 'short', result: 'loss' },
+                    { time: '09:02', type: 'short', result: 'loss' },
+                    { time: '09:29', type: 'short', result: 'loss' },
+                    { time: '11:08', type: 'short', result: 'loss' }
+                ]
+            },
+            '2026-01-06': {
+                image: 'jan0626.png',
+                notes: 'Mixed day with a loss early, but Pablo caught a small 0.57 RR winner in the afternoon.',
+                trades: [
+                    { time: '09:56', type: 'short', result: 'loss' },
+                    { time: '15:42', type: 'short', result: 'win', rr: 0.57 }
+                ]
+            },
+            '2026-01-07': {
+                image: 'jan0726.png',
+                notes: 'Started with a loss, but Pablo bounced back with a massive 9.86 RR winner.',
+                trades: [
+                    { time: '11:57', type: 'short', result: 'loss' },
+                    { time: '14:08', type: 'short', result: 'win', rr: 9.86 }
+                ]
+            },
+            '2026-01-08': {
+                image: 'jan0826.png',
+                notes: 'Quick turnaround. Pablo took a long loss early but immediately caught an 8.96 RR winner.',
+                trades: [
+                    { time: '09:36', type: 'long', result: 'loss' },
+                    { time: '10:01', type: 'long', result: 'win', rr: 8.96 }
+                ]
+            },
+            '2026-01-09': {
+                image: 'jan0926.png',
+                notes: 'Strong day with two winners. Pablo caught a 10.58 RR winner early and a 1.76 RR winner in the afternoon.',
+                trades: [
+                    { time: '09:00', type: 'short', result: 'win', rr: 10.58 },
+                    { time: '14:46', type: 'short', result: 'win', rr: 1.76 }
                 ]
             }
 
@@ -6324,7 +6383,7 @@ function updateNavButtons() {
 
             setupEventListeners();
 
-            renderCalendar();
+            renderCalendar();6
 
             setTimeout(updateOverallStats, 800);
 
