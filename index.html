@@ -752,23 +752,15 @@
 
 
         .stat-card {
-
             background: var(--bg-card);
-
             backdrop-filter: blur(20px);
-
             border: 1px solid var(--border);
-
             border-radius: 20px;
-
             padding: 2rem;
-
             text-align: center;
-
             transition: all 0.4s ease;
-
             animation: fadeInUp 0.8s ease-out both;
-
+            overflow: visible; /* Added to prevent cutoff during hover animations */
         }
 
 
@@ -890,46 +882,6 @@
         }
 
 
-
-        .recap-stats {
-
-            display: grid;
-
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-
-            gap: 1rem;
-
-            max-height: 2000px;
-
-            opacity: 1;
-
-            overflow: hidden;
-
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-
-                        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-
-                        margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-            margin-bottom: 0;
-            
-            transform: translateX(0); /* Add this line */
-            
-            will-change: transform, opacity; /* Add this for smoother performance */
-
-        }
-
-
-
-        .monthly-recap.collapsed .recap-stats {
-
-            max-height: 0;
-
-            opacity: 0;
-
-            margin-bottom: 0;
-
-        }
 
 
 
@@ -1061,15 +1013,24 @@
             
             max-height: 2000px;
             opacity: 1;
-            overflow: hidden;
+            overflow: visible; /* Changed from hidden to allow hover animations */
             transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
                         opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
                         margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Added for sliding animation */
+                        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             
             margin-bottom: 0;
             transform: translateX(0);
             will-change: transform, opacity;
+            padding-top: 10px; /* Added padding to ensure no cutoff at the very top */
+            margin-top: -10px;
+        }
+
+        .monthly-recap.collapsed .recap-stats {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+            overflow: hidden; /* Only hide overflow when collapsed */
         }
 
         /* Desktop: Force exactly 7 equal columns on one line */
@@ -1086,7 +1047,7 @@
             border-radius: 16px;
             
             padding: 1.2rem 0.5rem;
-            overflow: hidden;
+            overflow: visible; /* Changed from hidden to allow hover animations */
             min-width: 0; 
             
             text-align: center;
@@ -1111,25 +1072,16 @@
 
 
         .recap-stat {
-
             background: rgba(255, 255, 255, 0.03);
-
             border-radius: 16px;
-
             padding: 1.2rem;
-
             text-align: center;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
             transition: all 0.3s ease;
-
+            overflow: visible; /* Added to prevent cutoff */
         }
 
 
@@ -3903,7 +3855,7 @@
         const sp500MonthlyReturns = {
 
             '2025-12': -0.22,
-            '2026-01': 1.78
+            '2026-01': 1.43
 
         };
 
