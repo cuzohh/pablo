@@ -28,6 +28,8 @@ Unfortunately, buying a $600 TradingView plan to backtest this isn't something I
 
 But for now, data will be collected manually — the old fashioned way.
 
+I will put pablo on a funded account in February if it stays profitable through January though!
+
 Daily recaps and performance tracking will be uploaded on the **[Pablo website](https://cuzohh.github.io/pablo/)**
 
 ---
