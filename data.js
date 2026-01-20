@@ -7,7 +7,7 @@ const IMAGE_BASE = 'https://raw.githubusercontent.com/cuzohh/pablo/main/images/'
 // S&P 500 monthly returns (year-month format: "YYYY-MM")
 const sp500MonthlyReturns = {
     '2025-12': -0.22,
-    '2026-01': 1.43
+    '2026-01': -0.63
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -304,3 +304,4 @@ const tradingData = {
         ]
     }
 };
+
