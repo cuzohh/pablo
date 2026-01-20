@@ -286,5 +286,21 @@ const tradingData = {
             { time: '09:26', type: 'short', result: 'loss' },
             { time: '09:30', type: 'short', result: 'win', rr: 4.59 }
         ]
+    },
+    '2026-01-19': {
+        image: 'jan1926.png',
+        notes: 'Pablo caught a solid 6.31 RR long winner in the morning session.',
+        trades: [
+            { time: '10:55', type: 'long', result: 'win', rr: 6.31 }
+        ]
+    },
+    '2026-01-20': {
+        image: 'jan2026.png',
+        notes: 'Tough start with two long losses, but Pablo bounced back with a 2.55 RR winner via trailing stop.',
+        trades: [
+            { time: '03:05', type: 'long', result: 'loss' },
+            { time: '08:05', type: 'long', result: 'loss' },
+            { time: '09:31', type: 'long', result: 'win', rr: 2.55 }
+        ]
     }
 };
