@@ -2,7 +2,7 @@
 const STARTING_BALANCE = 100000;
 const RISK_PERCENT = 0.0025; // 0.25% risk per trade
 const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT;
-const IMAGE_BASE = 'https://raw.githubusercontent.com/whirls/pablo/main/images/';
+const IMAGE_BASE = 'https://raw.githubusercontent.com/cuzohh/pablo/main/images/';
 
 // S&P 500 monthly returns (year-month format: "YYYY-MM")
 const sp500MonthlyReturns = {
@@ -184,7 +184,7 @@ const tradingData = {
         ]
     },
     '2025-12-29': {
-        image: 'dec2925.png', 
+        image: 'dec2925.png',
         notes: 'A quiet Monday returning from the holidays. One breakeven in the early morning followed by a stop loss.',
         trades: [
             { time: '03:51', type: 'long', result: 'be' },
