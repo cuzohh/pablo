@@ -2,7 +2,7 @@
 const STARTING_BALANCE = 100000;
 const RISK_PERCENT = 0.0025; // 0.25% risk per trade
 const RISK_PER_TRADE = STARTING_BALANCE * RISK_PERCENT;
-const IMAGE_BASE = 'https://raw.githubusercontent.com/cuzohh/pablo/main/images/';
+const IMAGE_BASE = 'https://raw.githubusercontent.com/whirls/pablo/main/images/';
 
 // S&P 500 monthly returns (year-month format: "YYYY-MM")
 const sp500MonthlyReturns = {
@@ -304,4 +304,3 @@ const tradingData = {
         ]
     }
 };
-

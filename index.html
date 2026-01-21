@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pablo</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
-    <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
+    <link rel="alternate icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 </head>
+
 <body>
-    <div class="grid-bg"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div id="scroll-progress"></div>
+    <canvas id="bg-canvas"></canvas>
+
 
     <div class="container">
         <!-- Theme Toggle -->
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-            <svg class="theme-icon moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="theme-icon moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
-            <svg class="theme-icon sun-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="theme-icon sun-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
                 <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -57,73 +65,108 @@
 
         <!-- Disclaimer Button -->
         <div style="text-align: center; margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out 0.6s both;">
-            <button id="disclaimerBtn" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; font-size: 0.9rem; font-family: 'Syne', sans-serif; transition: all 0.3s ease;">
+            <button id="disclaimerBtn"
+                style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.8rem 1.5rem; border-radius: 12px; cursor: pointer; font-size: 0.9rem; font-family: 'Syne', sans-serif; transition: all 0.3s ease;">
                 ⚠️ View Disclaimers & Important Information
             </button>
         </div>
 
         <!-- Updates Section -->
-        <section class="updates-section" style="background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; margin-bottom: 3rem; animation: fadeInUp 1s ease-out 0.95s both; transition: all 0.3s ease;">
+        <section class="updates-section"
+            style="background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; margin-bottom: 3rem; transition: all 0.3s ease;">
             <div class="updates-header" id="updatesHeader">
-                <h3 class="section-title" style="font-size: 1.5rem; margin: 0; display: flex; align-items: center; gap: 0.8rem;">
+                <h3 class="section-title"
+                    style="font-size: 1.5rem; margin: 0; display: flex; align-items: center; gap: 0.8rem;">
                     <span>📝</span> Algorithm Updates
                 </h3>
                 <span class="updates-toggle-icon">▼</span>
             </div>
             <p style="color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.6;">
-                Significant updates that alter trading behavior are documented here. These changes may affect how historical trades would have been executed.
+                Significant updates that alter trading behavior are documented here. These changes may affect how
+                historical trades would have been executed.
                 <br><br>
-                <em>Note: Only major updates are tracked here. Minor updates and refinements occur every day as the algorithm is continuously improved.</em>
+                <em>Note: Only major updates are tracked here. Minor updates and refinements occur every day as the
+                    algorithm is continuously improved.</em>
             </p>
-            
-            <div class="updates-list" id="updatesList" style="display: flex; flex-direction: column; gap: 1rem; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
-                <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">January 19, 2026</span>
+
+            <div class="updates-list" id="updatesList"
+                style="display: flex; flex-direction: column; gap: 1rem; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                <div class="update-item"
+                    style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <span
+                            style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">January
+                            19, 2026</span>
                         <span style="color: var(--text-dim); font-size: 0.85rem;">Risk Management</span>
                     </div>
                     <p style="color: var(--text); line-height: 1.6; margin: 0;">
-                        Slightly tightened stop loss placement during periods of increased volatility. Historical trades may have executed differently under previous algorithm versions.
+                        Slightly tightened stop loss placement during periods of increased volatility. Historical trades
+                        may have executed differently under previous algorithm versions.
                     </p>
                 </div>
 
-                <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">January 5, 2026</span>
+                <div class="update-item"
+                    style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <span
+                            style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">January
+                            5, 2026</span>
                         <span style="color: var(--text-dim); font-size: 0.85rem;">Algorithm Refinement</span>
                     </div>
                     <p style="color: var(--text); line-height: 1.6; margin: 0;">
-                        Updated entry and exit logic with refined validation criteria. These changes may affect how trades would have been executed historically, potentially resulting in different entry points, exit timing, or trade selection compared to previous algorithm versions.
+                        Updated entry and exit logic with refined validation criteria. These changes may affect how
+                        trades would have been executed historically, potentially resulting in different entry points,
+                        exit timing, or trade selection compared to previous algorithm versions.
                     </p>
                 </div>
 
-                <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December 29, 2025</span>
+                <div class="update-item"
+                    style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <span
+                            style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December
+                            29, 2025</span>
                         <span style="color: var(--text-dim); font-size: 0.85rem;">Major Algorithm Overhaul</span>
                     </div>
                     <p style="color: var(--text); line-height: 1.6; margin: 0;">
-                        Major update that allowed Pablo to take much higher RR trades. Essentially doubled the algorithm size, added a lot more checks and calculations, and introduced the trailing stop loss feature. Historical trades may have executed differently under previous algorithm versions.
+                        Major update that allowed Pablo to take much higher RR trades. Essentially doubled the algorithm
+                        size, added a lot more checks and calculations, and introduced the trailing stop loss feature.
+                        Historical trades may have executed differently under previous algorithm versions.
                     </p>
                 </div>
 
-                <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December 22, 2025</span>
+                <div class="update-item"
+                    style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <span
+                            style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December
+                            22, 2025</span>
                         <span style="color: var(--text-dim); font-size: 0.85rem;">Entry Logic Update</span>
                     </div>
                     <p style="color: var(--text); line-height: 1.6; margin: 0;">
-                        Refined entry validation rules for specific entry levels, adjusting when trades can be taken during certain time windows. Historical trades may have executed differently under previous algorithm versions.
+                        Refined entry validation rules for specific entry levels, adjusting when trades can be taken
+                        during certain time windows. Historical trades may have executed differently under previous
+                        algorithm versions.
                     </p>
                 </div>
 
-                <div class="update-item" style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                        <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December 15, 2025</span>
+                <div class="update-item"
+                    style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem; transition: all 0.3s ease;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <span
+                            style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; font-size: 0.9rem;">December
+                            15, 2025</span>
                         <span style="color: var(--text-dim); font-size: 0.85rem;">Significant Update</span>
                     </div>
                     <p style="color: var(--text); line-height: 1.6; margin: 0;">
-                        Major algorithm updates including entry validation improvements, take profit adjustments, and breakeven logic refinements. Historical trades may have executed differently under previous algorithm versions.
+                        Major algorithm updates including entry validation improvements, take profit adjustments, and
+                        breakeven logic refinements. Historical trades may have executed differently under previous
+                        algorithm versions.
                     </p>
                 </div>
             </div>
@@ -169,13 +212,20 @@
         <div class="legend">
             <h3>📍 Signal Legend</h3>
             <div class="legend-grid">
-                <div class="legend-item"><span class="legend-icon green">▲</span><span>Green Arrow — Long entry</span></div>
-                <div class="legend-item"><span class="legend-icon red">▼</span><span>Red Arrow — Short entry</span></div>
-                <div class="legend-item"><span class="legend-icon orange">✕</span><span>Orange X — Stop loss hit</span></div>
-                <div class="legend-item"><span class="legend-icon teal">■</span><span>Teal Box — Moved SL to breakeven</span></div>
-                <div class="legend-item"><span class="legend-icon teal">✕</span><span>Teal X — Hit breakeven</span></div>
-                <div class="legend-item"><span class="legend-icon green">◆</span><span>Green Diamond — Took profit</span></div>
-                <div class="legend-item"><span class="legend-icon green">✕</span><span>Green X — Trailing stop loss hit</span></div>
+                <div class="legend-item"><span class="legend-icon green">▲</span><span>Green Arrow — Long entry</span>
+                </div>
+                <div class="legend-item"><span class="legend-icon red">▼</span><span>Red Arrow — Short entry</span>
+                </div>
+                <div class="legend-item"><span class="legend-icon orange">✕</span><span>Orange X — Stop loss hit</span>
+                </div>
+                <div class="legend-item"><span class="legend-icon teal">■</span><span>Teal Box — Moved SL to
+                        breakeven</span></div>
+                <div class="legend-item"><span class="legend-icon teal">✕</span><span>Teal X — Hit breakeven</span>
+                </div>
+                <div class="legend-item"><span class="legend-icon green">◆</span><span>Green Diamond — Took
+                        profit</span></div>
+                <div class="legend-item"><span class="legend-icon green">✕</span><span>Green X — Trailing stop loss
+                        hit</span></div>
             </div>
         </div>
 
@@ -205,7 +255,9 @@
 
             <div class="calendar">
                 <div class="calendar-header">
-                    <span class="weekend">Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span class="weekend">Sat</span>
+                    <span
+                        class="weekend">Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span
+                        class="weekend">Sat</span>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
             </div>
@@ -227,26 +279,31 @@
                 <div style="margin-bottom: 2rem;">
                     <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Paper Trading Only</h3>
                     <p style="color: var(--text-dim); margin-bottom: 1rem;">
-                        Pablo is not placing actual trades. This page documents signals Pablo <em>would have</em> taken. 
-                        No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade, compounding daily.
-                        Pablo trades a lower win rate, higher risk-to-reward strategy with tight stop losses. 
-                        Pablo may not find a valid entry every day. Trade tracking began <strong>December 8th, 2025</strong>.
+                        Pablo is not placing actual trades. This page documents signals Pablo <em>would have</em> taken.
+                        No contract sizing is calculated — risk is set to a fixed 0.25% of account balance per trade,
+                        compounding daily.
+                        Pablo trades a lower win rate, higher risk-to-reward strategy with tight stop losses.
+                        Pablo may not find a valid entry every day. Trade tracking began <strong>December 8th,
+                            2025</strong>.
                     </p>
                 </div>
                 <div style="margin-bottom: 2rem;">
                     <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Algorithm Development</h3>
                     <p style="color: var(--text-dim); margin-bottom: 1rem;">
-                        Past profits/losses may be misrepresented due to active algorithm development and updates. 
-                        The trading strategy is continuously being refined, and significant updates that alter trading behavior are documented in the Updates section.
+                        Past profits/losses may be misrepresented due to active algorithm development and updates.
+                        The trading strategy is continuously being refined, and significant updates that alter trading
+                        behavior are documented in the Updates section.
                         Historical performance should be viewed with this context in mind.
                     </p>
                 </div>
                 <div>
                     <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;">Breakeven Note</h3>
                     <p style="color: var(--text-dim);">
-                        Breakevens are actually small wins — Pablo moves the stop loss to be slightly in profit (typically 1 tick above/below entry). 
-                        However, breakevens are excluded from win rate calculations (only wins vs losses are counted). 
-                        For P&L tracking purposes, breakevens are treated as $0 (true breakeven) because tracking the tiny profits from each breakeven trade is too tedious. 
+                        Breakevens are actually small wins — Pablo moves the stop loss to be slightly in profit
+                        (typically 1 tick above/below entry).
+                        However, breakevens are excluded from win rate calculations (only wins vs losses are counted).
+                        For P&L tracking purposes, breakevens are treated as $0 (true breakeven) because tracking the
+                        tiny profits from each breakeven trade is too tedious.
                         This means the actual P&L is slightly higher than displayed.
                     </p>
                 </div>
@@ -272,4 +329,5 @@
     <script src="data.js"></script>
     <script src="scripts.js"></script>
 </body>
+
 </html>

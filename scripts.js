@@ -28,7 +28,7 @@ function calculateDailyBalances() {
             });
         }
 
-        balances[dateStr] = { 
+        balances[dateStr] = {
             startBalance: startBalance,
             endBalance: runningBalance,
             trades: tradeDetails
@@ -87,8 +87,8 @@ function calculateOverallStats() {
 
     const sortedDates = Object.keys(tradingData).sort();
     const lastDate = sortedDates[sortedDates.length - 1];
-    const currentBalance = lastDate && dailyBalances[lastDate] 
-        ? dailyBalances[lastDate].endBalance 
+    const currentBalance = lastDate && dailyBalances[lastDate]
+        ? dailyBalances[lastDate].endBalance
         : STARTING_BALANCE;
 
     totalPnL = currentBalance - STARTING_BALANCE;
@@ -248,14 +248,14 @@ function updateOverallStats() {
 function updateMonthlyRecap(year, month) {
     try {
         const stats = calculateMonthlyStats(year, month);
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                       'July', 'August', 'September', 'October', 'November', 'December'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
 
         const recapMonthEl = document.getElementById('recapMonth');
         if (recapMonthEl) {
             const expectedText = `${months[month]} ${year}`;
-            if (recapMonthEl.textContent !== expectedText && 
-                !recapMonthEl.classList.contains('slide-out-left') && 
+            if (recapMonthEl.textContent !== expectedText &&
+                !recapMonthEl.classList.contains('slide-out-left') &&
                 !recapMonthEl.classList.contains('slide-out-right') &&
                 !recapMonthEl.classList.contains('slide-in-left') &&
                 !recapMonthEl.classList.contains('slide-in-right')) {
@@ -458,8 +458,8 @@ function formatPnL(value) {
 
 let currentDate = new Date();
 let monthDirection = null;
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-               'July', 'August', 'September', 'October', 'November', 'December'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
 
 function animateMonthText(element, direction) {
     if (!element || !direction) return;
@@ -490,12 +490,12 @@ function renderCalendar() {
     const grid = document.getElementById('calendarGrid');
     const monthLabel = document.getElementById('currentMonth');
     const recapStats = document.getElementById('recapStats');
-    
+
     if (!grid || !monthLabel) return;
-    
+
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    
+
     if (monthDirection) {
         const direction = monthDirection;
         animateMonthText(monthLabel, direction);
@@ -511,7 +511,7 @@ function renderCalendar() {
                 updateMonthlyRecap(year, month);
                 recapStats.style.transition = 'none';
                 recapStats.style.transform = direction === 'next' ? 'translateX(10px)' : 'translateX(-10px)';
-                void recapStats.offsetWidth; 
+                void recapStats.offsetWidth;
                 recapStats.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                 recapStats.style.opacity = '1';
                 recapStats.style.transform = 'translateX(0)';
@@ -524,31 +524,31 @@ function renderCalendar() {
         if (recapMonthLabel) recapMonthLabel.textContent = `${months[month]} ${year}`;
         updateMonthlyRecap(year, month);
     }
-    
+
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const today = new Date();
-    
+
     grid.innerHTML = '';
-    
+
     for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         empty.className = 'calendar-day empty';
         grid.appendChild(empty);
     }
-    
+
     for (let day = 1; day <= daysInMonth; day++) {
         const dayEl = document.createElement('div');
         dayEl.className = 'calendar-day';
         dayEl.textContent = day;
-        
+
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const dayDate = new Date(year, month, day);
         const isWeekend = dayDate.getDay() === 0 || dayDate.getDay() === 6;
-        
+
         if (isWeekend) dayEl.classList.add('weekend');
         if (dayDate.toDateString() === today.toDateString()) dayEl.classList.add('today');
-        
+
         if (dayDate > today) {
             dayEl.classList.add('future');
         } else {
@@ -569,23 +569,23 @@ function renderCalendar() {
 function changeModalDay(offset) {
     if (!currentModalDateStr || isModalAnimating) return;
     isModalAnimating = true;
-    
+
     const content = document.getElementById('modalContent');
     const dateLabel = document.getElementById('modalDate');
     const exitClass = offset === 1 ? 'slide-out-left' : 'slide-out-right';
     const enterClass = offset === 1 ? 'slide-in-right' : 'slide-in-left';
-    
+
     if (content) content.classList.add(exitClass);
     if (dateLabel) dateLabel.classList.add(exitClass);
-    
+
     setTimeout(() => {
         const date = new Date(currentModalDateStr + 'T12:00:00');
         date.setDate(date.getDate() + offset);
         const newDateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-        
+
         openModal(newDateStr, isWeekend);
-        
+
         const newContent = document.getElementById('modalContent');
         const newDateLabel = document.getElementById('modalDate');
         if (newContent) {
@@ -596,7 +596,7 @@ function changeModalDay(offset) {
             newDateLabel.classList.remove('slide-out-left', 'slide-out-right');
             newDateLabel.classList.add(enterClass);
         }
-        
+
         setTimeout(() => {
             if (newContent) newContent.classList.remove('slide-in-left', 'slide-in-right');
             if (newDateLabel) newDateLabel.classList.remove('slide-in-left', 'slide-in-right');
@@ -811,12 +811,304 @@ if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 
 initTheme();
 
+// Auto-resize font to fit container width
+function autoResizeFont() {
+    function resizeElement(el) {
+        const container = el.parentElement;
+        if (!container) return;
+
+        const containerWidth = container.offsetWidth - 32; // Account for padding
+        let fontSize = parseFloat(getComputedStyle(el).fontSize);
+        const originalFontSize = fontSize;
+
+        el.style.fontSize = fontSize + 'px';
+
+        // Binary search for optimal font size
+        let minSize = 0.5; // Minimum font size
+        let maxSize = originalFontSize;
+
+        while (maxSize - minSize > 0.1) {
+            fontSize = (minSize + maxSize) / 2;
+            el.style.fontSize = fontSize + 'px';
+
+            if (el.scrollWidth <= containerWidth) {
+                minSize = fontSize;
+            } else {
+                maxSize = fontSize;
+            }
+        }
+
+        el.style.fontSize = minSize + 'px';
+    }
+
+    // Resize stat values in account cards
+    document.querySelectorAll('.account-card .stat-value').forEach(resizeElement);
+
+    // Resize stat values in stat cards
+    document.querySelectorAll('.stat-card .stat-value').forEach(resizeElement);
+
+    // Resize recap stat values
+    document.querySelectorAll('.recap-stat-value').forEach(resizeElement);
+}
+
+// Run on load and resize
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(autoResizeFont, 100);
+    });
+} else {
+    setTimeout(autoResizeFont, 100);
+}
+
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(autoResizeFont, 150);
+});
+
+// Hook into updateOverallStats to resize fonts after stats update
+const originalUpdateOverallStats = updateOverallStats;
+updateOverallStats = function () {
+    originalUpdateOverallStats.apply(this, arguments);
+    // Resize fonts after animation completes (1500ms + buffer)
+    setTimeout(autoResizeFont, 1700);
+};
+
+// Intersection Observer for scroll reveal animations
+function initScrollReveal() {
+    // Add reveal classes to elements (excluding updates section internals)
+    const elementsToReveal = [
+        // Hero elements
+        { selector: '.hero .logo', class: 'reveal-scale' },
+        { selector: '.hero h1', class: 'reveal' },
+        { selector: '.hero .tagline', class: 'reveal' },
+        { selector: '.hero .trust', class: 'reveal-scale' },
+        { selector: '.hero .status', class: 'reveal' },
+        { selector: '.hero .description', class: 'reveal' },
+        { selector: '.hero .links', class: 'reveal' },
+
+        // Disclaimer button
+        { selector: '#disclaimerBtn', class: 'reveal-scale', parent: true },
+
+        // Updates section
+        { selector: '.updates-section', class: 'reveal' },
+
+        // Account cards - stagger
+        { selector: '.account-section', class: 'reveal-stagger' },
+
+        // Stats - stagger
+        { selector: '.stats', class: 'reveal-stagger' },
+
+        // Legend - container only
+        { selector: '.legend', class: 'reveal' },
+
+        // Calendar section
+        { selector: '.calendar-section .section-header', class: 'reveal' },
+        { selector: '.monthly-recap', class: 'reveal-scale' },
+        { selector: '.calendar', class: 'reveal' },
+
+        // Footer
+        { selector: 'footer', class: 'reveal-fade' }
+    ];
+
+    elementsToReveal.forEach(({ selector, class: className, parent }) => {
+        const el = document.querySelector(selector);
+        if (el) {
+            const target = parent ? el.parentElement : el;
+            if (target && !target.classList.contains(className)) {
+                target.classList.add(className);
+            }
+        }
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                // Remove visible class when leaving viewport for re-animation
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Observe all reveal elements
+    document.querySelectorAll('.reveal, .reveal-stagger, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Background Canvas Animation
+// Background Canvas Animation
+function initCanvasBackground() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    // Config
+    const lineSpacing = 60; // Space between base lines
+    const waveAmplitude = 35;
+    const waveSpeed = 0.002;
+    // Theme colors
+    let accentRgb = '139, 92, 246'; // Default purple
+
+    function updateDimensions() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+    function updateThemeColors() {
+        const style = getComputedStyle(document.documentElement);
+        const accent = style.getPropertyValue('--accent').trim();
+
+        if (accent.startsWith('#')) {
+            const r = parseInt(accent.slice(1, 3), 16);
+            const g = parseInt(accent.slice(3, 5), 16);
+            const b = parseInt(accent.slice(5, 7), 16);
+            accentRgb = `${r}, ${g}, ${b}`;
+        }
+    }
+
+    let time = 0;
+
+    class TopoLine {
+        constructor(baseY, index) {
+            this.baseY = baseY;
+            this.index = index;
+            // Randomize wave parameters per line for uniqueness
+            this.freq1 = 0.001 + Math.random() * 0.002;
+            this.freq2 = 0.003 + Math.random() * 0.005;
+            this.freq3 = 0.01 + Math.random() * 0.01;
+            this.phase = Math.random() * Math.PI * 2;
+        }
+
+        draw(scrollY = 0) {
+            ctx.beginPath();
+
+            // Parallax offset: Moves slower than the foreground (0.2 factor)
+            const parallaxY = this.baseY - (scrollY * 0.2);
+
+            // Draw curve across width
+            for (let x = -50; x <= width + 50; x += 20) {
+                // Combine sine waves to create "organic" irregularity
+                const yOffset =
+                    Math.sin(x * this.freq1 + time + this.phase) * waveAmplitude +
+                    Math.sin(x * this.freq2 - time * 0.5 + this.index) * (waveAmplitude * 0.5) +
+                    Math.sin(x * this.freq3 + time * 1.5) * (waveAmplitude * 0.2);
+
+                const y = parallaxY + yOffset;
+
+                if (x === -50) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+
+            // Styling - very subtle lines
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = `rgba(${accentRgb}, 0.25)`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+    }
+
+    let lines = [];
+
+    function initLines() {
+        lines = [];
+        // Create lines covering the whole screen plus margin
+        const count = Math.ceil(height / lineSpacing) + 2;
+        for (let i = 0; i < count; i++) {
+            lines.push(new TopoLine(i * lineSpacing, i));
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        time += waveSpeed;
+
+        // Pass the latest global scroll offset if available
+        const currentScrollY = window.scrollY || 0;
+
+        lines.forEach(line => line.draw(currentScrollY));
+
+        requestAnimationFrame(animate);
+    }
+
+    // Init
+    updateDimensions();
+    updateThemeColors();
+    initLines();
+    animate();
+
+    // Event listeners
+    window.addEventListener('resize', () => {
+        updateDimensions();
+        initLines();
+    });
+
+    const toggleBtn = document.getElementById('themeToggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            setTimeout(updateThemeColors, 50);
+        });
+    }
+}
+
+// Smooth Scrolling & Scroll Effects (Lenis)
+function initSmoothScroll() {
+    if (typeof Lenis === 'undefined') return;
+
+    // Tighter, less "floaty" configuration
+    const lenis = new Lenis({
+        duration: 0.7, // Reduced from 1.2 for snappier response
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+    });
+
+    const progressBar = document.getElementById('scroll-progress');
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Scroll event listener for effects
+    lenis.on('scroll', ({ scroll, limit }) => {
+        // 1. Progress Bar
+        if (progressBar) {
+            const progress = limit > 0 ? (scroll / limit) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Skew effect removed for better accessibility/comfort
+    });
+}
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         initRecapState(); initUpdatesState(); setupEventListeners(); renderCalendar();
         setTimeout(updateOverallStats, 800);
+        initScrollReveal();
+        initCanvasBackground();
+        initSmoothScroll();
     });
 } else {
     initRecapState(); initUpdatesState(); setupEventListeners(); renderCalendar();
     setTimeout(updateOverallStats, 800);
+    initScrollReveal();
+    initCanvasBackground();
+    initSmoothScroll();
 }
