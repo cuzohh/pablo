@@ -685,10 +685,18 @@ function openModal(dateStr, isWeekend = false) {
             content.innerHTML = `<div class="no-data"><span class="no-data-emoji">${randomMessage.emoji}</span><p>No trades recorded for this day.</p><p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-dim);">${randomMessage.text}</p></div>`;
         }
     }
-    setTimeout(() => overlay.classList.add('active'), 100);
+    setTimeout(() => {
+        overlay.classList.add('active');
+        // Init smooth scroll on the modal container
+        const modalContainer = overlay.querySelector('.modal');
+        if (modalContainer) initModalSmoothScroll(modalContainer);
+    }, 100);
 }
 
-function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    destroyModalSmoothScroll();
+}
 
 function initRecapState() {
     const monthlyRecap = document.getElementById('monthlyRecap');
@@ -767,9 +775,27 @@ function setupEventListeners() {
     const disclaimerBtn = document.getElementById('disclaimerBtn');
     const disclaimerClose = document.getElementById('disclaimerClose');
     const disclaimerModal = document.getElementById('disclaimerModal');
-    if (disclaimerBtn && disclaimerModal) disclaimerBtn.addEventListener('click', () => disclaimerModal.classList.add('active'));
-    if (disclaimerClose && disclaimerModal) disclaimerClose.addEventListener('click', () => disclaimerModal.classList.remove('active'));
-    if (disclaimerModal) disclaimerModal.addEventListener('click', (e) => { if (e.target === e.currentTarget) disclaimerModal.classList.remove('active'); });
+    if (disclaimerBtn && disclaimerModal) {
+        disclaimerBtn.addEventListener('click', () => {
+            disclaimerModal.classList.add('active');
+            const modalContainer = disclaimerModal.querySelector('.modal');
+            if (modalContainer) initModalSmoothScroll(modalContainer);
+        });
+    }
+    if (disclaimerClose && disclaimerModal) {
+        disclaimerClose.addEventListener('click', () => {
+            disclaimerModal.classList.remove('active');
+            destroyModalSmoothScroll();
+        });
+    }
+    if (disclaimerModal) {
+        disclaimerModal.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                disclaimerModal.classList.remove('active');
+                destroyModalSmoothScroll();
+            }
+        });
+    }
 
     const modalClose = document.getElementById('modalClose');
     const modalOverlay = document.getElementById('modalOverlay');
@@ -1061,12 +1087,16 @@ function initCanvasBackground() {
 }
 
 // Smooth Scrolling & Scroll Effects (Lenis)
+// Smooth Scrolling & Scroll Effects (Lenis)
+let mainLenis;
+let modalLenis;
+
 function initSmoothScroll() {
     if (typeof Lenis === 'undefined') return;
 
     // Tighter, less "floaty" configuration
-    const lenis = new Lenis({
-        duration: 0.7, // Reduced from 1.2 for snappier response
+    mainLenis = new Lenis({
+        duration: 0.7,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
@@ -1079,22 +1109,54 @@ function initSmoothScroll() {
     const progressBar = document.getElementById('scroll-progress');
 
     function raf(time) {
-        lenis.raf(time);
+        mainLenis.raf(time);
+        if (modalLenis) modalLenis.raf(time);
         requestAnimationFrame(raf);
     }
 
     requestAnimationFrame(raf);
 
     // Scroll event listener for effects
-    lenis.on('scroll', ({ scroll, limit }) => {
+    mainLenis.on('scroll', ({ scroll, limit }) => {
         // 1. Progress Bar
         if (progressBar) {
             const progress = limit > 0 ? (scroll / limit) * 100 : 0;
             progressBar.style.width = `${progress}%`;
         }
-
-        // Skew effect removed for better accessibility/comfort
     });
+}
+
+function initModalSmoothScroll(modalEl) {
+    if (typeof Lenis === 'undefined' || !modalEl) return;
+
+    // Destroy existing if any to be safe
+    if (modalLenis) modalLenis.destroy();
+
+    modalLenis = new Lenis({
+        wrapper: modalEl, // The scrollable container
+        content: modalEl.children[0], // The content inside (usually first child works if wrapped, or we might need to target specific content div)
+        // actually Lenis wrapper/content works best if wrapper is the overflow element. 
+        // Our .modal has overflow-y: auto. So wrapper = .modal.
+        duration: 0.7,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+    });
+
+    // Stop main scrolling while modal is open
+    if (mainLenis) mainLenis.stop();
+}
+
+function destroyModalSmoothScroll() {
+    if (modalLenis) {
+        modalLenis.destroy();
+        modalLenis = null;
+    }
+    if (mainLenis) mainLenis.start();
 }
 
 if (document.readyState === 'loading') {
