@@ -302,5 +302,14 @@ const tradingData = {
             { time: '08:05', type: 'long', result: 'loss' },
             { time: '09:31', type: 'long', result: 'win', rr: 2.55 }
         ]
+    },
+    '2026-01-21': {
+        image: 'jan2126.png',
+        notes: 'Started with two short losses in the morning, but Pablo caught a solid 5.83 RR winner in the afternoon.',
+        trades: [
+            { time: '09:52', type: 'short', result: 'loss' },
+            { time: '09:55', type: 'short', result: 'loss' },
+            { time: '15:17', type: 'short', result: 'win', rr: 5.83 }
+        ]
     }
 };
