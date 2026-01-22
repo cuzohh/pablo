@@ -969,6 +969,9 @@ function initScrollReveal() {
 
 // Background Canvas Animation
 // Background Canvas Animation
+// Background Canvas Animation
+// Background Canvas Animation
+// Background Canvas Animation
 function initCanvasBackground() {
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
@@ -976,13 +979,16 @@ function initCanvasBackground() {
     const ctx = canvas.getContext('2d');
     let width, height;
 
-    // Config
-    const lineSpacing = 60; // Space between base lines
-    const waveAmplitude = 35;
-    const waveSpeed = 0.002;
-    // Theme colors
+    // Theme
     let accentRgb = '139, 92, 246'; // Default purple
+    let time = 0;
 
+    // Objects
+    let topoLines = [];
+    const lineSpacing = 60;
+    const waveAmplitude = 35;
+
+    // --- Common Setup ---
     function updateDimensions() {
         width = window.innerWidth;
         height = window.innerHeight;
@@ -993,7 +999,6 @@ function initCanvasBackground() {
     function updateThemeColors() {
         const style = getComputedStyle(document.documentElement);
         const accent = style.getPropertyValue('--accent').trim();
-
         if (accent.startsWith('#')) {
             const r = parseInt(accent.slice(1, 3), 16);
             const g = parseInt(accent.slice(3, 5), 16);
@@ -1002,40 +1007,33 @@ function initCanvasBackground() {
         }
     }
 
-    let time = 0;
-
+    // --- Topology Logic ---
     class TopoLine {
         constructor(baseY, index) {
             this.baseY = baseY;
             this.index = index;
-            // Randomize wave parameters per line for uniqueness
             this.freq1 = 0.001 + Math.random() * 0.002;
             this.freq2 = 0.003 + Math.random() * 0.005;
             this.freq3 = 0.01 + Math.random() * 0.01;
             this.phase = Math.random() * Math.PI * 2;
         }
 
-        draw(scrollY = 0) {
+        draw(scrollY) {
             ctx.beginPath();
-
-            // Parallax offset: Moves slower than the foreground (0.2 factor)
             const parallaxY = this.baseY - (scrollY * 0.2);
+            // Optimization: Only draw if on screen
+            if (parallaxY < -100 || parallaxY > height + 100) return;
 
-            // Draw curve across width
             for (let x = -50; x <= width + 50; x += 20) {
-                // Combine sine waves to create "organic" irregularity
+                // Combine sine waves to create "organic" irregularity (Slowed down time factors)
                 const yOffset =
-                    Math.sin(x * this.freq1 + time + this.phase) * waveAmplitude +
-                    Math.sin(x * this.freq2 - time * 0.5 + this.index) * (waveAmplitude * 0.5) +
-                    Math.sin(x * this.freq3 + time * 1.5) * (waveAmplitude * 0.2);
-
+                    Math.sin(x * this.freq1 + time * 0.001 + this.phase) * waveAmplitude +
+                    Math.sin(x * this.freq2 - time * 0.0005 + this.index) * (waveAmplitude * 0.5) +
+                    Math.sin(x * this.freq3 + time * 0.0015) * (waveAmplitude * 0.2);
                 const y = parallaxY + yOffset;
-
                 if (x === -50) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
-
-            // Styling - very subtle lines
             ctx.shadowBlur = 0;
             ctx.strokeStyle = `rgba(${accentRgb}, 0.25)`;
             ctx.lineWidth = 1.5;
@@ -1043,39 +1041,35 @@ function initCanvasBackground() {
         }
     }
 
-    let lines = [];
-
-    function initLines() {
-        lines = [];
-        // Create lines covering the whole screen plus margin
-        const count = Math.ceil(height / lineSpacing) + 2;
+    function initTopology() {
+        topoLines = [];
+        // Add extra lines for scrolling coverage
+        const count = Math.ceil((height + 1000) / lineSpacing);
         for (let i = 0; i < count; i++) {
-            lines.push(new TopoLine(i * lineSpacing, i));
+            topoLines.push(new TopoLine(i * lineSpacing, i));
         }
     }
 
     function animate() {
         ctx.clearRect(0, 0, width, height);
-        time += waveSpeed;
+        time++;
 
-        // Pass the latest global scroll offset if available
         const currentScrollY = window.scrollY || 0;
-
-        lines.forEach(line => line.draw(currentScrollY));
+        topoLines.forEach(line => line.draw(currentScrollY));
 
         requestAnimationFrame(animate);
     }
 
-    // Init
+    // Initialize
     updateDimensions();
     updateThemeColors();
-    initLines();
+    initTopology();
     animate();
 
-    // Event listeners
+    // Event Listeners
     window.addEventListener('resize', () => {
         updateDimensions();
-        initLines();
+        initTopology();
     });
 
     const toggleBtn = document.getElementById('themeToggle');

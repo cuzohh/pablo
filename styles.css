@@ -1,6 +1,7 @@
 :root {
     --bg-dark: #050507;
-    --bg-card: rgba(15, 15, 20, 0.8);
+    --bg-card: rgba(15, 15, 20, 0.1);
+    /* Even more transparency */
     --accent: #8b5cf6;
     --accent-glow: rgba(139, 92, 246, 0.4);
     --green: #10b981;
@@ -12,7 +13,8 @@
 
 :root[data-theme="light"] {
     --bg-dark: #f5f5f7;
-    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card: rgba(255, 255, 255, 0.3);
+    /* Even more transparency */
     --accent: #7c3aed;
     --accent-glow: rgba(124, 58, 237, 0.2);
     --green: #059669;
@@ -84,11 +86,14 @@ html.lenis body {
 
 html {
     scroll-behavior: smooth;
+    background: var(--bg-dark);
+    /* Base color moved here */
 }
 
 body {
     font-family: 'Syne', sans-serif;
-    background: var(--bg-dark);
+    background: transparent;
+    /* Transparent so we see canvas */
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
@@ -126,7 +131,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 0;
+    /* Changed from -1 to 0 to sit on top of HTML background */
     pointer-events: none;
     transition: opacity 0.4s ease;
     opacity: 1;
@@ -435,8 +441,9 @@ h1 {
     align-items: center;
     gap: 0.6rem;
     background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    /* Reduced from 20px for performance */
+    /* Uses the new transparent variable */
+    backdrop-filter: blur(8px);
+    /* Reduced blur to match others */
     border: 1px solid var(--border);
     padding: 0.8rem 1.8rem;
     border-radius: 50px;
@@ -498,7 +505,8 @@ h1 {
     padding: 0.8rem 1.5rem;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: var(--bg-card);
+    background: rgba(255, 255, 255, 0.03);
+    /* Explicit ultra-transparent background */
     backdrop-filter: blur(8px);
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
@@ -537,7 +545,7 @@ h1 {
 
 .stat-card {
     background: var(--bg-card);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 2rem;
@@ -728,8 +736,9 @@ h1 {
 }
 
 .recap-stats>div {
-    background: var(--bg-card);
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.03);
+    /* Lighter, no stacking of card bg */
+    backdrop-filter: blur(5px);
     border: 1px solid var(--border);
     border-radius: 16px;
 
@@ -991,7 +1000,8 @@ h1 {
 
 .calendar {
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(8px);
+    /* Reduced for better transparency visibility */
     border: 1px solid var(--border);
     border-radius: 24px;
     padding: 2rem;
@@ -1188,7 +1198,10 @@ h1 {
 }
 
 .modal {
-    background: linear-gradient(135deg, rgba(20, 20, 30, 0.95) 0%, rgba(10, 10, 15, 0.98) 100%);
+    background: linear-gradient(135deg, rgba(20, 20, 30, 0.65) 0%, rgba(10, 10, 15, 0.75) 100%);
+    /* Increased transparency */
+    backdrop-filter: blur(16px);
+    /* Strong blur for readability */
     border: 1px solid var(--border);
     border-radius: 24px;
     padding: 2rem;
@@ -1204,7 +1217,7 @@ h1 {
 }
 
 :root[data-theme="light"] .modal {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 250, 255, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(250, 250, 255, 0.8) 100%);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 0 50px var(--accent-glow);
 }
 
@@ -1805,7 +1818,7 @@ footer span {
 
 .account-card {
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.25rem;
@@ -1838,7 +1851,7 @@ footer span {
 /* Signal Legend */
 .legend {
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 1.5rem 2rem;
