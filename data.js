@@ -368,5 +368,13 @@ const tradingData = {
             { time: '09:55', type: 'short', result: 'loss' },
             { time: '15:17', type: 'short', result: 'win', rr: 5.83 }
         ]
+    },
+    '2026-01-22': {
+        image: 'jan2226.png',
+        notes: 'Early morning loss, but Pablo bounced back with a 5.2 RR winner via trailing stop.',
+        trades: [
+            { time: '03:02', type: 'short', result: 'loss' },
+            { time: '13:01', type: 'short', result: 'win', rr: 5.2 }
+        ]
     }
 };
