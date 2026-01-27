@@ -64,7 +64,7 @@ const sp500MonthlyReturns = {
     '2025-10': 2.38,
     '2025-11': 0.2,
     '2025-12': -0.22,
-    '2026-01': 1.04,
+    '2026-01': 1.99,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -375,6 +375,22 @@ const tradingData = {
         trades: [
             { time: '03:02', type: 'short', result: 'loss' },
             { time: '13:01', type: 'short', result: 'win', rr: 5.2 }
+        ]
+    },
+    '2026-01-23': {
+        image: 'jan2326.png',
+        notes: 'Single short loss in the morning session.',
+        trades: [
+            { time: '10:53', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-01-27': {
+        image: 'jan2726.png',
+        notes: 'Early morning breakeven, followed by a loss, but Pablo closed with a 1.16 RR winner in the afternoon.',
+        trades: [
+            { time: '02:52', type: 'short', result: 'be' },
+            { time: '11:05', type: 'short', result: 'loss' },
+            { time: '15:34', type: 'short', result: 'win', rr: 1.16 }
         ]
     }
 };
