@@ -392,5 +392,12 @@ const tradingData = {
             { time: '11:05', type: 'short', result: 'loss' },
             { time: '15:34', type: 'short', result: 'win', rr: 1.16 }
         ]
+    },
+    '2026-01-28': {
+        image: 'jan2826.png',
+        notes: 'Single trade. Pablo caught a 3.44 RR short at 3:02 AM that hit trailing stop.',
+        trades: [
+            { time: '03:02', type: 'short', result: 'win', rr: 3.44 }
+        ]
     }
 };
