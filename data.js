@@ -64,7 +64,7 @@ const sp500MonthlyReturns = {
     '2025-10': 2.38,
     '2025-11': 0.2,
     '2025-12': -0.22,
-    '2026-01': 1.99,
+    '2026-01': 1.98,
 };
 
 // Funny messages for when Pablo beats S&P 500
