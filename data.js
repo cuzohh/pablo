@@ -64,7 +64,7 @@ const sp500MonthlyReturns = {
     '2025-10': 2.38,
     '2025-11': 0.2,
     '2025-12': -0.22,
-    '2026-01': 1.98,
+    '2026-01': 1.78,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -398,6 +398,15 @@ const tradingData = {
         notes: 'Single trade. Pablo caught a 3.44 RR short at 3:02 AM that hit trailing stop.',
         trades: [
             { time: '03:02', type: 'short', result: 'win', rr: 3.44 }
+        ]
+    },
+    '2026-01-29': {
+        image: 'jan2926.png',
+        notes: 'Pablo tried to long 3 times: 9:57 AM loss, 10:03 AM loss, then caught the massive low of day bottom tick for 72.84 RR at 10:55 AM.',
+        trades: [
+            { time: '09:57', type: 'long', result: 'loss' },
+            { time: '10:03', type: 'long', result: 'loss' },
+            { time: '10:55', type: 'long', result: 'win', rr: 72.84 }
         ]
     }
 };
