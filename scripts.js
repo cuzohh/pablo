@@ -1,5 +1,6 @@
 let currentModalDateStr = null;
 let isModalAnimating = false;
+let equityChartInstance = null;
 
 function calculateDailyBalances() {
     const sortedDates = Object.keys(tradingData).sort();
@@ -243,6 +244,143 @@ function updateOverallStats() {
         }
         requestAnimationFrame(updateBalance);
     }
+    initEquityChart();
+}
+
+
+
+
+function initEquityChart() {
+    const ctx = document.getElementById('equityChart');
+    if (!ctx) return;
+
+    const sortedDates = Object.keys(dailyBalances).sort();
+    const labels = sortedDates;
+    const dataPoints = sortedDates.map(date => dailyBalances[date].endBalance);
+
+    // If chart already exists, destroy it to re-render (e.g. on updates)
+    if (equityChartInstance) {
+        equityChartInstance.destroy();
+    }
+
+    // Gradient fill
+    const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(139, 92, 246, 0.5)'); // Accent color
+    gradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
+    // Initial state for fade-in
+    ctx.style.opacity = '0';
+    ctx.style.transition = 'opacity 1s ease-out';
+
+    equityChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Account Balance',
+                data: dataPoints,
+                borderColor: '#8b5cf6',
+                backgroundColor: gradient,
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            animation: {
+                y: {
+                    duration: 1500,
+                    easing: 'easeOutQuart',
+                    from: (ctx) => {
+                        if (ctx.type === 'data') {
+                            // Start 30 pixels lower for a subtle drift up
+                            return ctx.element.y + 30;
+                        }
+                    }
+                },
+                x: { duration: 0 } // No horizontal animation
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            // Trigger opacity fade after chart init
+            onResize: () => {
+                // Ensure opacity stays 1 on resize
+                ctx.style.opacity = '1';
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(24, 24, 27, 0.9)', // Zinc-900 with opacity
+                    titleColor: '#f4f4f5', // Zinc-100
+                    bodyColor: '#e4e4e7', // Zinc-200
+                    titleFont: {
+                        family: "'Inter', sans-serif",
+                        size: 13,
+                        weight: '600'
+                    },
+                    bodyFont: {
+                        family: "'Inter', sans-serif",
+                        size: 13,
+                        weight: '500'
+                    },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: false, // Cleaner look without color box
+                    callbacks: {
+                        label: function (context) {
+                            if (context.parsed.y !== null) {
+                                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                            }
+                            return '';
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            scales: {
+                x: {
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    display: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.03)', // Very subtle grid
+                        borderDash: [5, 5],
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: {
+                            family: "'Inter', sans-serif",
+                            size: 11
+                        },
+                        color: '#71717a', // Zinc-500
+                        padding: 10,
+                        callback: function (value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Trigger the fade-in
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            ctx.style.opacity = '1';
+        }, 50);
+    });
 }
 
 function updateMonthlyRecap(year, month) {
