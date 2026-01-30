@@ -244,6 +244,34 @@ function updateOverallStats() {
         }
         requestAnimationFrame(updateBalance);
     }
+
+
+    // Calculate Max Drawdown
+    let maxDrawdown = 0;
+    let peak = STARTING_BALANCE;
+    const sortedDates = Object.keys(dailyBalances).sort();
+
+    // Iterate through daily balances to find max drawdown
+    for (const date of sortedDates) {
+        const balance = dailyBalances[date].endBalance;
+        if (balance > peak) {
+            peak = balance;
+        }
+        const drawdown = (peak - balance) / peak;
+        if (drawdown > maxDrawdown) {
+            maxDrawdown = drawdown;
+        }
+    }
+
+    const maxDrawdownPercent = (maxDrawdown * 100).toFixed(2);
+    const mddEl = document.getElementById('maxDrawdown');
+    if (mddEl) {
+        mddEl.textContent = maxDrawdownPercent + '%';
+        // Add a simple fade-in or let it inherit static style (since it's a negative metric, usually stays static or we can animate)
+        // Animating it nicely:
+        animateValue('maxDrawdown', 0, parseFloat(maxDrawdownPercent), '%', 'negative');
+    }
+
     initEquityChart();
 }
 
