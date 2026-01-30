@@ -64,7 +64,7 @@ const sp500MonthlyReturns = {
     '2025-10': 2.38,
     '2025-11': 0.2,
     '2025-12': -0.22,
-    '2026-01': 1.78,
+    '2026-01': 1.48,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -407,6 +407,18 @@ const tradingData = {
             { time: '09:57', type: 'long', result: 'loss' },
             { time: '10:03', type: 'long', result: 'loss' },
             { time: '10:55', type: 'long', result: 'win', rr: 72.84 }
+        ]
+    },
+    '2026-01-30': {
+        image: 'jan3026.png',
+        notes: 'A busy Friday with all long trades. After three early losses, Pablo caught a 6.1 RR runner via trailing stop. Finished the week with a 4.38 RR winner in the afternoon.',
+        trades: [
+            { time: '02:50', type: 'long', result: 'loss' },
+            { time: '02:59', type: 'long', result: 'loss' },
+            { time: '03:51', type: 'long', result: 'loss' },
+            { time: '04:58', type: 'long', result: 'win', rr: 6.1 },
+            { time: '03:15', type: 'long', result: 'loss' },
+            { time: '03:32', type: 'long', result: 'win', rr: 4.38 }
         ]
     }
 };
