@@ -64,7 +64,8 @@ const sp500MonthlyReturns = {
     '2025-10': 2.38,
     '2025-11': 0.2,
     '2025-12': -0.22,
-    '2026-01': 1.48,
+    '2026-01': 1.47,
+    '2026-02': 0.29,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -419,6 +420,61 @@ const tradingData = {
             { time: '04:58', type: 'long', result: 'win', rr: 6.1 },
             { time: '03:15', type: 'long', result: 'loss' },
             { time: '03:32', type: 'long', result: 'win', rr: 4.38 }
+        ]
+    },
+    '2026-02-02': {
+        image: 'feb0226.png',
+        notes: 'Mixed day. Caught a nice 13.67 RR long early morning, but the short attempts later in the session resulted in losses.',
+        trades: [
+            { time: '02:04', type: 'long', result: 'win', rr: 13.67 },
+            { time: '09:51', type: 'short', result: 'loss' },
+            { time: '10:02', type: 'short', result: 'loss' },
+            { time: '10:07', type: 'short', result: 'loss' },
+            { time: '12:02', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-02-03': {
+        image: 'feb0326.png',
+        notes: 'Challenging session. Started with losses, caught a small 3.04 RR winner via trailing stop, then gave back gains with subsequent losses.',
+        trades: [
+            { time: '02:08', type: 'short', result: 'loss' },
+            { time: '02:47', type: 'short', result: 'loss' },
+            { time: '03:06', type: 'short', result: 'win', rr: 3.04 },
+            { time: '07:45', type: 'short', result: 'loss' },
+            { time: '10:01', type: 'long', result: 'loss' },
+            { time: '10:06', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-02-04': {
+        image: 'feb0426.png',
+        notes: 'Tough day for longs. Multiple stops hit, with only a small 1.08 RR trailing stop win to show for it.',
+        trades: [
+            { time: '09:31', type: 'long', result: 'loss' },
+            { time: '09:34', type: 'long', result: 'loss' },
+            { time: '09:38', type: 'long', result: 'win', rr: 1.08 },
+            { time: '09:53', type: 'long', result: 'loss' },
+            { time: '09:56', type: 'long', result: 'loss' },
+            { time: '10:00', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-02-05': {
+        image: 'feb0526.png',
+        notes: 'Another heavy volume day for longs. Caught two decent moves (3.39 RR and 3 RR) but gave back profits on chop.',
+        trades: [
+            { time: '07:46', type: 'long', result: 'loss' },
+            { time: '07:49', type: 'long', result: 'win', rr: 3.39 },
+            { time: '09:00', type: 'long', result: 'loss' },
+            { time: '09:30', type: 'long', result: 'loss' },
+            { time: '09:37', type: 'long', result: 'win', rr: 3.0 },
+            { time: '10:00', type: 'long', result: 'loss' },
+            { time: '11:02', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-02-06': {
+        image: 'feb0626.png',
+        notes: 'Quiet Friday. Just a single short trade that didn\'t work out.',
+        trades: [
+            { time: '11:59', type: 'short', result: 'loss' }
         ]
     }
 };
