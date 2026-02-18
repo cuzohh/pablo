@@ -486,9 +486,9 @@ const tradingData = {
     },
     '2026-02-10': {
         image: 'feb1026.png',
-        notes: 'Early morning winner. Pablo caught a 1.24 RR move.',
+        notes: 'Late afternoon winner. Pablo caught a 1.24 RR move.',
         trades: [
-            { time: '03:56', type: 'long', result: 'win', rr: 1.24 }
+            { time: '15:56', type: 'long', result: 'win', rr: 1.24 }
         ]
     },
     '2026-02-11': {
@@ -518,3 +518,4 @@ const tradingData = {
         ]
     }
 };
+
