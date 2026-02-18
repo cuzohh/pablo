@@ -486,9 +486,9 @@ const tradingData = {
     },
     '2026-02-10': {
         image: 'feb1026.png',
-        notes: 'Late afternoon winner. Pablo caught a 1.24 RR move.',
+        notes: 'Early morning winner. Pablo caught a 1.24 RR move.',
         trades: [
-            { time: '15:56', type: 'long', result: 'win', rr: 1.24 }
+            { time: '03:56', type: 'long', result: 'win', rr: 1.24 }
         ]
     },
     '2026-02-11': {
@@ -516,6 +516,16 @@ const tradingData = {
         trades: [
             { time: '11:55', type: 'short', result: 'loss' }
         ]
+    },
+    '2026-02-17': {
+        image: 'feb1726.png',
+        notes: 'Mixed morning session with multiple losses, but Pablo caught a massive 16.06 RR long winner at 8:12 AM.',
+        trades: [
+            { time: '08:05', type: 'long', result: 'loss' },
+            { time: '08:12', type: 'long', result: 'win', rr: 16.06 },
+            { time: '09:53', type: 'long', result: 'loss' },
+            { time: '09:55', type: 'long', result: 'loss' },
+            { time: '10:06', type: 'long', result: 'loss' }
+        ]
     }
 };
-
