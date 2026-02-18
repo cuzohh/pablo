@@ -63,9 +63,9 @@ const sp500MonthlyReturns = {
     '2025-09': 3.28,
     '2025-10': 2.38,
     '2025-11': 0.2,
-    '2025-12': -0.22,
-    '2026-01': 1.47,
-    '2026-02': 0.29,
+    '2025-12': -0.05,
+    '2026-01': 1.37,
+    '2026-02': -1.38,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -143,9 +143,9 @@ const tradingData = {
         notes: 'Pablo took 3 stop losses before catching a 5.38 RR winner. Patience pays off.',
         trades: [
             { time: '12:00', type: 'long', result: 'loss' },
-            { time: '01:53', type: 'long', result: 'loss' },
-            { time: '02:56', type: 'long', result: 'loss' },
-            { time: '03:15', type: 'long', result: 'win', rr: 5.38 }
+            { time: '13:53', type: 'long', result: 'loss' },
+            { time: '14:56', type: 'long', result: 'loss' },
+            { time: '15:15', type: 'long', result: 'win', rr: 5.38 }
         ]
     },
     '2025-12-10': {
@@ -155,9 +155,9 @@ const tradingData = {
             { time: '10:55', type: 'long', result: 'loss' },
             { time: '11:00', type: 'long', result: 'loss' },
             { time: '11:06', type: 'long', result: 'win', rr: 10.08 },
-            { time: '03:04', type: 'short', result: 'loss' },
-            { time: '03:15', type: 'short', result: 'be' },
-            { time: '03:34', type: 'short', result: 'win', rr: 5.34 }
+            { time: '15:04', type: 'short', result: 'loss' },
+            { time: '15:15', type: 'short', result: 'be' },
+            { time: '15:34', type: 'short', result: 'win', rr: 5.34 }
         ]
     },
     '2025-12-11': {
@@ -174,8 +174,8 @@ const tradingData = {
             { time: '04:54', type: 'long', result: 'be' },
             { time: '10:07', type: 'long', result: 'loss' },
             { time: '10:54', type: 'long', result: 'loss' },
-            { time: '01:01', type: 'long', result: 'be' },
-            { time: '02:06', type: 'long', result: 'loss' }
+            { time: '13:01', type: 'long', result: 'be' },
+            { time: '14:06', type: 'long', result: 'loss' }
         ]
     },
     '2025-12-15': {
@@ -185,11 +185,11 @@ const tradingData = {
             { time: '09:01', type: 'short', result: 'loss' },
             { time: '09:32', type: 'short', result: 'win', rr: 10.24 },
             { time: '12:52', type: 'long', result: 'be' },
-            { time: '02:41', type: 'long', result: 'be' },
-            { time: '03:23', type: 'long', result: 'loss' },
-            { time: '03:41', type: 'long', result: 'loss' },
-            { time: '03:50', type: 'long', result: 'loss' },
-            { time: '03:57', type: 'long', result: 'win', rr: 0.74 }
+            { time: '14:41', type: 'long', result: 'be' },
+            { time: '15:23', type: 'long', result: 'loss' },
+            { time: '15:41', type: 'long', result: 'loss' },
+            { time: '15:50', type: 'long', result: 'loss' },
+            { time: '15:57', type: 'long', result: 'win', rr: 0.74 }
         ]
     },
     '2025-12-16': {
@@ -207,7 +207,7 @@ const tradingData = {
             { time: '10:50', type: 'long', result: 'loss' },
             { time: '11:08', type: 'long', result: 'loss' },
             { time: '11:50', type: 'long', result: 'be' },
-            { time: '01:51', type: 'long', result: 'loss' }
+            { time: '13:51', type: 'long', result: 'loss' }
         ]
     },
     '2025-12-18': {
@@ -216,8 +216,8 @@ const tradingData = {
         trades: [
             { time: '09:31', type: 'short', result: 'be' },
             { time: '12:52', type: 'short', result: 'loss' },
-            { time: '02:40', type: 'short', result: 'loss' },
-            { time: '03:34', type: 'short', result: 'win', rr: 2.0 }
+            { time: '14:40', type: 'short', result: 'loss' },
+            { time: '15:34', type: 'short', result: 'win', rr: 2.0 }
         ]
     },
     '2025-12-19': {
@@ -418,8 +418,8 @@ const tradingData = {
             { time: '02:59', type: 'long', result: 'loss' },
             { time: '03:51', type: 'long', result: 'loss' },
             { time: '04:58', type: 'long', result: 'win', rr: 6.1 },
-            { time: '03:15', type: 'long', result: 'loss' },
-            { time: '03:32', type: 'long', result: 'win', rr: 4.38 }
+            { time: '15:15', type: 'long', result: 'loss' },
+            { time: '15:32', type: 'long', result: 'win', rr: 4.38 }
         ]
     },
     '2026-02-02': {
@@ -475,6 +475,46 @@ const tradingData = {
         notes: 'Quiet Friday. Just a single short trade that didn\'t work out.',
         trades: [
             { time: '11:59', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-02-09': {
+        image: 'feb0926.png',
+        notes: 'Single breakeven trade to start the week.',
+        trades: [
+            { time: '05:06', type: 'long', result: 'be' }
+        ]
+    },
+    '2026-02-10': {
+        image: 'feb1026.png',
+        notes: 'Early morning winner. Pablo caught a 1.24 RR move.',
+        trades: [
+            { time: '03:56', type: 'long', result: 'win', rr: 1.24 }
+        ]
+    },
+    '2026-02-11': {
+        image: 'feb1126.png',
+        notes: 'Great execution. 6.68 RR short winner in the morning.',
+        trades: [
+            { time: '09:30', type: 'short', result: 'win', rr: 6.68 }
+        ]
+    },
+    '2026-02-12': {
+        image: 'feb1226.png',
+        notes: 'Rough day for longs with multiple losses, though a breakeven provided some relief.',
+        trades: [
+            { time: '10:57', type: 'long', result: 'loss' },
+            { time: '11:02', type: 'long', result: 'loss' },
+            { time: '11:54', type: 'long', result: 'be' },
+            { time: '13:10', type: 'long', result: 'loss' },
+            { time: '13:56', type: 'long', result: 'loss' },
+            { time: '14:55', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-02-13': {
+        image: 'feb1326.png',
+        notes: 'Single short loss to end the week.',
+        trades: [
+            { time: '11:55', type: 'short', result: 'loss' }
         ]
     }
 };
