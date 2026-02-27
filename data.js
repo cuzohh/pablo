@@ -65,7 +65,7 @@ const sp500MonthlyReturns = {
     '2025-11': 0.2,
     '2025-12': -0.05,
     '2026-01': 1.37,
-    '2026-02': -1.38,
+    '2026-02': -0.87,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -526,6 +526,53 @@ const tradingData = {
             { time: '09:53', type: 'long', result: 'loss' },
             { time: '09:55', type: 'long', result: 'loss' },
             { time: '10:06', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-02-23': {
+        image: 'feb2326.png',
+        notes: 'All longs. Pablo took losses at 10:53 and 10:55 before catching a 6.22 RR winner at 11:08.',
+        trades: [
+            { time: '10:53', type: 'long', result: 'loss' },
+            { time: '10:55', type: 'long', result: 'loss' },
+            { time: '11:08', type: 'long', result: 'win', rr: 6.22 }
+        ]
+    },
+    '2026-02-24': {
+        image: 'feb2426.png',
+        notes: 'All shorts. Pablo took a loss at 11:01, a breakeven at 14:52, and a 0.91 RR winner at 15:54.',
+        trades: [
+            { time: '11:01', type: 'short', result: 'loss' },
+            { time: '14:52', type: 'short', result: 'be' },
+            { time: '15:54', type: 'short', result: 'win', rr: 0.91 }
+        ]
+    },
+    '2026-02-25': {
+        image: 'feb2526.png',
+        notes: 'Four short losses on the day at 08:56, 09:30, 09:32, and 11:01.',
+        trades: [
+            { time: '08:56', type: 'short', result: 'loss' },
+            { time: '09:30', type: 'short', result: 'loss' },
+            { time: '09:32', type: 'short', result: 'loss' },
+            { time: '11:01', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-02-26': {
+        image: 'feb2626.png',
+        notes: 'Five long losses throughout the morning session at 09:36, 10:50, 11:00, 11:07, and 11:50.',
+        trades: [
+            { time: '09:36', type: 'long', result: 'loss' },
+            { time: '10:50', type: 'long', result: 'loss' },
+            { time: '11:00', type: 'long', result: 'loss' },
+            { time: '11:07', type: 'long', result: 'loss' },
+            { time: '11:50', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-02-27': {
+        image: 'feb2726.png',
+        notes: 'All longs. Pablo took a loss at 08:51 and later a breakeven at 09:26.',
+        trades: [
+            { time: '08:51', type: 'long', result: 'loss' },
+            { time: '09:26', type: 'long', result: 'be' }
         ]
     }
 };
