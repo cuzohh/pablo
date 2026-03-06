@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pablo</title>
+    <meta name="description" content="A proprietary mean-reversion quantitative trading system for the Nasdaq.">
+
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div id="scroll-progress"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+        <svg class="theme-icon moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="theme-icon sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+    </button>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="performance.html" class="nav-item">Performance</a>
+            <a href="calendar.html" class="nav-item active">Calendar Index</a>
+            <span class="nav-divider"></span>
+            <a href="ledger.html" class="nav-item">Ledger</a>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 5rem;">
+
+        <!-- Signals Architecture Info -->
+        <section class="legend-section reveal">
+            <h3 class="minimal-title">Legend & Symbology</h3>
+            <div class="legend-archival">
+                <div class="legend-item"><span class="icon green">▲</span> Long Vector</div>
+                <div class="legend-item"><span class="icon red">▼</span> Short Vector</div>
+                <div class="legend-item"><span class="icon orange">✕</span> Stop Hit</div>
+                <div class="legend-item"><span class="icon teal">■</span> SL Break-even</div>
+                <div class="legend-item"><span class="icon teal">✕</span> Break-even Exit</div>
+                <div class="legend-item"><span class="icon green">◆</span> Profit Captured</div>
+                <div class="legend-item"><span class="icon green">✕</span> Trailing Stop Exit</div>
+            </div>
+        </section>
+
+        <!-- Archival Calendar Index -->
+        <section class="calendar-section reveal" id="calendar">
+            <div class="calendar-header-panel">
+                <h2 class="section-title">Temporal Index</h2>
+                <div class="month-nav">
+                    <button id="prevMonth" class="nav-btn" aria-label="Previous Month">←</button>
+                    <span class="current-month" id="currentMonth"></span>
+                    <button id="nextMonth" class="nav-btn" aria-label="Next Month">→</button>
+                </div>
+            </div>
+
+            <div class="monthly-recap collapsed glass-panel" id="monthlyRecap">
+                <div class="recap-header" id="recapHeader">
+                    <h3 class="recap-title">Performance Snapshot</h3>
+                    <div class="recap-header-right">
+                        <span class="recap-month" id="recapMonth"></span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                </div>
+                <div class="recap-stats" id="recapStats">
+                    <!-- Javascript Data Injects Here -->
+                </div>
+            </div>
+
+            <div class="calendar-container glass-panel">
+                <div class="calendar-days-header">
+                    <span
+                        class="weekend">Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span
+                        class="weekend">Sat</span>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal glass-panel modal-lg">
+            <div class="modal-header with-nav">
+                <button class="modal-nav-btn" id="modalPrev">←</button>
+                <span class="modal-date" id="modalDate"></span>
+                <button class="modal-nav-btn" id="modalNext">→</button>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body" id="modalContent"></div>
+        </div>
+    </div>
+
+    <footer>
+        <span class="footer-text">Engineered logic. Human oversight.</span>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="scripts.js"></script>
+</body>
+
+</html>

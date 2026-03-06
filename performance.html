@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pablo</title>
+    <meta name="description" content="Comprehensive performance analytics for Pablo's quantitative trading system.">
+
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div id="scroll-progress"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+        <svg class="theme-icon moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="theme-icon sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+    </button>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="performance.html" class="nav-item active">Performance</a>
+            <a href="calendar.html" class="nav-item">Calendar Index</a>
+            <span class="nav-divider"></span>
+            <a href="ledger.html" class="nav-item">Ledger</a>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 5rem;">
+
+        <!-- Page Header -->
+        <div class="perf-page-header reveal">
+            <h1 class="perf-page-title">Performance Analytics</h1>
+            <p class="perf-page-subtitle">Comprehensive breakdown of Pablo's trading performance across all recorded
+                sessions.</p>
+        </div>
+
+        <!-- Key Metrics Row -->
+        <section class="perf-metrics-grid reveal">
+            <div class="perf-metric glass-panel" id="perfMetricEquity">
+                <div class="stat-label">Current Equity</div>
+                <div class="stat-value positive" id="currentBalance">—</div>
+                <div class="stat-meta">from $100,000.00</div>
+            </div>
+            <div class="perf-metric glass-panel" id="perfMetricReturn">
+                <div class="stat-label">Total Return</div>
+                <div class="stat-value" id="totalPercentReturn">—</div>
+                <div class="stat-meta">Net Cumulative</div>
+            </div>
+            <div class="perf-metric glass-panel" id="perfMetricWinRate">
+                <div class="stat-label">Win Rate</div>
+                <div class="stat-value" id="winRate">—</div>
+                <div class="stat-meta">All Trades</div>
+            </div>
+            <div class="perf-metric glass-panel" id="perfMetricDrawdown">
+                <div class="stat-label">Max Drawdown</div>
+                <div class="stat-value negative" id="maxDrawdown">—</div>
+                <div class="stat-meta">Peak to Trough</div>
+            </div>
+        </section>
+
+        <!-- Equity Curve -->
+        <section class="chart-section reveal">
+            <div class="chart-header">
+                <h2>Equity Trajectory</h2>
+                <div class="chart-meta">Cumulative Balance Over Time</div>
+            </div>
+            <div class="chart-container glass-panel">
+                <canvas id="equityChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Two-column charts row -->
+        <section class="perf-charts-row reveal">
+            <!-- Monthly Returns Bar Chart -->
+            <div class="perf-chart-half">
+                <div class="chart-header">
+                    <h2>Monthly Returns</h2>
+                    <div class="chart-meta">Pablo vs S&P 500</div>
+                </div>
+                <div class="chart-container glass-panel">
+                    <canvas id="monthlyReturnsChart"></canvas>
+                </div>
+            </div>
+            <!-- Win/Loss Distribution -->
+            <div class="perf-chart-half">
+                <div class="chart-header">
+                    <h2>Trade Outcomes</h2>
+                    <div class="chart-meta">Win / Loss / Breakeven Split</div>
+                </div>
+                <div class="chart-container glass-panel">
+                    <canvas id="outcomeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- RR Distribution -->
+        <section class="chart-section reveal">
+            <div class="chart-header">
+                <h2>Risk-to-Reward Distribution</h2>
+                <div class="chart-meta">RR of Winning Trades</div>
+            </div>
+            <div class="chart-container glass-panel">
+                <canvas id="rrDistChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Daily P&L -->
+        <section class="chart-section reveal">
+            <div class="chart-header">
+                <h2>Daily P&L</h2>
+                <div class="chart-meta">Net Gain/Loss Per Trading Day</div>
+            </div>
+            <div class="chart-container glass-panel">
+                <canvas id="dailyPnlChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Detailed Stats Table -->
+        <section class="perf-detail-section reveal">
+            <div class="chart-header">
+                <h2>Detailed Statistics</h2>
+                <div class="chart-meta">Aggregated Across All Sessions</div>
+            </div>
+            <div class="perf-stats-table glass-panel" id="perfStatsTable">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <span class="footer-text">🎨 Engineered logic. Human oversight.</span>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="scripts.js"></script>
+    <script>
+        // Performance page charts
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initPerformanceCharts, 1200);
+        });
+
+        function initPerformanceCharts() {
+            const sortedDates = Object.keys(tradingData).sort();
+            if (sortedDates.length === 0) return;
+
+            // Gather all trades
+            let allTrades = [];
+            let wins = 0, losses = 0, bes = 0;
+            let totalWinRR = 0, bestRR = 0, winRRs = [];
+            let balance = STARTING_BALANCE;
+            const dailyPnls = [];
+            const dailyLabels = [];
+            const monthlyPablo = {};
+
+            sortedDates.forEach(dateStr => {
+                const data = tradingData[dateStr];
+                if (!data || !data.trades) return;
+                const risk = balance * RISK_PERCENT;
+                let dayPnl = 0;
+
+                data.trades.forEach(t => {
+                    let pnl = 0;
+                    if (t.result === 'win') {
+                        pnl = risk * (t.rr || 0);
+                        wins++;
+                        totalWinRR += (t.rr || 0);
+                        winRRs.push(t.rr || 0);
+                        if ((t.rr || 0) > bestRR) bestRR = t.rr;
+                    } else if (t.result === 'loss') {
+                        pnl = -risk;
+                        losses++;
+                    } else {
+                        bes++;
+                    }
+                    dayPnl += pnl;
+                    balance += pnl;
+                    allTrades.push({ ...t, pnl, date: dateStr });
+                });
+
+                dailyPnls.push(dayPnl);
+                dailyLabels.push(dateStr);
+
+                const monthKey = dateStr.substring(0, 7);
+                if (!monthlyPablo[monthKey]) monthlyPablo[monthKey] = { startBal: balance - dayPnl, endBal: balance };
+                else monthlyPablo[monthKey].endBal = balance;
+            });
+
+            const totalTrades = wins + losses + bes;
+            const avgWinRR = wins > 0 ? (totalWinRR / wins).toFixed(2) : '0';
+            const profitFactor = losses > 0 ? (totalWinRR / losses).toFixed(2) : '∞';
+            const avgTradesPerDay = sortedDates.length > 0 ? (totalTrades / sortedDates.length).toFixed(1) : '0';
+            const greenDays = dailyPnls.filter(p => p > 0).length;
+            const redDays = dailyPnls.filter(p => p < 0).length;
+            const flatDays = dailyPnls.filter(p => p === 0).length;
+
+            // Populate detailed stats table
+            const statsTable = document.getElementById('perfStatsTable');
+            if (statsTable) {
+                statsTable.innerHTML = `
+                <div class="perf-stats-grid">
+                    <div class="perf-stat-row"><span class="perf-stat-label">Total Trades</span><span class="perf-stat-val">${totalTrades}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Wins</span><span class="perf-stat-val positive">${wins}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Losses</span><span class="perf-stat-val negative">${losses}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Breakevens</span><span class="perf-stat-val">${bes}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Avg Win RR</span><span class="perf-stat-val positive">${avgWinRR}R</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Best Single RR</span><span class="perf-stat-val positive">${bestRR.toFixed(2)}R</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Profit Factor (RR)</span><span class="perf-stat-val">${profitFactor}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Avg Trades/Day</span><span class="perf-stat-val">${avgTradesPerDay}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Green Days</span><span class="perf-stat-val positive">${greenDays}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Red Days</span><span class="perf-stat-val negative">${redDays}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Flat Days</span><span class="perf-stat-val">${flatDays}</span></div>
+                    <div class="perf-stat-row"><span class="perf-stat-label">Trading Days</span><span class="perf-stat-val">${sortedDates.length}</span></div>
+                </div>
+            `;
+            }
+
+            // Chart defaults
+            const style = getComputedStyle(document.documentElement);
+            const gridColor = 'rgba(255,255,255,0.04)';
+            const textColor = style.getPropertyValue('--text-dim').trim() || '#71717a';
+
+            // Monthly Returns Chart
+            const monthKeys = Object.keys(monthlyPablo).sort();
+            const pabloReturns = monthKeys.map(k => {
+                const m = monthlyPablo[k];
+                return m.startBal > 0 ? ((m.endBal - m.startBal) / m.startBal * 100) : 0;
+            });
+            const sp500Returns = monthKeys.map(k => sp500MonthlyReturns[k] || 0);
+
+            const mCtx = document.getElementById('monthlyReturnsChart');
+            if (mCtx) {
+                new Chart(mCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: monthKeys,
+                        datasets: [
+                            {
+                                label: 'Pablo',
+                                data: pabloReturns,
+                                backgroundColor: pabloReturns.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'),
+                                borderRadius: 4,
+                                barPercentage: 0.5,
+                            },
+                            {
+                                label: 'S&P 500',
+                                data: sp500Returns,
+                                backgroundColor: 'rgba(139, 92, 246, 0.4)',
+                                borderRadius: 4,
+                                barPercentage: 0.5,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: textColor, font: { family: 'Inter' } } } },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } },
+                            y: { ticks: { color: textColor, callback: v => v + '%' }, grid: { color: gridColor } }
+                        }
+                    }
+                });
+            }
+
+            // Win/Loss/BE Doughnut
+            const oCtx = document.getElementById('outcomeChart');
+            if (oCtx) {
+                new Chart(oCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Wins', 'Losses', 'Breakeven'],
+                        datasets: [{
+                            data: [wins, losses, bes],
+                            backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(20, 184, 166, 0.5)'],
+                            borderWidth: 0,
+                            hoverOffset: 8,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        cutout: '65%',
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: textColor, padding: 16, font: { family: 'Inter' } } }
+                        }
+                    }
+                });
+            }
+
+            // RR Distribution Histogram
+            const rrCtx = document.getElementById('rrDistChart');
+            if (rrCtx && winRRs.length > 0) {
+                const buckets = [0, 1, 2, 3, 5, 8, 10, 15, 20, 50, 100];
+                const bucketLabels = [];
+                const bucketCounts = [];
+                for (let i = 0; i < buckets.length - 1; i++) {
+                    bucketLabels.push(`${buckets[i]}-${buckets[i + 1]}R`);
+                    bucketCounts.push(winRRs.filter(r => r >= buckets[i] && r < buckets[i + 1]).length);
+                }
+                bucketLabels.push(`${buckets[buckets.length - 1]}R+`);
+                bucketCounts.push(winRRs.filter(r => r >= buckets[buckets.length - 1]).length);
+
+                new Chart(rrCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: bucketLabels,
+                        datasets: [{
+                            label: 'Winning Trades',
+                            data: bucketCounts,
+                            backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } },
+                            y: { ticks: { color: textColor, stepSize: 1 }, grid: { color: gridColor }, title: { display: true, text: 'Count', color: textColor } }
+                        }
+                    }
+                });
+            }
+
+            // Daily P&L Bar Chart
+            const dpCtx = document.getElementById('dailyPnlChart');
+            if (dpCtx) {
+                new Chart(dpCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: dailyLabels,
+                        datasets: [{
+                            label: 'Daily P&L',
+                            data: dailyPnls,
+                            backgroundColor: dailyPnls.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.6)' : 'rgba(239, 68, 68, 0.6)'),
+                            borderRadius: 3,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 9 }, maxRotation: 45 }, grid: { color: gridColor } },
+                            y: { ticks: { color: textColor, callback: v => '$' + v.toLocaleString() }, grid: { color: gridColor } }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

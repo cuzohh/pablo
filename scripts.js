@@ -901,6 +901,7 @@ function setupEventListeners() {
     const prevMonthBtn = document.getElementById('prevMonth');
     const nextMonthBtn = document.getElementById('nextMonth');
     function updateNavButtons() {
+        if (!prevMonthBtn || !nextMonthBtn) return;
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         if (year < 2025 || (year === 2025 && month <= 11)) {
@@ -1130,13 +1131,11 @@ function initScrollReveal() {
     // Observe all reveal elements
     document.querySelectorAll('.reveal, .reveal-stagger, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade').forEach(el => {
         observer.observe(el);
+        // Fallback to guarantee elements appear even if IntersectionObserver fails on short pages
+        setTimeout(() => el.classList.add('visible'), 300);
     });
 }
 
-// Background Canvas Animation
-// Background Canvas Animation
-// Background Canvas Animation
-// Background Canvas Animation
 // Background Canvas Animation
 function initCanvasBackground() {
     const canvas = document.getElementById('bg-canvas');
@@ -1246,77 +1245,50 @@ function initCanvasBackground() {
     }
 }
 
-// Smooth Scrolling & Scroll Effects (Lenis)
-// Smooth Scrolling & Scroll Effects (Lenis)
-let mainLenis;
-let modalLenis;
-
-function initSmoothScroll() {
-    if (typeof Lenis === 'undefined') return;
-
-    // Tighter, less "floaty" configuration
-    mainLenis = new Lenis({
-        duration: 0.7,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        smoothTouch: false,
-        touchMultiplier: 2,
-    });
-
+// Scroll Progress Bar + Navbar Auto-Hide
+function initScrollProgress() {
     const progressBar = document.getElementById('scroll-progress');
+    const topNav = document.querySelector('.top-nav');
+    let lastScrollY = 0;
+    let ticking = false;
 
-    function raf(time) {
-        mainLenis.raf(time);
-        if (modalLenis) modalLenis.raf(time);
-        requestAnimationFrame(raf);
-    }
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const scrollTop = window.scrollY;
 
-    requestAnimationFrame(raf);
+                // Progress bar
+                if (progressBar) {
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                    progressBar.style.width = `${progress}%`;
+                }
 
-    // Scroll event listener for effects
-    mainLenis.on('scroll', ({ scroll, limit }) => {
-        // 1. Progress Bar
-        if (progressBar) {
-            const progress = limit > 0 ? (scroll / limit) * 100 : 0;
-            progressBar.style.width = `${progress}%`;
+                // Navbar auto-hide: hide on scroll down, show on scroll up
+                if (topNav) {
+                    if (scrollTop > lastScrollY && scrollTop > 100) {
+                        topNav.classList.add('nav-hidden');
+                    } else {
+                        topNav.classList.remove('nav-hidden');
+                    }
+                }
+
+                lastScrollY = scrollTop;
+                ticking = false;
+            });
+            ticking = true;
         }
-    });
+    }, { passive: true });
 }
 
+// Modal scroll helpers (no-op now, modals use native overflow)
 function initModalSmoothScroll(modalEl) {
-    if (typeof Lenis === 'undefined' || !modalEl) return;
-
-    // Destroy existing if any to be safe
-    if (modalLenis) modalLenis.destroy();
-
-    modalLenis = new Lenis({
-        wrapper: modalEl, // The scrollable container
-        content: modalEl.children[0], // The content inside (usually first child works if wrapped, or we might need to target specific content div)
-        // actually Lenis wrapper/content works best if wrapper is the overflow element. 
-        // Our .modal has overflow-y: auto. So wrapper = .modal.
-        duration: 0.7,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        smoothTouch: false,
-        touchMultiplier: 2,
-    });
-
-    // Stop main scrolling while modal is open
-    if (mainLenis) mainLenis.stop();
+    // Lock body scroll when modal is open
+    if (modalEl) document.body.style.overflow = 'hidden';
 }
 
 function destroyModalSmoothScroll() {
-    if (modalLenis) {
-        modalLenis.destroy();
-        modalLenis = null;
-    }
-    if (mainLenis) mainLenis.start();
+    document.body.style.overflow = '';
 }
 
 if (document.readyState === 'loading') {
@@ -1325,12 +1297,12 @@ if (document.readyState === 'loading') {
         setTimeout(updateOverallStats, 800);
         initScrollReveal();
         initCanvasBackground();
-        initSmoothScroll();
+        initScrollProgress();
     });
 } else {
     initRecapState(); initUpdatesState(); setupEventListeners(); renderCalendar();
     setTimeout(updateOverallStats, 800);
     initScrollReveal();
     initCanvasBackground();
-    initSmoothScroll();
+    initScrollProgress();
 }
