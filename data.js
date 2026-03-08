@@ -66,6 +66,7 @@ const sp500MonthlyReturns = {
     '2025-12': -0.05,
     '2026-01': 1.37,
     '2026-02': -0.87,
+    '2026-03': -1.98,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -573,6 +574,61 @@ const tradingData = {
         trades: [
             { time: '08:51', type: 'long', result: 'loss' },
             { time: '09:26', type: 'long', result: 'be' }
+        ]
+    },
+    '2026-03-02': {
+        image: 'mar0226.png',
+        notes: 'Two shorts. Pablo caught a 3.97 RR winner at 10:50, then took a loss at 3:03 PM.',
+        trades: [
+            { time: '10:50', type: 'short', result: 'win', rr: 3.97 },
+            { time: '15:03', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-03-03': {
+        image: 'mar0326.png',
+        notes: 'Five long losses throughout the session at 01:49, 03:00, 07:48, 09:01, and 09:32.',
+        trades: [
+            { time: '01:49', type: 'long', result: 'loss' },
+            { time: '03:00', type: 'long', result: 'loss' },
+            { time: '07:48', type: 'long', result: 'loss' },
+            { time: '09:01', type: 'long', result: 'loss' },
+            { time: '09:32', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-03-04': {
+        image: 'mar0426.png',
+        notes: 'All shorts. Pablo caught a 1.53 RR winner at 9:32 AM, then losses at 10:09, 10:58, and 3:52 PM.',
+        trades: [
+            { time: '09:32', type: 'short', result: 'win', rr: 1.53 },
+            { time: '10:09', type: 'short', result: 'loss' },
+            { time: '10:58', type: 'short', result: 'loss' },
+            { time: '15:52', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-03-05': {
+        image: 'mar0526.png',
+        notes: 'All longs. Pablo took a breakeven at 01:09 AM, then losses at 08:58, 09:06, 09:26, 11:11, and 2:08 PM.',
+        trades: [
+            { time: '01:09', type: 'long', result: 'be' },
+            { time: '08:58', type: 'long', result: 'loss' },
+            { time: '09:06', type: 'long', result: 'loss' },
+            { time: '09:26', type: 'long', result: 'loss' },
+            { time: '11:11', type: 'long', result: 'loss' },
+            { time: '14:08', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-03-06': {
+        image: 'mar0626.png',
+        notes: 'All longs. Losses at 04:51 and 04:58 AM, breakeven at 07:48, loss at 08:50, breakeven at 09:09, loss at 09:55, 6.62 RR win at 10:09, loss at 3:25 PM.',
+        trades: [
+            { time: '04:51', type: 'long', result: 'loss' },
+            { time: '04:58', type: 'long', result: 'loss' },
+            { time: '07:48', type: 'long', result: 'be' },
+            { time: '08:50', type: 'long', result: 'loss' },
+            { time: '09:09', type: 'long', result: 'be' },
+            { time: '09:55', type: 'long', result: 'loss' },
+            { time: '10:09', type: 'long', result: 'win', rr: 6.62 },
+            { time: '15:25', type: 'long', result: 'loss' }
         ]
     }
 };
