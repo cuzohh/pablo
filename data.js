@@ -66,7 +66,7 @@ const sp500MonthlyReturns = {
     '2025-12': -0.05,
     '2026-01': 1.37,
     '2026-02': -0.87,
-    '2026-03': -1.98,
+    '2026-03': -3.45,
 };
 
 // Funny messages for when Pablo beats S&P 500
@@ -629,6 +629,53 @@ const tradingData = {
             { time: '09:55', type: 'long', result: 'loss' },
             { time: '10:09', type: 'long', result: 'win', rr: 6.62 },
             { time: '15:25', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-03-09': {
+        image: 'mar0926.png',
+        notes: 'Only shorts. Breakeven at 1:11 PM, then a loss at 2:51 PM.',
+        trades: [
+            { time: '13:11', type: 'short', result: 'be' },
+            { time: '14:51', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-03-10': {
+        image: 'mar1026.png',
+        notes: 'Only shorts. Losses at 5:07 AM, 10:50 AM, and 10:57 AM.',
+        trades: [
+            { time: '05:07', type: 'short', result: 'loss' },
+            { time: '10:50', type: 'short', result: 'loss' },
+            { time: '10:57', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-03-11': {
+        image: 'mar1126.png',
+        notes: 'Single short loss at 10:05 AM.',
+        trades: [
+            { time: '10:05', type: 'short', result: 'loss' }
+        ]
+    },
+    '2026-03-12': {
+        image: 'mar1226.png',
+        notes: 'All longs. Breakeven at 9:31 AM, losses at 9:52 AM, 10:49 AM, 1:55 PM, 2:52 PM, and 3:25 PM.',
+        trades: [
+            { time: '09:31', type: 'long', result: 'be' },
+            { time: '09:52', type: 'long', result: 'loss' },
+            { time: '10:49', type: 'long', result: 'loss' },
+            { time: '13:55', type: 'long', result: 'loss' },
+            { time: '14:52', type: 'long', result: 'loss' },
+            { time: '15:25', type: 'long', result: 'loss' }
+        ]
+    },
+    '2026-03-13': {
+        image: 'mar1326.png',
+        notes: 'Mixed day. Long loss at 3:55 AM, long breakeven at 4:10 AM, short breakevens at 8:52 AM and 9:33 AM, then a 13.22 RR short win at 9:55 AM.',
+        trades: [
+            { time: '03:55', type: 'long', result: 'loss' },
+            { time: '04:10', type: 'long', result: 'be' },
+            { time: '08:52', type: 'short', result: 'be' },
+            { time: '09:33', type: 'short', result: 'be' },
+            { time: '09:55', type: 'short', result: 'win', rr: 13.22 }
         ]
     }
 };
