@@ -650,9 +650,9 @@ const tradingData = {
     },
     '2026-03-11': {
         image: 'mar1126.png',
-        notes: 'Single short loss at 10:05 AM.',
+        notes: 'Single trade. 12.72 RR short win at 10:00 AM.',
         trades: [
-            { time: '10:05', type: 'short', result: 'loss' }
+            { time: '10:00', type: 'short', result: 'win', rr: 12.72 }
         ]
     },
     '2026-03-12': {
